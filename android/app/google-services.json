@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "492486980221",
+    "project_id": "desal-mcs",
+    "storage_bucket": "desal-mcs.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:492486980221:android:3a374543e52a88aa0e7714",
+        "android_client_info": {
+          "package_name": "com.myminervahub.desalmcs_mobile_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "492486980221-6uigbfv42984qfmcbeau0aomskuv77gj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyClkuHcZ5nEkhhwNPZW_5aLsdtnkAmTxac"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "492486980221-6uigbfv42984qfmcbeau0aomskuv77gj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
