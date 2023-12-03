@@ -1,5 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:desalmcs_mobile_app/model/customer_model.dart';
+import 'package:landmarkcoop_mobile_app/model/customer_model.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pdf/pdf.dart';
@@ -361,7 +361,7 @@ class _CertificateOfInvestmentState extends State<CertificateOfInvestment> {
     return pw.Column(children: <pw.Widget>[
       pw.SizedBox(height: 20),
       pw.Text(
-        'DESAL-mcs',
+        'Landmark Coop',
         style: pw.TextStyle(
           color: PdfColor.fromHex("#091841"),
           fontWeight: pw.FontWeight.bold,

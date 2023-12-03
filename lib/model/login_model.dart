@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:desalmcs_mobile_app/model/customer_model.dart';
-import 'package:desalmcs_mobile_app/model/other_model.dart';
+import 'package:landmarkcoop_mobile_app/model/customer_model.dart';
+import 'package:landmarkcoop_mobile_app/model/other_model.dart';
 
 class LoginResponseModel {
   final List<CustomerWalletsBalanceModel> customerWalletsList;
@@ -19,19 +19,18 @@ class LoginResponseModel {
 
     List<CustomerWalletsBalanceModel> customerWallets = [];
     for (var singleStatement in data) {
+
       CustomerWalletsBalanceModel customerWallet = CustomerWalletsBalanceModel(
         id: singleStatement['id'] ?? 0,
         accountNumber: singleStatement['accountNumber'] ?? '',
+        trackNumber: singleStatement['trackNumber'] ?? '',
         balance: singleStatement['balance'] ?? 0,
         productName: singleStatement['products']['displayName'] ?? '',
-        fullName: singleStatement['customer']['firstName'] +
-                ' ' +
-                singleStatement['customer']['lastName'] ??
-            '',
+        fullName: singleStatement['customer']['firstName'] ?? '' + ' ' + singleStatement['customer']['lastName'] ?? '',
         email: singleStatement['customer']['email'] ?? '',
         phoneNo: singleStatement['customer']['phoneNumber'] ?? '',
         nubanAccountNumber: singleStatement['nubanAccountNumber'] ?? '',
-        interBankName: singleStatement['interBankName'],
+        interBankName: singleStatement['interBankName'] ?? '',
       );
       //Adding user to the list.
       customerWallets.add(customerWallet);

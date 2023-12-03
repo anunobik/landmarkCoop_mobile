@@ -1,7 +1,7 @@
-import 'package:desalmcs_mobile_app/api/api_service.dart';
-import 'package:desalmcs_mobile_app/model/other_model.dart';
-import 'package:desalmcs_mobile_app/pages/dashboard.dart';
-import 'package:desalmcs_mobile_app/util/home_drawer.dart';
+import 'package:landmarkcoop_mobile_app/api/api_service.dart';
+import 'package:landmarkcoop_mobile_app/model/other_model.dart';
+import 'package:landmarkcoop_mobile_app/pages/dashboard.dart';
+import 'package:landmarkcoop_mobile_app/util/home_drawer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

@@ -1,4 +1,4 @@
-import 'package:desalmcs_mobile_app/util/string_extension.dart';
+import 'package:landmarkcoop_mobile_app/util/string_extension.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';

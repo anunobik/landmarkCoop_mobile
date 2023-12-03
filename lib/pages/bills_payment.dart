@@ -1,9 +1,9 @@
-import 'package:desalmcs_mobile_app/model/customer_model.dart';
-import 'package:desalmcs_mobile_app/model/other_model.dart';
-import 'package:desalmcs_mobile_app/pages/airtime_data.dart';
-import 'package:desalmcs_mobile_app/pages/electricity.dart';
-import 'package:desalmcs_mobile_app/pages/tv.dart';
-import 'package:desalmcs_mobile_app/util/home_drawer.dart';
+import 'package:landmarkcoop_mobile_app/model/customer_model.dart';
+import 'package:landmarkcoop_mobile_app/model/other_model.dart';
+import 'package:landmarkcoop_mobile_app/pages/airtime_data.dart';
+import 'package:landmarkcoop_mobile_app/pages/electricity.dart';
+import 'package:landmarkcoop_mobile_app/pages/tv.dart';
+import 'package:landmarkcoop_mobile_app/util/home_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 

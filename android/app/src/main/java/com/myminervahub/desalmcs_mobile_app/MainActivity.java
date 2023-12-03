@@ -1,4 +1,4 @@
-package com.myminervahub.desalmcs_mobile_app;
+package com.myminervahub.landmarkcoop_mobile_app;
 
 import io.flutter.embedding.android.FlutterFragmentActivity;
 

@@ -1,14 +1,14 @@
 // ignore_for_file: library_private_types_in_public_api
 
-import 'package:desalmcs_mobile_app/api/api_service.dart';
-import 'package:desalmcs_mobile_app/main.dart';
-import 'package:desalmcs_mobile_app/model/login_model.dart';
-import 'package:desalmcs_mobile_app/model/other_model.dart';
-import 'package:desalmcs_mobile_app/pages/dashboard.dart';
-import 'package:desalmcs_mobile_app/pages/face_id_finger_print.dart';
-import 'package:desalmcs_mobile_app/pages/forgot_password.dart';
-import 'package:desalmcs_mobile_app/util/ProgressHUD.dart';
-import 'package:desalmcs_mobile_app/util/home_drawer.dart';
+import 'package:landmarkcoop_mobile_app/api/api_service.dart';
+import 'package:landmarkcoop_mobile_app/main.dart';
+import 'package:landmarkcoop_mobile_app/model/login_model.dart';
+import 'package:landmarkcoop_mobile_app/model/other_model.dart';
+import 'package:landmarkcoop_mobile_app/pages/dashboard.dart';
+import 'package:landmarkcoop_mobile_app/pages/face_id_finger_print.dart';
+import 'package:landmarkcoop_mobile_app/pages/forgot_password.dart';
+import 'package:landmarkcoop_mobile_app/util/ProgressHUD.dart';
+import 'package:landmarkcoop_mobile_app/util/home_drawer.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
@@ -106,8 +106,10 @@ class _LoginState extends State<Login> {
                   // ),
                   Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
-                    margin: const EdgeInsets.symmetric(vertical: 60, horizontal: 20),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 30, horizontal: 20),
+                    margin: const EdgeInsets.symmetric(
+                        vertical: 60, horizontal: 20),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
                       color: Colors.white,
@@ -135,8 +137,7 @@ class _LoginState extends State<Login> {
                               "Login",
                               // style: Theme.of(context).textTheme.headline2,
                               style: GoogleFonts.montserrat(
-                                  fontSize: 32,
-                                  fontWeight: FontWeight.bold),
+                                  fontSize: 32, fontWeight: FontWeight.bold),
                             ),
                           ),
                           const SizedBox(height: 40),
@@ -144,17 +145,16 @@ class _LoginState extends State<Login> {
                             keyboardType: TextInputType.emailAddress,
                             onSaved: (input) =>
                                 loginRequestModel.email = input!,
-                            validator: (input) => !input!.contains('@')
-                                ? "Email Id should be valid"
+                            validator: (input) => input!.isEmpty
+                                ? "Please enter email or phone no."
                                 : null,
                             decoration: InputDecoration(
-                              hintText: "Email Address",
+                              hintText: "Email / Phone No.",
                               enabledBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(
                                       color: Colors.blue.withOpacity(0.2))),
                               focusedBorder: const UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Colors.blue)),
+                                  borderSide: BorderSide(color: Colors.blue)),
                               prefixIcon: const Icon(
                                 Icons.email,
                                 color: Colors.black45,
@@ -177,8 +177,7 @@ class _LoginState extends State<Login> {
                                   borderSide: BorderSide(
                                       color: Colors.blue.withOpacity(0.2))),
                               focusedBorder: const UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Colors.blue),
+                                borderSide: BorderSide(color: Colors.blue),
                               ),
                               prefixIcon: const Icon(
                                 Icons.lock,
@@ -223,23 +222,25 @@ class _LoginState extends State<Login> {
                                 setState(() {
                                   isApiCallProcess = true;
                                 });
-
+                                print('We are here!');
                                 APIService apiService = APIService();
                                 apiService
                                     .login(loginRequestModel)
                                     .then((value) async {
+                                  print('We are inside here!');
                                   setState(() {
                                     isApiCallProcess = false;
                                   });
+
                                   if (value.customerWalletsList.isNotEmpty) {
                                     //Todo add token to database or modify
                                     APIService apiServiceDeviceToken =
-                                    APIService();
+                                        APIService();
                                     print("token - $token");
                                     PushDeviceTokenRequestModel
-                                    pushDeviceTokenRequestModel =
-                                    PushDeviceTokenRequestModel(
-                                        deviceToken: token);
+                                        pushDeviceTokenRequestModel =
+                                        PushDeviceTokenRequestModel(
+                                            deviceToken: token);
                                     apiServiceDeviceToken.addDeviceToken(
                                         pushDeviceTokenRequestModel,
                                         value.token);
@@ -247,7 +248,8 @@ class _LoginState extends State<Login> {
                                     final SharedPreferences prefs =
                                         await SharedPreferences.getInstance();
                                     await prefs.setBool('useFingerPrint', true);
-                                    await prefs.setString('biometricToken', value.token);
+                                    await prefs.setString(
+                                        'biometricToken', value.token);
                                     print('Token at Login - ${value.token}');
 
                                     Navigator.of(context).pushReplacement(
@@ -256,12 +258,22 @@ class _LoginState extends State<Login> {
                                           value: 0,
                                           page: Dashboard(
                                             token: value.token,
-                                            fullName: value.customerWalletsList[0].fullName, customerWallets: value.customerWalletsList,
-                                            lastTransactions: value.lastTransactionsList,
+                                            fullName: value
+                                                .customerWalletsList[0]
+                                                .fullName,
+                                            customerWallets:
+                                                value.customerWalletsList,
+                                            lastTransactions:
+                                                value.lastTransactionsList,
                                           ),
                                           name: 'wallet',
-                                          fullName: value.customerWalletsList[0].fullName,
-                                          token: value.token, customerWallets: value.customerWalletsList, lastTransactionsList: value.lastTransactionsList,
+                                          fullName: value
+                                              .customerWalletsList[0].fullName,
+                                          token: value.token,
+                                          customerWallets:
+                                              value.customerWalletsList,
+                                          lastTransactionsList:
+                                              value.lastTransactionsList,
                                         ),
                                       ),
                                     );
@@ -271,12 +283,11 @@ class _LoginState extends State<Login> {
                                         builder: (BuildContext context) {
                                           return AlertDialog(
                                             title: const Text("Message"),
-                                            content: Text(
-                                                value.token),
+                                            content: Text(value.token),
                                           );
                                         });
                                   }
-                                }).catchError((errorMsg){
+                                }).catchError((errorMsg) {
                                   AlertDialog(
                                     title: const Text(
                                       "Message",
@@ -293,8 +304,7 @@ class _LoginState extends State<Login> {
                               }
                             },
                             style: ElevatedButton.styleFrom(
-                              primary: Colors.blue
-                              ,
+                              primary: Colors.blue,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5),
                               ),
@@ -314,48 +324,50 @@ class _LoginState extends State<Login> {
                           const SizedBox(height: 15),
                           useFingerPrint
                               ? SizedBox(
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      '-- Or Sign In Using --',
-                                      textAlign: TextAlign.center,
-                                      style: GoogleFonts.montserrat(
-                                        color: const Color(0XFF091841),
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w600,
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        '-- Or Sign In Using --',
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.montserrat(
+                                          color: const Color(0XFF091841),
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
-                                    ),
-                                    const SizedBox(height: 20),
-                                    GestureDetector(
-                                      onTap: () {
-                                        Navigator.of(context).push(
-                                            MaterialPageRoute(builder: (context) => const FaceIDFingerPrint())
-                                        );
-                                      },
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          const Icon(
-                                            CupertinoIcons.camera_viewfinder,
-                                            color: Colors.blue,
-                                          ),
-                                          const Icon(
-                                            Icons.fingerprint,
-                                            color: Colors.blue,
-                                          ),
-                                          Text(
-                                            'Face ID or Finger Print',
-                                            style: GoogleFonts.montserrat(
+                                      const SizedBox(height: 20),
+                                      GestureDetector(
+                                        onTap: () {
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const FaceIDFingerPrint()));
+                                        },
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            const Icon(
+                                              CupertinoIcons.camera_viewfinder,
                                               color: Colors.blue,
-                                              fontWeight: FontWeight.bold,
                                             ),
-                                          ),
-                                        ],
+                                            const Icon(
+                                              Icons.fingerprint,
+                                              color: Colors.blue,
+                                            ),
+                                            Text(
+                                              'Face ID or Finger Print',
+                                              style: GoogleFonts.montserrat(
+                                                color: Colors.blue,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              )
+                                    ],
+                                  ),
+                                )
                               : Container(),
                         ],
                       ),

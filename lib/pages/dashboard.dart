@@ -1,19 +1,19 @@
 import 'dart:async';
 
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:desalmcs_mobile_app/api/api_paystack.dart';
-import 'package:desalmcs_mobile_app/api/api_service.dart';
-import 'package:desalmcs_mobile_app/main.dart';
-import 'package:desalmcs_mobile_app/model/customer_model.dart';
-import 'package:desalmcs_mobile_app/model/other_model.dart';
-import 'package:desalmcs_mobile_app/model/paystack_model.dart';
-import 'package:desalmcs_mobile_app/model/push_notification.dart';
-import 'package:desalmcs_mobile_app/pages/investment.dart';
-import 'package:desalmcs_mobile_app/pushNotifications/push_messages.dart';
-import 'package:desalmcs_mobile_app/util/ProgressHUD.dart';
-import 'package:desalmcs_mobile_app/util/color_extension.dart';
-import 'package:desalmcs_mobile_app/util/home_drawer.dart';
-import 'package:desalmcs_mobile_app/util/notification_badge.dart';
+import 'package:landmarkcoop_mobile_app/api/api_paystack.dart';
+import 'package:landmarkcoop_mobile_app/api/api_service.dart';
+import 'package:landmarkcoop_mobile_app/main.dart';
+import 'package:landmarkcoop_mobile_app/model/customer_model.dart';
+import 'package:landmarkcoop_mobile_app/model/other_model.dart';
+import 'package:landmarkcoop_mobile_app/model/paystack_model.dart';
+import 'package:landmarkcoop_mobile_app/model/push_notification.dart';
+import 'package:landmarkcoop_mobile_app/pages/investment.dart';
+import 'package:landmarkcoop_mobile_app/pushNotifications/push_messages.dart';
+import 'package:landmarkcoop_mobile_app/util/ProgressHUD.dart';
+import 'package:landmarkcoop_mobile_app/util/color_extension.dart';
+import 'package:landmarkcoop_mobile_app/util/home_drawer.dart';
+import 'package:landmarkcoop_mobile_app/util/notification_badge.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -93,8 +93,31 @@ class _DashboardState extends State<Dashboard> {
   List<CustomerInvestmentWalletModel> investData =
       <CustomerInvestmentWalletModel>[];
 
+  OnlineRateResponseModel newValue = OnlineRateResponseModel(
+      id: 0,
+      oneMonth: 0,
+      twoMonth: 0,
+      threeMonth: 0,
+      fourMonth: 0,
+      fiveMonth: 0,
+      sixMonth: 0,
+      sevenMonth: 0,
+      eightMonth: 0,
+      nineMonth: 0,
+      tenMonth: 0,
+      elevenMonth: 0,
+      twelveMonth: 0);
+
   Future<List<ProductResponseModel>> getProducts() {
     return apiService.getProducts();
+  }
+
+  getRate() async {
+    APIService apiService = APIService();
+    OnlineRateResponseModel value = await apiService.getOnlineRate(widget.token);
+    setState(() {
+      newValue = value;
+    });
   }
 
   Widget futureBundleListBuilder() {
@@ -181,6 +204,7 @@ class _DashboardState extends State<Dashboard> {
   @override
   void initState() {
     super.initState();
+    getRate();
     displayWallets(widget.customerWallets);
     getAllInvestment();
     plugin.initialize(publicKey: publicKey);
@@ -269,8 +293,6 @@ class _DashboardState extends State<Dashboard> {
 
   void displayChart(List<LastTransactionsModel> lastTransactionsList) {
     for(var singleTransactions in widget.lastTransactions){
-      print('Monday Dep - ${singleTransactions.mondayDepositAmount}');
-      print('Monday With - ${singleTransactions.mondayWithdrawalAmount}');
       final items = [
         DataItem(x: 0, y1: singleTransactions.mondayDepositAmount, y2: singleTransactions.mondayWithdrawalAmount),
         DataItem(x: 1, y1: singleTransactions.tuesdayDepositAmount, y2: singleTransactions.tuesdayWithdrawalAmount),
@@ -394,7 +416,7 @@ class _DashboardState extends State<Dashboard> {
                               builder: (context) => Investment(
                                     token: widget.token,
                                     fullName: widget.fullName,
-                                    customerWallets: widget.customerWallets, lastTransactions: widget.lastTransactions,
+                                    customerWallets: widget.customerWallets, lastTransactions: widget.lastTransactions, interestRate: newValue,
                                   )));
                         },
                         child: Container(
@@ -749,7 +771,7 @@ class _DashboardState extends State<Dashboard> {
         amount: fundAmount.toString(),
         customer: customer,
         paymentOptions: "ussd, bank_transfer, card",
-        customization: Customization(title: "DESAL Mobile funding"),
+        customization: Customization(title: "Landmark Coop Mobile funding"),
         isTestMode: false);
 
     final ChargeResponse response = await flutterwave.charge();
@@ -1547,7 +1569,7 @@ class _DashboardState extends State<Dashboard> {
 //         amount: fundAmount.toString(),
 //         customer: customer,
 //         paymentOptions: "ussd, bank_transfer, card",
-//         customization: Customization(title: "DESAL Mobile funding"),
+//         customization: Customization(title: "Landmark Coop Mobile funding"),
 //         isTestMode: false);
 
 //     final ChargeResponse response = await flutterwave.charge();

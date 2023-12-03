@@ -35,6 +35,7 @@ class CustomerRequestModel {
 class CustomerWalletsBalanceModel {
   final int id;
   final String accountNumber;
+  final String trackNumber;
   final String nubanAccountNumber;
   final double balance;
   final String productName;
@@ -46,6 +47,7 @@ class CustomerWalletsBalanceModel {
   CustomerWalletsBalanceModel(
       {required this.id,
         required this.accountNumber,
+        required this.trackNumber,
         required this.nubanAccountNumber,
         required this.balance,
         required this.productName,
@@ -59,6 +61,7 @@ class CustomerWalletsBalanceModel {
     return CustomerWalletsBalanceModel(
         id: json['id'] ?? 0,
         accountNumber: json['accountNumber'] ?? '',
+        trackNumber: json['trackNumber'] ?? '',
         nubanAccountNumber: json['nubanAccountNumber'] ?? '',
         balance: json['balance'] ?? 0,
         productName: json['products']['displayName'] ?? '',

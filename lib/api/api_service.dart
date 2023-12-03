@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'package:dart_ipify/dart_ipify.dart';
-import 'package:desalmcs_mobile_app/model/complaint_model.dart';
-import 'package:desalmcs_mobile_app/model/customer_model.dart';
-import 'package:desalmcs_mobile_app/model/login_model.dart';
-import 'package:desalmcs_mobile_app/model/other_model.dart';
-import 'package:desalmcs_mobile_app/model/statement_model.dart';
+import 'package:landmarkcoop_mobile_app/model/complaint_model.dart';
+import 'package:landmarkcoop_mobile_app/model/customer_model.dart';
+import 'package:landmarkcoop_mobile_app/model/login_model.dart';
+import 'package:landmarkcoop_mobile_app/model/other_model.dart';
+import 'package:landmarkcoop_mobile_app/model/statement_model.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -13,9 +13,8 @@ import '../model/password_model.dart';
 
 
 class APIService {
-  static const String DOMAIN_URL = "https://core.desalmcs.com";
+  static const String DOMAIN_URL = "https://testapp-core.myminervahub.com";
   // static const String DOMAIN_URL = "https://desalmc.herokuapp.com";
-  static const String TALENT_HUNT_DOMAIN_URL = "https://talenthunt-core.desalmcs.com";
 
   Future<List<ProductResponseModel>> getProducts() async {
     String url = "$DOMAIN_URL/allProducts";
@@ -88,7 +87,7 @@ class APIService {
         },
         body: requestModel.toJson());
 
-    // print(response.body);
+    print('Response code ${response.statusCode}');
 
     if (response.statusCode == 200) {
       return LoginResponseModel.fromJson(
@@ -162,6 +161,7 @@ class APIService {
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
+      print('data - $data');
 
       List<StatementResponseModel> statementList = [];
       for (var singleStatement in data) {
@@ -285,6 +285,8 @@ class APIService {
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
         },);
+
+    print(response.body);
 
     if (response.statusCode == 200) {
       return 'Success';
@@ -694,6 +696,33 @@ class APIService {
       return response.body;
     } else {
       return response.body;
+    }
+  }
+
+  Future<OnlineRateResponseModel> getOnlineRate(String token) async {
+    String url = "$DOMAIN_URL/getOnlineInvestmentRate/$token";
+
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      return OnlineRateResponseModel.fromJson(
+        json.decode(response.body),
+      );
+    } else {
+      return OnlineRateResponseModel(
+        id: 0,
+        oneMonth: 0,
+        twoMonth: 0,
+        threeMonth: 0,
+        fourMonth: 0,
+        fiveMonth: 0,
+        sixMonth: 0,
+        sevenMonth: 0,
+        eightMonth: 0,
+        nineMonth: 0,
+        tenMonth: 0,
+        elevenMonth: 0,
+        twelveMonth: 0,
+      );
     }
   }
   

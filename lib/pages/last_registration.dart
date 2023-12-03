@@ -1,7 +1,7 @@
-import 'package:desalmcs_mobile_app/api/api_service.dart';
-import 'package:desalmcs_mobile_app/component/congrats.dart';
-import 'package:desalmcs_mobile_app/model/customer_model.dart';
-import 'package:desalmcs_mobile_app/model/other_model.dart';
+import 'package:landmarkcoop_mobile_app/api/api_service.dart';
+import 'package:landmarkcoop_mobile_app/component/congrats.dart';
+import 'package:landmarkcoop_mobile_app/model/customer_model.dart';
+import 'package:landmarkcoop_mobile_app/model/other_model.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';

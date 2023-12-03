@@ -1,18 +1,18 @@
 import 'dart:math';
 
-import 'package:desalmcs_mobile_app/api/api_service.dart';
-import 'package:desalmcs_mobile_app/model/customer_model.dart';
-import 'package:desalmcs_mobile_app/model/other_model.dart';
-import 'package:desalmcs_mobile_app/pages/bills_payment.dart';
-import 'package:desalmcs_mobile_app/pages/customer_care.dart';
-import 'package:desalmcs_mobile_app/pages/dashboard.dart';
-import 'package:desalmcs_mobile_app/pages/investment.dart';
-import 'package:desalmcs_mobile_app/pages/login.dart';
-import 'package:desalmcs_mobile_app/pages/manage_cards.dart';
-import 'package:desalmcs_mobile_app/pages/setting.dart';
-import 'package:desalmcs_mobile_app/pages/transaction_history.dart';
-import 'package:desalmcs_mobile_app/pages/transfer_tabs.dart';
-import 'package:desalmcs_mobile_app/pages/withdrawal_request.dart';
+import 'package:landmarkcoop_mobile_app/api/api_service.dart';
+import 'package:landmarkcoop_mobile_app/model/customer_model.dart';
+import 'package:landmarkcoop_mobile_app/model/other_model.dart';
+import 'package:landmarkcoop_mobile_app/pages/bills_payment.dart';
+import 'package:landmarkcoop_mobile_app/pages/customer_care.dart';
+import 'package:landmarkcoop_mobile_app/pages/dashboard.dart';
+import 'package:landmarkcoop_mobile_app/pages/investment.dart';
+import 'package:landmarkcoop_mobile_app/pages/login.dart';
+import 'package:landmarkcoop_mobile_app/pages/manage_cards.dart';
+import 'package:landmarkcoop_mobile_app/pages/setting.dart';
+import 'package:landmarkcoop_mobile_app/pages/transaction_history.dart';
+import 'package:landmarkcoop_mobile_app/pages/transfer_tabs.dart';
+import 'package:landmarkcoop_mobile_app/pages/withdrawal_request.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -47,6 +47,35 @@ class HomeDrawer extends StatefulWidget {
 
 class _HomeDrawerState extends State<HomeDrawer> {
   APIService apiService = APIService();
+  OnlineRateResponseModel newValue = OnlineRateResponseModel(
+      id: 0,
+      oneMonth: 0,
+      twoMonth: 0,
+      threeMonth: 0,
+      fourMonth: 0,
+      fiveMonth: 0,
+      sixMonth: 0,
+      sevenMonth: 0,
+      eightMonth: 0,
+      nineMonth: 0,
+      tenMonth: 0,
+      elevenMonth: 0,
+      twelveMonth: 0);
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getRate();
+  }
+
+  getRate() async {
+    APIService apiService = APIService();
+    OnlineRateResponseModel value = await apiService.getOnlineRate(widget.token);
+    setState(() {
+      newValue = value;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -158,36 +187,36 @@ class _HomeDrawerState extends State<HomeDrawer> {
                           ),
                         ),
                       ),
-                      ListTile(
-                        onTap: () {
-                          setState(() {
-                            widget.value = 0;
-                            widget.page = WithdrawalRequest(
-                              token: widget.token,
-                              fullName: widget.fullName,
-                              customerWallets: widget.customerWallets,
-                              lastTransactions: widget.lastTransactionsList,
-                            );
-                            widget.name = 'withdrawal';
-                          });
-                        },
-                        leading: Icon(
-                          Icons.download,
-                          color: widget.name == 'withdrawal'
-                              ? Colors.white
-                              : Colors.white,
-                        ),
-                        title: Text(
-                          "Withdrawal",
-                          style: GoogleFonts.montserrat(
-                            color: widget.name == 'withdrawal'
-                                ? Colors.white
-                                : Colors.white,
-                            fontSize: 13,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
+                      // ListTile(
+                      //   onTap: () {
+                      //     setState(() {
+                      //       widget.value = 0;
+                      //       widget.page = WithdrawalRequest(
+                      //         token: widget.token,
+                      //         fullName: widget.fullName,
+                      //         customerWallets: widget.customerWallets,
+                      //         lastTransactions: widget.lastTransactionsList,
+                      //       );
+                      //       widget.name = 'withdrawal';
+                      //     });
+                      //   },
+                      //   leading: Icon(
+                      //     Icons.download,
+                      //     color: widget.name == 'withdrawal'
+                      //         ? Colors.white
+                      //         : Colors.white,
+                      //   ),
+                      //   title: Text(
+                      //     "Withdrawal",
+                      //     style: GoogleFonts.montserrat(
+                      //       color: widget.name == 'withdrawal'
+                      //           ? Colors.white
+                      //           : Colors.white,
+                      //       fontSize: 13,
+                      //       fontWeight: FontWeight.bold,
+                      //     ),
+                      //   ),
+                      // ),
                       ListTile(
                         onTap: () {
                           setState(() {
@@ -196,7 +225,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                               token: widget.token,
                               fullName: widget.fullName,
                               customerWallets: widget.customerWallets,
-                              lastTransactions: widget.lastTransactionsList,
+                              lastTransactions: widget.lastTransactionsList, interestRate: newValue,
                             );
                             widget.name = 'investment';
                           });
@@ -286,7 +315,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                               token: widget.token,
                               fullName: widget.fullName,
                               customerWallets: widget.customerWallets,
-                              lastTransactions: widget.lastTransactionsList,
+                              lastTransactions: widget.lastTransactionsList, phoneNumber: widget.customerWallets[0].phoneNo,
                             );
                             widget.name = 'setting';
                           });
@@ -312,16 +341,14 @@ class _HomeDrawerState extends State<HomeDrawer> {
                         contentPadding: const EdgeInsets.only(left: 16.0),
                         onTap: () {
                           setState(() {
-                            apiService.pageReload(widget.token).then((value) {
-                              widget.value = 0;
-                              widget.page = ContactCustomerSupport(
-                                token: widget.token,
-                                fullName: widget.fullName,
-                                customerWallets: value.customerWalletsList,
-                                lastTransactions: value.lastTransactionsList,
-                              );
-                              widget.name = 'complaint';
-                            });
+                            widget.value = 0;
+                            widget.page = ContactCustomerSupport(
+                              token: widget.token,
+                              fullName: widget.fullName,
+                              customerWallets: widget.customerWallets,
+                              lastTransactions: widget.lastTransactionsList,
+                            );
+                            widget.name = 'complaint';
                           });
                         },
                         leading: Icon(

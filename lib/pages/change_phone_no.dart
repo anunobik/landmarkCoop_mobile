@@ -1,182 +1,207 @@
-import 'package:desalmcs_mobile_app/api/api_service.dart';
-import 'package:desalmcs_mobile_app/component/custom_text_form_field.dart';
-import 'package:desalmcs_mobile_app/model/customer_model.dart';
-import 'package:desalmcs_mobile_app/pages/certificate_of_investment.dart';
-import 'package:desalmcs_mobile_app/util/ProgressHUD.dart';
-import 'package:desalmcs_mobile_app/util/home_drawer.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:landmarkcoop_mobile_app/component/custom_text_form_field.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../api/api_service.dart';
 
 
-class ChangePhoneNo extends StatefulWidget {
-  final String fullName;
-  final String token;
-  const ChangePhoneNo({super.key, required this.fullName, required this.token});
-
-  @override
-  State<ChangePhoneNo> createState() => _ChangePhoneNoState();
-}
-
-class _ChangePhoneNoState extends State<ChangePhoneNo> {
-  APIService apiService = APIService();
-  bool isApiCallProcess = false;
+Future<Object?> changePhoneNo(BuildContext context,
+    {required ValueChanged onClosed,
+      required final String fullName,
+      required final String token,}){
   TextEditingController phoneController = TextEditingController();
   bool isDisabled = true;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      child: Wrap(
-        children: [
-          Column(
-            children: [
-              Container(
-                margin: const EdgeInsets.only(top: 8),
-                padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-                child: Column(
+  bool isApiCallProcess = false;
+  return showGeneralDialog(
+    barrierDismissible: true,
+    barrierLabel: 'Change Phone Number',
+    transitionDuration: const Duration(milliseconds: 400),
+    transitionBuilder: (context, animation, __, child) {
+      Tween<Offset> tween;
+      tween = Tween(begin: const Offset(0, -1), end: Offset.zero);
+      return SlideTransition(
+        position: tween.animate(CurvedAnimation(
+          parent: animation,
+          curve: Curves.easeInOut,
+        ),
+        ),
+        child: child,
+      );
+    },
+    context: context,
+    pageBuilder: (context, _, __) => StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+          void enableButton() {
+            phoneController.text.isEmpty ? setState(() {
+              isDisabled = true;
+            })
+                : setState(() {
+              isDisabled = false;
+            });
+          }
+          return Center(
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 24),
+              height: 620,
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(Radius.circular(40)),
+              ),
+              child: Scaffold(
+                backgroundColor: Colors.transparent,
+                body: Stack(
+                  clipBehavior: Clip.none,
                   children: [
-                    Container(
-                      height: 3,
-                      width: 50,
-                      color: Colors.grey.shade300,
-                    ),
-                    Row(
+                    Column(
                       children: [
-                        const Spacer(),
+                        const SizedBox(height: 50),
                         Text('Change Phone Number',
-                          style: GoogleFonts.montserrat(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                          ),
+                            style: GoogleFonts.montserrat(
+                              color: const Color(0xff000080),
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            )
                         ),
-                        const Spacer(),
-                        IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
+                        const SizedBox(height: 20),
+                        CustomTextFormField(
+                          keyboardType: TextInputType.phone,
+                          controller: phoneController,
+                          hintText: "Enter New Phone No.",
+                          enabled: true,
+                          enableButton: enableButton,
+                        ),
+                        const SizedBox(height: 30,),
+                        isApiCallProcess ? const Align(
+                          alignment: Alignment.center,
+                          child: CircularProgressIndicator(
+                            valueColor:
+                            AlwaysStoppedAnimation<Color>(Colors.blue),
+                          ),
+                        )
+                            : ElevatedButton(
+                          onPressed: () async {
+                            final prefs = await SharedPreferences.getInstance();
+                            String subdomain = prefs.getString('subdomain') ?? 'https://core.myminervahub.com';
+
+                            APIService apiService = APIService();
+                            if (phoneController.text.isEmpty) {
+                              Fluttertoast.showToast(msg: 'Phone number cannot be empty');
+                            } else {
+                              String phoneNo = phoneController.text;
+                              setState(() {
+                                isApiCallProcess = true;
+                              });
+                              apiService.changePhoneNo(phoneNo, token).then((value) {
+                                setState(() {
+                                  isApiCallProcess = false;
+                                });
+                                if(value == 'Success'){
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Container(
+                                            height: 50,
+                                            alignment: Alignment.centerLeft,
+                                            padding: const EdgeInsets.only(left: 15),
+                                            color: const Color.fromRGBO(0, 0, 139, 1),
+                                            child: Center(
+                                              child: Text(
+                                                'Message',
+                                                style: GoogleFonts.montserrat(
+                                                    color: Colors.white,
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w600),
+                                              ),
+                                            ),
+                                          ),
+                                          content: Text(
+                                            'Phone Number Successfully modified!',
+                                            textAlign: TextAlign.center,
+                                            style: GoogleFonts.montserrat(),
+                                          ),
+                                          actionsAlignment: MainAxisAlignment.start,
+                                          actions: <Widget>[
+                                            Center(
+                                              child: ElevatedButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                style: ElevatedButton.styleFrom(
+                                                  primary: Colors.grey.shade200,
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(5),
+                                                  ),
+                                                ),
+                                                child: Padding(
+                                                  padding: const EdgeInsets.symmetric(
+                                                      vertical: 10, horizontal: 10),
+                                                  child: Text(
+                                                    "Close",
+                                                    style: GoogleFonts.montserrat(
+                                                      color: const Color.fromRGBO(0, 0, 139, 1),
+                                                      fontSize: 16,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                      });
+                                }else{
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return const AlertDialog(
+                                          title: Text("Notice"),
+                                          content: Text("Phone Number NOT modified!"),
+                                        );
+                                      });
+                                }
+                              });
+                            }
                           },
-                          icon: const Icon(
-                            Icons.close,
-                            color: Color(0XFF091841),
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: Text(
+                            "Submit",
+                            style: GoogleFonts.montserrat(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold
+                            ),
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 12),
-                    CustomTextFormField(
-                      keyboardType: TextInputType.phone,
-                      controller: phoneController,
-                      hintText: "Enter New Phone No.",
-                      enabled: true,
-                      enableButton: enableButton,
-                    ),
-                    const SizedBox(height: 30,),
-                    ElevatedButton(
-                      onPressed: () {
-                        if (phoneController.text.isEmpty) {
-                          Fluttertoast.showToast(msg: 'Phone number cannot be empty');
-                        } else {
-                          String phoneNo = phoneController.text;
-                          setState(() {
-                            isApiCallProcess = true;
-                          });
-                          apiService.changePhoneNo(phoneNo, widget.token).then((value) {
-                            setState(() {
-                              isApiCallProcess = false;
-                            });
-                            if(value == 'Success'){
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: Container(
-                                        height: 50,
-                                        alignment: Alignment.centerLeft,
-                                        padding: const EdgeInsets.only(left: 15),
-                                        color: Colors.blue.shade200,
-                                        child: Text(
-                                          'Message',
-                                          style: GoogleFonts.montserrat(
-                                              color: Colors.blue,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                      ),
-                                      content: Text('Phone Number Successfully modified!',
-                                        style: GoogleFonts.montserrat(),
-                                      ),
-                                      actionsAlignment: MainAxisAlignment.start,
-                                      actions: <Widget>[
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          style: ElevatedButton.styleFrom(
-                                            primary: Colors.grey.shade200,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(5),
-                                            ),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 10, horizontal: 10),
-                                            child: Text(
-                                              "Close",
-                                              style: GoogleFonts.montserrat(
-                                                color: Colors.blue,
-                                                fontSize: 16,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    );
-                                  });
-                            }else{
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return const AlertDialog(
-                                      title: Text("Notice"),
-                                      content: Text("Phone Number NOT modified!"),
-                                    );
-                                  });
-                            }
-                          });
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                      ),
-                      child: Text(
-                        "Submit",
-                        style: GoogleFonts.montserrat(color: Colors.white),
-                      ),
-                    ),
+                    const Positioned(
+                        left: 0,
+                        right: 0,
+                        bottom: -48,
+                        child: CircleAvatar(
+                          radius: 16,
+                          backgroundColor: Colors.white,
+                          child: Icon(
+                            Icons.close,
+                            color: Colors.black,
+                          ),
+                        )
+                    )
                   ],
                 ),
               ),
-            ],
-          )
-        ],
-      ),
-    );
-  }
-
-  void enableButton() {
-    phoneController.text.isEmpty ? setState(() {
-      isDisabled = true;
-    })
-        : setState(() {
-      isDisabled = false;
-    });
-  }
-
+            ),
+          );
+        }
+    ),
+  ).then((onClosed));
 }
-
-// Previous Code
 
 
 // class ChangePhoneNo extends StatefulWidget {
@@ -193,7 +218,6 @@ class _ChangePhoneNoState extends State<ChangePhoneNo> {
 // }
 
 // class _ChangePhoneNoState extends State<ChangePhoneNo> {
-//   APIService apiService = APIService();
 //   bool isApiCallProcess = false;
 //   TextEditingController phoneController = TextEditingController();
 //   bool isDisabled = true;
@@ -201,21 +225,19 @@ class _ChangePhoneNoState extends State<ChangePhoneNo> {
 //   @override
 //   Widget build(BuildContext context) {
 //     return ProgressHUD(
-//       child: _uiSetup(context),
 //       inAsyncCall: isApiCallProcess,
 //       opacity: 0.3,
+//       child: _uiSetup(context),
 //     );
 //   }
 
 //   Widget _uiSetup(BuildContext context) {
-//     var width = MediaQuery.of(context).size.width;
-
 //     return Scaffold(
 //       backgroundColor: Colors.white,
 //       body: Container(
 //         padding: const EdgeInsets.all(20),
 //         child: Column(children: <Widget>[
-//           SizedBox(height: 50,),
+//           const SizedBox(height: 50,),
 //           CustomTextFormField(
 //             keyboardType: TextInputType.phone,
 //             controller: phoneController,
@@ -223,9 +245,13 @@ class _ChangePhoneNoState extends State<ChangePhoneNo> {
 //             enabled: true,
 //             enableButton: enableButton,
 //           ),
-//           SizedBox(height: 30,),
+//           const SizedBox(height: 30,),
 //           ElevatedButton(
-//             onPressed: () {
+//             onPressed: () async {
+//               final prefs = await SharedPreferences.getInstance();
+//               String subdomain = prefs.getString('subdomain') ?? 'https://core.myminervahub.com';
+
+//               APIService apiService = APIService(subdomain_url: subdomain);
 //               if (phoneController.text.isEmpty) {
 //                 Fluttertoast.showToast(msg: 'Phone number cannot be empty');
 //               } else {
@@ -246,36 +272,44 @@ class _ChangePhoneNoState extends State<ChangePhoneNo> {
 //                               height: 50,
 //                               alignment: Alignment.centerLeft,
 //                               padding: const EdgeInsets.only(left: 15),
-//                               color: Colors.blue.shade200,
-//                               child: Text(
-//                                 'Message',
-//                                 style: GoogleFonts.montserrat(
-//                                     color: Colors.blue,
-//                                     fontSize: 16,
-//                                     fontWeight: FontWeight.w600),
+//                               color: const Color.fromRGBO(0, 0, 139, 1),
+//                               child: Center(
+//                                 child: Text(
+//                                   'Message',
+//                                   style: GoogleFonts.montserrat(
+//                                       color: Colors.white,
+//                                       fontSize: 16,
+//                                       fontWeight: FontWeight.w600),
+//                                 ),
 //                               ),
 //                             ),
-//                             content: Text('Phone Number Successfully modified!'),
+//                             content: Text(
+//                               'Phone Number Successfully modified!', 
+//                               textAlign: TextAlign.center,
+//                               style: GoogleFonts.montserrat(),
+//                             ),
 //                             actionsAlignment: MainAxisAlignment.start,
 //                             actions: <Widget>[
-//                               ElevatedButton(
-//                                 onPressed: () {
-//                                   Navigator.pop(context);
-//                                 },
-//                                 style: ElevatedButton.styleFrom(
-//                                   primary: Colors.grey.shade200,
-//                                   shape: RoundedRectangleBorder(
-//                                     borderRadius: BorderRadius.circular(5),
+//                               Center(
+//                                 child: ElevatedButton(
+//                                   onPressed: () {
+//                                     Navigator.pop(context);
+//                                   },
+//                                   style: ElevatedButton.styleFrom(
+//                                     primary: Colors.grey.shade200,
+//                                     shape: RoundedRectangleBorder(
+//                                       borderRadius: BorderRadius.circular(5),
+//                                     ),
 //                                   ),
-//                                 ),
-//                                 child: Padding(
-//                                   padding: const EdgeInsets.symmetric(
-//                                       vertical: 10, horizontal: 10),
-//                                   child: Text(
-//                                     "Close",
-//                                     style: GoogleFonts.montserrat(
-//                                       color: Colors.blue,
-//                                       fontSize: 16,
+//                                   child: Padding(
+//                                     padding: const EdgeInsets.symmetric(
+//                                         vertical: 10, horizontal: 10),
+//                                     child: Text(
+//                                       "Close",
+//                                       style: GoogleFonts.montserrat(
+//                                         color: const Color.fromRGBO(0, 0, 139, 1),
+//                                         fontSize: 16,
+//                                       ),
 //                                     ),
 //                                   ),
 //                                 ),
@@ -298,15 +332,19 @@ class _ChangePhoneNoState extends State<ChangePhoneNo> {
 //             },
 //             style: ElevatedButton.styleFrom(
 //               shape: RoundedRectangleBorder(
-//                 borderRadius: BorderRadius.circular(5),
+//                 borderRadius: BorderRadius.circular(10),
 //               ),
 //             ),
 //             child: Text(
 //               "Submit",
-//               style: TextStyle(color: Colors.white),
+//               style: GoogleFonts.montserrat(
+//                 color: Colors.white,
+//                 fontWeight: FontWeight.bold
+//               ),
 //             ),
 //           ),
-//         ]),
+//         ]
+//         ),
 //       ),
 //     );
 //   }

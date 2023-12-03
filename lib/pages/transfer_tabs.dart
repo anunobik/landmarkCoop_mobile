@@ -1,18 +1,18 @@
-import 'package:desalmcs_mobile_app/pages/transfer_external.dart';
-import 'package:desalmcs_mobile_app/pages/transfer_ozi.dart';
-import 'package:desalmcs_mobile_app/pages/transfer_status.dart';
-import 'package:desalmcs_mobile_app/pages/withdrawal_request.dart';
-import 'package:desalmcs_mobile_app/pushNotifications/push_messages.dart';
+import 'package:landmarkcoop_mobile_app/model/customer_model.dart';
+import 'package:landmarkcoop_mobile_app/model/login_model.dart';
+import 'package:landmarkcoop_mobile_app/model/other_model.dart';
+import 'package:landmarkcoop_mobile_app/pages/transfer_external.dart';
+import 'package:landmarkcoop_mobile_app/pages/transfer_ozi.dart';
+import 'package:landmarkcoop_mobile_app/pages/transfer_status.dart';
+import 'package:landmarkcoop_mobile_app/pages/withdrawal_request.dart';
+import 'package:landmarkcoop_mobile_app/pushNotifications/push_messages.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:landmarkcoop_mobile_app/util/home_drawer.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../api/api_service.dart';
-import '../model/customer_model.dart';
-import '../model/login_model.dart';
-import '../model/other_model.dart';
 import '../model/push_notification.dart';
 import '../util/notification_badge.dart';
 
@@ -40,13 +40,9 @@ class _TransferTabsState extends State<TransferTabs> {
   List notificationList = [];
   LoginRequestModel loginRequestModel = LoginRequestModel();
   bool isBvnLinked = false;
-  bool isMinervaHub = false;
+  bool isMinervaHub = true;
 
   Future<LoginResponseModel> getCustomerWallets() async {
-    final prefs = await SharedPreferences.getInstance();
-    String subdomain =
-        prefs.getString('subdomain') ?? 'https://core.myminervahub.com';
-
     APIService apiService = APIService();
     return apiService.pageReload(widget.token);
   }
@@ -93,7 +89,6 @@ class _TransferTabsState extends State<TransferTabs> {
 
   @override
   void initState() {
-    checkFintech();
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       // Parse the message received
       PushNotification notification = PushNotification(
@@ -176,18 +171,6 @@ class _TransferTabsState extends State<TransferTabs> {
     super.initState();
   }
 
-  Future<void> checkFintech() async {
-    final prefs = await SharedPreferences.getInstance();
-    String subdomain =
-        prefs.getString('subdomain') ?? 'https://core.myminervahub.com';
-    String institution = prefs.getString('institution') ?? 'Minerva Hub';
-    if (institution == 'Minerva Hub' ||
-        subdomain == null ||
-        institution.isEmpty) {
-      isMinervaHub = true;
-    }
-  }
-
   void pushNotify() async {
     final prefs = await SharedPreferences.getInstance();
     String notificationTitle = prefs.getString('notificationTitle') ?? '';
@@ -213,10 +196,45 @@ class _TransferTabsState extends State<TransferTabs> {
             body: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
+                IconButton(
+                  padding: EdgeInsets.zero,
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => HomeDrawer(
+                            value: 1,
+                            page: TransferTabs(
+                              token: widget.token,
+                              fullName: widget.fullName,
+                              customerWallets: widget.customerWallets,
+                              lastTransactions: widget.lastTransactions,
+                            ),
+                            name: 'Transfer',
+                            token: widget.token,
+                            fullName: widget.fullName,
+                            customerWallets: widget.customerWallets,
+                            lastTransactionsList: widget.lastTransactions)));
+                  },
+                  icon: Icon(
+                    Icons.menu,
+                    color: Colors.grey.shade600,
+                  ),
+                ),
                 const SizedBox(height: 10),
+                Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    'Transfer',
+                    style: GoogleFonts.montserrat(
+                      color: const Color(0xff091841),
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 5),
                 isMinervaHub
                     ? Container(
-                        margin: const EdgeInsets.fromLTRB(8, 60, 8, 10),
+                        margin: const EdgeInsets.fromLTRB(8, 30, 8, 10),
                         height: 45,
                         decoration: BoxDecoration(
                           color: Colors.grey.shade300,
@@ -234,7 +252,7 @@ class _TransferTabsState extends State<TransferTabs> {
                           unselectedLabelStyle: GoogleFonts.montserrat(
                               fontWeight: FontWeight.bold),
                           tabs: const [
-                            Tab(text: 'OZI Users'),
+                            Tab(text: 'In-House'),
                             Tab(text: 'Other Banks'),
                             Tab(text: 'Status'),
                           ],

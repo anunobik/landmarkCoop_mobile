@@ -1,4 +1,4 @@
-import 'package:desalmcs_mobile_app/pages/last_registration.dart';
+import 'package:landmarkcoop_mobile_app/pages/last_registration.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';

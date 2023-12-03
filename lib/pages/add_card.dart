@@ -1,7 +1,7 @@
-import 'package:desalmcs_mobile_app/component/custom_text_form_field.dart';
-import 'package:desalmcs_mobile_app/model/push_notification.dart';
-import 'package:desalmcs_mobile_app/pushNotifications/push_messages.dart';
-import 'package:desalmcs_mobile_app/util/notification_badge.dart';
+import 'package:landmarkcoop_mobile_app/component/custom_text_form_field.dart';
+import 'package:landmarkcoop_mobile_app/model/push_notification.dart';
+import 'package:landmarkcoop_mobile_app/pushNotifications/push_messages.dart';
+import 'package:landmarkcoop_mobile_app/util/notification_badge.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/credit_card_brand.dart';

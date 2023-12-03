@@ -1,11 +1,11 @@
-import 'package:desalmcs_mobile_app/api/api_service.dart';
-import 'package:desalmcs_mobile_app/model/customer_model.dart';
-import 'package:desalmcs_mobile_app/model/login_model.dart';
-import 'package:desalmcs_mobile_app/model/other_model.dart';
-import 'package:desalmcs_mobile_app/pages/completed.dart';
-import 'package:desalmcs_mobile_app/pages/ongoing.dart';
-import 'package:desalmcs_mobile_app/pages/pending.dart';
-import 'package:desalmcs_mobile_app/util/home_drawer.dart';
+import 'package:landmarkcoop_mobile_app/api/api_service.dart';
+import 'package:landmarkcoop_mobile_app/model/customer_model.dart';
+import 'package:landmarkcoop_mobile_app/model/login_model.dart';
+import 'package:landmarkcoop_mobile_app/model/other_model.dart';
+import 'package:landmarkcoop_mobile_app/pages/completed.dart';
+import 'package:landmarkcoop_mobile_app/pages/ongoing.dart';
+import 'package:landmarkcoop_mobile_app/pages/pending.dart';
+import 'package:landmarkcoop_mobile_app/util/home_drawer.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +24,8 @@ class Investment extends StatefulWidget {
   final String token;
   final List<CustomerWalletsBalanceModel> customerWallets;
   final List<LastTransactionsModel> lastTransactions;
-  const Investment({super.key, required this.fullName, required this.token, required this.customerWallets, required this.lastTransactions});
+  final OnlineRateResponseModel interestRate;
+  const Investment({super.key, required this.fullName, required this.token, required this.customerWallets, required this.lastTransactions, required this.interestRate});
 
   @override
   State<Investment> createState() => _InvestmentState();
@@ -146,7 +147,7 @@ class _InvestmentState extends State<Investment> {
                     MaterialPageRoute(builder: (context) => HomeDrawer(
                         value: 1,
                         page: Investment(token: widget.token,
-                          fullName: widget.fullName, customerWallets: widget.customerWallets, lastTransactions: widget.lastTransactions,
+                          fullName: widget.fullName, customerWallets: widget.customerWallets, lastTransactions: widget.lastTransactions, interestRate: widget.interestRate,
                         ),
                         name: 'investment',
                         token: widget.token,
@@ -253,7 +254,7 @@ class _InvestmentState extends State<Investment> {
                       Navigator.of(context).push(
                           MaterialPageRoute(builder: (context) => BookInvestment(customerWallets: widget.customerWallets,
                               fullName: widget.fullName,
-                              token: widget.token))
+                              token: widget.token, interestRate: widget.interestRate, lastTransactions: widget.lastTransactions,))
                       );
                     },
                     style: ElevatedButton.styleFrom(

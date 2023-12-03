@@ -55,7 +55,7 @@ class _TransferState extends State<Transfer> {
         productName: '',
         fullName: '',
         email: '',
-        phoneNo: '', interBankName: '', nubanAccountNumber: 'Select Account')
+        phoneNo: '', interBankName: '', nubanAccountNumber: 'Select Account', trackNumber: '')
   ];
   late int totalNotifications;
   late final FirebaseMessaging messaging;

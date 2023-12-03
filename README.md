@@ -1,4 +1,4 @@
-# desalmcs_mobile_app
+# landmarkcoop_mobile_app
 
 A new Flutter project.
 

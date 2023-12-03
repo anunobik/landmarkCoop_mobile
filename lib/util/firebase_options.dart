@@ -43,7 +43,7 @@ class DefaultFirebaseOptions {
    projectId: 'desal-mcs',
    storageBucket: 'desal-mcs.appspot.com',
    iosClientId: '492486980221-egbbi5mefhm0qfhgvkiapbl9vqbf7ds2.apps.googleusercontent.com',
-   iosBundleId: 'com.myminervahub.desalmcsMobileApp',
+   iosBundleId: 'com.myminervahub.landmarkcoopMobileApp',
  );
 
 }

@@ -1,18 +1,17 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:landmarkcoop_mobile_app/api/api_core.dart';
+import 'package:landmarkcoop_mobile_app/api/api_service.dart';
+import 'package:landmarkcoop_mobile_app/model/customer_model.dart';
+import 'package:landmarkcoop_mobile_app/model/login_model.dart';
+import 'package:landmarkcoop_mobile_app/model/other_model.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../api/api_core.dart';
-import '../api/api_service.dart';
 import '../component/custom_text_form_field.dart';
-import '../model/customer_model.dart';
-import '../model/login_model.dart';
-import '../model/other_model.dart';
 import '../model/push_notification.dart';
 import '../util/ProgressHUD.dart';
 import 'package:intl/intl.dart';
-
 import '../util/home_drawer.dart';
 import '../util/notification_badge.dart';
 import 'dashboard.dart';
@@ -57,7 +56,7 @@ class _TransferExternalState extends State<TransferExternal> {
         email: '',
         phoneNo: '',
         interBankName: '',
-        nubanAccountNumber: 'Select Account')
+        nubanAccountNumber: 'Select Account', trackNumber: '')
   ];
   CustomerWalletsBalanceModel? currentWallet;
   bool showBankWidgets = true;
@@ -227,7 +226,7 @@ class _TransferExternalState extends State<TransferExternal> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(10),
                 child: Column(children: <Widget>[
                   const SizedBox(height: 20),
                   dropDownWallets(),

@@ -1,4 +1,4 @@
-import 'package:desalmcs_mobile_app/util/data_item.dart';
+import 'package:landmarkcoop_mobile_app/util/data_item.dart';
 
 List<DataItem> myData = [ 
   DataItem(

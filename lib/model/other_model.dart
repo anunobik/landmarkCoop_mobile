@@ -356,3 +356,53 @@ class AccountToAccountRequestModel {
     });
   }
 }
+
+class OnlineRateResponseModel {
+  final int id;
+  final double oneMonth;
+  final double twoMonth;
+  final double threeMonth;
+  final double fourMonth;
+  final double fiveMonth;
+  final double sixMonth;
+  final double sevenMonth;
+  final double eightMonth;
+  final double nineMonth;
+  final double tenMonth;
+  final double elevenMonth;
+  final double twelveMonth;
+
+  OnlineRateResponseModel({
+    required this.id,
+    required this.oneMonth,
+    required this.twoMonth,
+    required this.threeMonth,
+    required this.fourMonth,
+    required this.fiveMonth,
+    required this.sixMonth,
+    required this.sevenMonth,
+    required this.eightMonth,
+    required this.nineMonth,
+    required this.tenMonth,
+    required this.elevenMonth,
+    required this.twelveMonth,
+  });
+
+  factory OnlineRateResponseModel.fromJson(Map<String, dynamic> json) {
+    return OnlineRateResponseModel(
+      id: json['id'] ?? 0,
+      oneMonth: json['oneMonth'] ?? 0,
+      twoMonth: json['twoMonth'] ?? 0,
+      threeMonth: json['threeMonth'] ?? 0,
+      fourMonth: json['fourMonth'] ?? 0,
+      fiveMonth: json['fiveMonth'] ?? 0,
+      sixMonth: json['sixMonth'] ?? 0,
+      sevenMonth: json['sevenMonth'] ?? 0,
+      eightMonth: json['eightMonth'] ?? 0,
+      nineMonth: json['nineMonth'] ?? 0,
+      tenMonth: json['tenMonth'] ?? 0,
+      elevenMonth: json['elevenMonth'] ?? 0,
+      twelveMonth: json['twelveMonth'] ?? 0,
+    );
+  }
+}

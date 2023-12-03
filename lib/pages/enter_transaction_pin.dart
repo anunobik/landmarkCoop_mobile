@@ -1,16 +1,13 @@
-import 'package:desalmcs_mobile_app/pages/transfer_receipt.dart';
-import 'package:desalmcs_mobile_app/util/home_drawer.dart';
+import 'package:landmarkcoop_mobile_app/model/customer_model.dart';
+import 'package:landmarkcoop_mobile_app/model/other_model.dart';
+import 'package:landmarkcoop_mobile_app/pages/transfer_receipt.dart';
+import 'package:landmarkcoop_mobile_app/util/home_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import '../api/api_service.dart';
-import '../model/customer_model.dart';
 import 'package:intl/intl.dart';
-
-import '../model/other_model.dart';
 import '../util/ProgressHUD.dart';
 import 'dashboard.dart';
 

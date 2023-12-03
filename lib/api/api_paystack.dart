@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-import 'package:desalmcs_mobile_app/model/paystack_model.dart';
+import 'package:landmarkcoop_mobile_app/model/paystack_model.dart';
 
 class PaystackApi {
   static const String DOMAIN_URL = "https://api.paystack.co";

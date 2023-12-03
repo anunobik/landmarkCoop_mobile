@@ -1,6 +1,6 @@
-import 'package:desalmcs_mobile_app/pages/first_registration.dart';
-import 'package:desalmcs_mobile_app/pages/login.dart';
-import 'package:desalmcs_mobile_app/util/firebase_options.dart';
+import 'package:landmarkcoop_mobile_app/pages/first_registration.dart';
+import 'package:landmarkcoop_mobile_app/pages/login.dart';
+import 'package:landmarkcoop_mobile_app/util/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
