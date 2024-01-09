@@ -26,8 +26,8 @@ class CustomerRequestModel {
       'gender': 'female',
       'maritalStatus': 'single',
       'country': 'Nigeria',
-      'countryState': 'Plateau',
-      'homeAddress': 'Jos',
+      'countryState': 'Abuja',
+      'homeAddress': 'FCT',
     });
   }
 }

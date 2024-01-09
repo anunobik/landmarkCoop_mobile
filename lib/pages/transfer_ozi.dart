@@ -187,7 +187,7 @@ class _TransferState extends State<Transfer> {
               child: Column(
                 children: <Widget>[
                   Text(
-                    'Transfer to other OZI users',
+                    'Transfer to other Landmark users',
                     style: GoogleFonts.montserrat(
                       color: const Color(0xff000080),
                       fontSize: 18,

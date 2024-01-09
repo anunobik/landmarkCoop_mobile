@@ -453,7 +453,7 @@ class _TransferDetailsState extends State<TransferDetails> {
                     ),
                     children: const <pw.TextSpan>[
                       pw.TextSpan(
-                        text: 'OZI has successfully processed this transaction but the completion of the transfers are subject to transaction errors, network interruptions, glitches and other factors that are beyond OZI\'s control and for which OZI will not be liable. If any issues are experienced with your transaction, please generate a receipt from the list of recent transactions',
+                        text: 'Landmark has successfully processed this transaction but the completion of the transfers are subject to transaction errors, network interruptions, glitches and other factors that are beyond Landmark\'s control and for which Landmark will not be liable. If any issues are experienced with your transaction, please generate a receipt from the list of recent transactions',
                         style: pw.TextStyle(
                           fontSize: 13,
                         ),

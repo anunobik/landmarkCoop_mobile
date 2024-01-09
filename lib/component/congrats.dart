@@ -1,13 +1,15 @@
-import 'package:landmarkcoop_mobile_app/pages/login.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:landmarkcoop_mobile_app/pages/login.dart';
+import 'package:lottie/lottie.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Congrats extends StatefulWidget {
   final String response;
 
   const Congrats(
       {Key? key,
-      required this.response})
+        required this.response})
       : super(key: key);
 
   @override
@@ -28,11 +30,7 @@ class _CongratsState extends State<Congrats> {
             Container(
               height: height * 0.35,
               width: width * 0.6,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage("assets/congrats.jpg"),
-                    fit: BoxFit.contain),
-              ),
+              child: Lottie.asset('assets/LottieAssets/congrats.zip'),
             ),
             const SizedBox(height: 20),
             Container(
@@ -40,15 +38,21 @@ class _CongratsState extends State<Congrats> {
               decoration: BoxDecoration(
                   color: Colors.green, borderRadius: BorderRadius.circular(8)),
               child: Text(widget.response,
+                textAlign: TextAlign.center,
                 style: GoogleFonts.montserrat(
                     color: Colors.white, fontWeight: FontWeight.w600),
               ),
             ),
             const SizedBox(height: 40),
             ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
+                  final prefs = await SharedPreferences.getInstance();
+
+                  String institution =  prefs.getString('institution') ?? 'institution';
+                  String subdomain = prefs.getString('subdomain') ?? 'subdomain';
+                  print('This is the institution $institution');
                   Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => const Login())
+                      MaterialPageRoute(builder: (context) => Login())
                   );
                 },
                 style: ElevatedButton.styleFrom(

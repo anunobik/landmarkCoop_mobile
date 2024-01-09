@@ -66,7 +66,21 @@ class _DashboardState extends State<Dashboard> {
   late final FirebaseMessaging messaging;
   PushNotification? notificationInfo;
   List notificationList = [];
-  CustomerInvestmentWalletModel? currentWallet;
+  CustomerWalletsBalanceModel? currentWallet;
+  CustomerWalletsBalanceModel? selectedWallet;
+  List<CustomerWalletsBalanceModel> dataWallet = <CustomerWalletsBalanceModel>[
+    CustomerWalletsBalanceModel(
+        id: 0,
+        accountNumber: 'Select Account',
+        balance: 0,
+        productName: '',
+        fullName: '',
+        email: '',
+        phoneNo: '',
+        interBankName: '',
+        nubanAccountNumber: 'Select Account', trackNumber: 'Select Account')
+  ];
+  List<CustomerWalletsBalanceModel> viewWallet = [];
   final CarouselController _controller = CarouselController();
   int _currentIndex = 0;
 
@@ -205,11 +219,9 @@ class _DashboardState extends State<Dashboard> {
   void initState() {
     super.initState();
     getRate();
-    displayWallets(widget.customerWallets);
+    getCustomerWallets();
     getAllInvestment();
     plugin.initialize(publicKey: publicKey);
-
-    displayChart(widget.lastTransactions);
 
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
@@ -271,6 +283,21 @@ class _DashboardState extends State<Dashboard> {
     totalNotifications = 0;
   }
 
+  getCustomerWallets() {
+    apiService = APIService();
+    return apiService.pageReload(widget.token).then((value) {
+      currentWallet = dataWallet[0];
+      for (var singleData in value.customerWalletsList) {
+        dataWallet.add(singleData);
+        viewWallet.add(singleData);
+      }
+      setState(() {
+        displayWallets(viewWallet);
+        displayChart(value.lastTransactionsList);
+      });
+    });
+  }
+
   getAllInvestment() {
     return apiService.allInvestments(widget.token).then((value) {
       // currentWallet = investData[0];
@@ -292,7 +319,7 @@ class _DashboardState extends State<Dashboard> {
   }
 
   void displayChart(List<LastTransactionsModel> lastTransactionsList) {
-    for(var singleTransactions in widget.lastTransactions){
+    for(var singleTransactions in lastTransactionsList){
       final items = [
         DataItem(x: 0, y1: singleTransactions.mondayDepositAmount, y2: singleTransactions.mondayWithdrawalAmount),
         DataItem(x: 1, y1: singleTransactions.tuesdayDepositAmount, y2: singleTransactions.tuesdayWithdrawalAmount),

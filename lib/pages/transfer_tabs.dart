@@ -277,7 +277,7 @@ class _TransferTabsState extends State<TransferTabs> {
                           unselectedLabelStyle: GoogleFonts.montserrat(
                               fontWeight: FontWeight.bold),
                           tabs: const [
-                            Tab(text: 'OZI Users'),
+                            Tab(text: 'Landmark Users'),
                             Tab(text: 'Withdrawal Request')
                           ],
                         ),

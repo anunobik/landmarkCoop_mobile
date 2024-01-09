@@ -219,7 +219,7 @@ class _LastRegistrationState extends State<LastRegistration> {
         });
         Navigator.of(context).pushReplacement(MaterialPageRoute(
             builder: (context) => Congrats(
-                  response: value.message,
+                  response: "Your account has been successfully opened.\n\nKindly check email Inbox/Spam for login details.",
                 )));
       } else {
         setState(() {
