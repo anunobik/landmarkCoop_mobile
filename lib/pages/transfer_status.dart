@@ -44,7 +44,7 @@ class _TransferStatusState extends State<TransferStatus> {
   Future<void> loadLastTenTransfers() async {
     final prefs = await SharedPreferences.getInstance();
     String subdomain =
-        prefs.getString('subdomain') ?? 'https://core.myminervahub.com';
+        prefs.getString('subdomain') ?? 'https://core.landmarkcooperative.org';
     String institution = prefs.getString('institution') ?? 'Minerva Hub';
 
     APIService apiService = APIService();

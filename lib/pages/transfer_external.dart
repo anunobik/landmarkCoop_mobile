@@ -273,7 +273,7 @@ class _TransferExternalState extends State<TransferExternal> {
                     onPressed: () async {
                       final prefs = await SharedPreferences.getInstance();
                       String subdomain = prefs.getString('subdomain') ??
-                          'https://core.myminervahub.com';
+                          'https://core.landmarkcooperative.org';
 
                       APIService apiService = APIService();
                       if (double.parse(amountController.text) <

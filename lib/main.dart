@@ -120,14 +120,30 @@ class _HomePageState extends State<HomePage> {
           children: [
             // const TopBar(),
             Container(
-              height: height * 0.18,
+              height: height * 0.15,
             ),
             Container(
-              height: 150,
+              height: 100,
               width: 150,
               decoration: BoxDecoration(
                   image: const DecorationImage(
-                      image: AssetImage('assets/landmark.jpg'),
+                      image: AssetImage('assets/Logo.png'),
+                      fit: BoxFit.contain)),
+            ),
+            Container(
+              height: 40,
+              width: 150,
+              decoration: BoxDecoration(
+                  image: const DecorationImage(
+                      image: AssetImage('assets/landmark.png'),
+                      fit: BoxFit.contain)),
+            ),
+            Container(
+              height: 20,
+              width: 150,
+              decoration: BoxDecoration(
+                  image: const DecorationImage(
+                      image: AssetImage('assets/coop.png'),
                       fit: BoxFit.contain)),
             ),
             // Padding(

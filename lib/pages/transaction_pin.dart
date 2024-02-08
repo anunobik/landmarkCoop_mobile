@@ -754,7 +754,7 @@ class _TransactionPinState extends State<TransactionPin> {
                                           UserPinCodeModifyRequestModel requestModel = UserPinCodeModifyRequestModel(oldPinCode: oldPinController.text, newPinCode: newPinController.text, confirmNewPinCode: conNewPinController.text);
                                           final prefs = await SharedPreferences.getInstance();
                                           String subdomain = prefs.getString('subdomain') ??
-                                              'https://core.myminervahub.com';
+                                              'https://core.landmarkcooperative.org';
 
                                           APIService apiService = APIService();
                                           apiService.changePincode(requestModel, widget.token).then((value) {

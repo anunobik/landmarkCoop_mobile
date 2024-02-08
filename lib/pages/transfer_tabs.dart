@@ -138,7 +138,7 @@ class _TransferTabsState extends State<TransferTabs> {
         await prefs.setString(
             'notificationBody', message.notification!.body.toString());
         String subdomain =
-            prefs.getString('subdomain') ?? 'core.myminervahub.com';
+            prefs.getString('subdomain') ?? 'core.landmarkcooperative.org';
         setState(() {
           notificationInfo = notification;
           totalNotifications++;

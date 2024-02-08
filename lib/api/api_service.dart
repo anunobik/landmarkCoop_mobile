@@ -13,7 +13,7 @@ import '../model/password_model.dart';
 
 
 class APIService {
-  static const String DOMAIN_URL = "https://testapp-core.myminervahub.com";
+  static const String DOMAIN_URL = "https://core.landmarkcooperative.org";
   // static const String DOMAIN_URL = "https://desalmc.herokuapp.com";
 
   Future<List<ProductResponseModel>> getProducts() async {

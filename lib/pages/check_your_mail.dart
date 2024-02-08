@@ -66,7 +66,7 @@ class _CheckMailState extends State<CheckMail> {
                   String institution =
                       prefs.getString('institution') ?? 'Minerva Hub';
                   String subdomain = prefs.getString('subdomain') ??
-                      'https://core.myminervahub.com';
+                      'https://core.landmarkcooperative.org';
 
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => Login()));
@@ -104,7 +104,7 @@ class _CheckMailState extends State<CheckMail> {
                           ..onTap = () async {
                             final prefs = await SharedPreferences.getInstance();
                             String subdomain = prefs.getString('subdomain') ??
-                                'https://core.myminervahub.com';
+                                'https://core.landmarkcooperative.org';
                             String institution =
                                 prefs.getString('institution') ?? 'Minerva Hub';
                             Navigator.of(context)

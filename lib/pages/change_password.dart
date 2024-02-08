@@ -519,7 +519,7 @@ Future<Object?> changePassword(BuildContext context,
 //           ElevatedButton(
 //             onPressed: () async {
 //               final prefs = await SharedPreferences.getInstance();
-//               String subdomain = prefs.getString('subdomain') ?? 'https://core.myminervahub.com';
+//               String subdomain = prefs.getString('subdomain') ?? 'https://core.landmarkcooperative.org';
 
 //               APIService apiService = APIService();
 //               if (passwordController.text.isEmpty) {

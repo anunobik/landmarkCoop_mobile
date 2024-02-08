@@ -217,7 +217,7 @@ class _WithdrawalRequestState extends State<WithdrawalRequest> {
                     onPressed: () async {
                       // final prefs = await SharedPreferences.getInstance();
                       // String subdomain = prefs.getString('subdomain') ??
-                      //     'https://core.myminervahub.com';
+                      //     'https://core.landmarkcooperative.org';
 
                       // APIService apiService =
                       //     APIService();
@@ -266,7 +266,7 @@ class _WithdrawalRequestState extends State<WithdrawalRequest> {
                       //                 onPressed: () async {
                       //                   final prefs = await SharedPreferences.getInstance();
                       //                   String subdomain = prefs.getString('subdomain') ??
-                      //                       'https://core.myminervahub.com';
+                      //                       'https://core.landmarkcooperative.org';
 
                       //                   APIService apiService =
                       //                   APIService();

@@ -109,7 +109,7 @@ class _TransferState extends State<Transfer> {
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('notificationTitle', message.notification!.title.toString());
         await prefs.setString('notificationBody', message.notification!.body.toString());
-        String subdomain = prefs.getString('subdomain') ?? 'core.myminervahub.com';
+        String subdomain = prefs.getString('subdomain') ?? 'core.landmarkcooperative.org';
         setState(() {
           notificationInfo = notification;
           totalNotifications++;
@@ -162,7 +162,7 @@ class _TransferState extends State<Transfer> {
   getCustomerWallets() async {
     final prefs = await SharedPreferences.getInstance();
     String subdomain =
-        prefs.getString('subdomain') ?? 'https://core.myminervahub.com';
+        prefs.getString('subdomain') ?? 'https://core.landmarkcooperative.org';
 
     APIService apiService = APIService();
     return apiService.pageReload(widget.token).then((value) {
@@ -205,7 +205,7 @@ class _TransferState extends State<Transfer> {
                     onTap: () async {
                       final prefs = await SharedPreferences.getInstance();
                       String subdomain = prefs.getString('subdomain') ??
-                          'https://core.myminervahub.com';
+                          'https://core.landmarkcooperative.org';
 
                       final granted =
                           await FlutterContactPicker.hasPermission();
@@ -405,7 +405,7 @@ class _TransferState extends State<Transfer> {
                   onPressed: () async {
                     final prefs = await SharedPreferences.getInstance();
                     String subdomain = prefs.getString('subdomain') ??
-                        'https://core.myminervahub.com';
+                        'https://core.landmarkcooperative.org';
 
                     APIService apiService =
                         APIService();
@@ -548,7 +548,7 @@ class _TransferState extends State<Transfer> {
                     onPressed: () async {
                       final prefs = await SharedPreferences.getInstance();
                       String subdomain = prefs.getString('subdomain') ??
-                          'https://core.myminervahub.com';
+                          'https://core.landmarkcooperative.org';
 
                       APIService apiService =
                           APIService();

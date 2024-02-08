@@ -84,7 +84,7 @@ Future<Object?> changePhoneNo(BuildContext context,
                             : ElevatedButton(
                           onPressed: () async {
                             final prefs = await SharedPreferences.getInstance();
-                            String subdomain = prefs.getString('subdomain') ?? 'https://core.myminervahub.com';
+                            String subdomain = prefs.getString('subdomain') ?? 'https://core.landmarkcooperative.org';
 
                             APIService apiService = APIService();
                             if (phoneController.text.isEmpty) {
@@ -249,7 +249,7 @@ Future<Object?> changePhoneNo(BuildContext context,
 //           ElevatedButton(
 //             onPressed: () async {
 //               final prefs = await SharedPreferences.getInstance();
-//               String subdomain = prefs.getString('subdomain') ?? 'https://core.myminervahub.com';
+//               String subdomain = prefs.getString('subdomain') ?? 'https://core.landmarkcooperative.org';
 
 //               APIService apiService = APIService(subdomain_url: subdomain);
 //               if (phoneController.text.isEmpty) {
