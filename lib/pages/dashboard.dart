@@ -45,6 +45,7 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  bool showWallet = false;
   final displayAmount = NumberFormat("#,##0.00", "en_US");
   APIService apiService = APIService();
   List itemData = [];
@@ -78,11 +79,13 @@ class _DashboardState extends State<Dashboard> {
         email: '',
         phoneNo: '',
         interBankName: '',
-        nubanAccountNumber: 'Select Account', trackNumber: 'Select Account')
+        nubanAccountNumber: 'Select Account',
+        trackNumber: 'Select Account')
   ];
   List<CustomerWalletsBalanceModel> viewWallet = [];
   final CarouselController _controller = CarouselController();
   int _currentIndex = 0;
+  GatewayResponseModel? gateWayResponse;
 
   List<ProductResponseModel> data = <ProductResponseModel>[
     ProductResponseModel(
@@ -128,7 +131,8 @@ class _DashboardState extends State<Dashboard> {
 
   getRate() async {
     APIService apiService = APIService();
-    OnlineRateResponseModel value = await apiService.getOnlineRate(widget.token);
+    OnlineRateResponseModel value =
+        await apiService.getOnlineRate(widget.token);
     setState(() {
       newValue = value;
     });
@@ -221,8 +225,8 @@ class _DashboardState extends State<Dashboard> {
     getRate();
     getCustomerWallets();
     getAllInvestment();
+    loadGateWay();
     plugin.initialize(publicKey: publicKey);
-
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       // Parse the message received
@@ -294,6 +298,20 @@ class _DashboardState extends State<Dashboard> {
       setState(() {
         displayWallets(viewWallet);
         displayChart(value.lastTransactionsList);
+        showWallet = true;
+      });
+    });
+  }
+
+  loadGateWay() {
+    APIService apiService = APIService();
+    return apiService.getActivePaymentGateway().then((value) {
+      gateWayResponse = value;
+      setState(() {
+        gateWayResponse;
+        if (gateWayResponse!.gatewayName == 'Paystack') {
+          plugin.initialize(publicKey: gateWayResponse!.publicKey);
+        }
       });
     });
   }
@@ -319,23 +337,46 @@ class _DashboardState extends State<Dashboard> {
   }
 
   void displayChart(List<LastTransactionsModel> lastTransactionsList) {
-    for(var singleTransactions in lastTransactionsList){
+    for (var singleTransactions in lastTransactionsList) {
       final items = [
-        DataItem(x: 0, y1: singleTransactions.mondayDepositAmount, y2: singleTransactions.mondayWithdrawalAmount),
-        DataItem(x: 1, y1: singleTransactions.tuesdayDepositAmount, y2: singleTransactions.tuesdayWithdrawalAmount),
-        DataItem(x: 2, y1: singleTransactions.wednesdayDepositAmount, y2: singleTransactions.wednesdayWithdrawalAmount),
-        DataItem(x: 3, y1: singleTransactions.thursdayDepositAmount, y2: singleTransactions.thursdayWithdrawalAmount),
-        DataItem(x: 4, y1: singleTransactions.fridayDepositAmount, y2: singleTransactions.fridayWithdrawalAmount),
-        DataItem(x: 5, y1: singleTransactions.saturdayDepositAmount, y2: singleTransactions.saturdayWithdrawalAmount),
-        DataItem(x: 6, y1: singleTransactions.sundayDepositAmount, y2: singleTransactions.sundayWithdrawalAmount),
+        DataItem(
+            x: 0,
+            y1: singleTransactions.mondayDepositAmount,
+            y2: singleTransactions.mondayWithdrawalAmount),
+        DataItem(
+            x: 1,
+            y1: singleTransactions.tuesdayDepositAmount,
+            y2: singleTransactions.tuesdayWithdrawalAmount),
+        DataItem(
+            x: 2,
+            y1: singleTransactions.wednesdayDepositAmount,
+            y2: singleTransactions.wednesdayWithdrawalAmount),
+        DataItem(
+            x: 3,
+            y1: singleTransactions.thursdayDepositAmount,
+            y2: singleTransactions.thursdayWithdrawalAmount),
+        DataItem(
+            x: 4,
+            y1: singleTransactions.fridayDepositAmount,
+            y2: singleTransactions.fridayWithdrawalAmount),
+        DataItem(
+            x: 5,
+            y1: singleTransactions.saturdayDepositAmount,
+            y2: singleTransactions.saturdayWithdrawalAmount),
+        DataItem(
+            x: 6,
+            y1: singleTransactions.sundayDepositAmount,
+            y2: singleTransactions.sundayWithdrawalAmount),
       ];
 
       chartList.add(items);
     }
 
-      setState(() {
+    setState(() {
+      if (chartList.length >= 1) {
         newData = chartList[0];
-      });
+      }
+    });
   }
 
   @override
@@ -356,19 +397,18 @@ class _DashboardState extends State<Dashboard> {
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => HomeDrawer(
-                              value: 1,
-                              page: Dashboard(
-                                token: widget.token,
-                                fullName: widget.fullName,
-                                lastTransactions: widget.lastTransactions,
-                                customerWallets: widget.customerWallets,
-                              ),
-                              name: 'wallet',
+                            value: 1,
+                            page: Dashboard(
                               token: widget.token,
                               fullName: widget.fullName,
+                              lastTransactions: widget.lastTransactions,
                               customerWallets: widget.customerWallets,
-                            lastTransactionsList: widget.lastTransactions
-                            )));
+                            ),
+                            name: 'wallet',
+                            token: widget.token,
+                            fullName: widget.fullName,
+                            customerWallets: widget.customerWallets,
+                            lastTransactionsList: widget.lastTransactions)));
                   },
                   icon: Icon(
                     Icons.menu,
@@ -381,7 +421,7 @@ class _DashboardState extends State<Dashboard> {
 
                 Container(
                   padding: const EdgeInsets.only(bottom: 10),
-                  height: height * 0.28,
+                  height: height * 0.4,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -400,39 +440,73 @@ class _DashboardState extends State<Dashboard> {
                             fontSize: 10,
                             fontWeight: FontWeight.bold),
                       ),
-                      const SizedBox(height: 20),
-                      Expanded(
-                        child: CarouselSlider(
-                          items: itemData.map((card) {
-                            return Builder(builder: (BuildContext context) {
-                              return SizedBox(
-                                height: 0.48 * height,
-                                width: width,
-                                child: Card(
-                                  color: Colors.grey.shade100,
-                                  child: card,
+                      showWallet
+                          ? Expanded(
+                              child: CarouselSlider(
+                                items: itemData.map((card) {
+                                  return Builder(
+                                      builder: (BuildContext context) {
+                                    return SizedBox(
+                                      height: 0.5 * height,
+                                      width: width,
+                                      child: Card(
+                                        color: Colors.grey.shade100,
+                                        child: card,
+                                      ),
+                                    );
+                                  });
+                                }).toList(),
+                                carouselController: _controller,
+                                options: CarouselOptions(
+                                  height: 330.8,
+                                  autoPlay: false,
+                                  enlargeCenterPage: true,
+                                  autoPlayInterval: const Duration(seconds: 3),
+                                  autoPlayAnimationDuration:
+                                      const Duration(milliseconds: 800),
+                                  autoPlayCurve: Curves.fastOutSlowIn,
+                                  enableInfiniteScroll: false,
+                                  pauseAutoPlayOnTouch: true,
+                                  onPageChanged: (index, reason) {
+                                    setState(() {
+                                      _currentIndex = index;
+                                      if (chartList.length >= 1) {
+                                        newData = chartList[index];
+                                      }
+                                    });
+                                  },
                                 ),
-                              );
-                            });
-                          }).toList(),
-                          carouselController: _controller,
-                          options: CarouselOptions(
-                              height: 330.8,
-                              autoPlay: false,
-                              enlargeCenterPage: true,
-                              autoPlayInterval: const Duration(seconds: 3),
-                              autoPlayAnimationDuration:
-                                  const Duration(milliseconds: 800),
-                              autoPlayCurve: Curves.fastOutSlowIn,
-                              pauseAutoPlayOnTouch: true,
-                              onPageChanged: (index, reason) {
-                                setState(() {
-                                  _currentIndex = index;
-                                  newData = chartList[index];
-                                });
-                              }),
-                        ),
-                      ),
+                              ),
+                            )
+                          : Center(
+                              child: Text(
+                                'Loading...',
+                                style: GoogleFonts.montserrat(
+                                    color: const Color(0xff000080),
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w800),
+                              ),
+                            ),
+                      itemData.length > 1
+                          ? const Center(
+                              child: Icon(
+                                Icons.swipe,
+                                color: Color(0xff000080),
+                              ),
+                            )
+                          : const SizedBox(),
+                      itemData.length > 1
+                          ? Center(
+                              child: Text(
+                                'Swipe to view your wallets',
+                                style: GoogleFonts.roboto(
+                                  color: Color(0xff000080),
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            )
+                          : const SizedBox(),
                     ],
                   ),
                 ),
@@ -443,7 +517,9 @@ class _DashboardState extends State<Dashboard> {
                               builder: (context) => Investment(
                                     token: widget.token,
                                     fullName: widget.fullName,
-                                    customerWallets: widget.customerWallets, lastTransactions: widget.lastTransactions, interestRate: newValue,
+                                    customerWallets: widget.customerWallets,
+                                    lastTransactions: widget.lastTransactions,
+                                    interestRate: newValue,
                                   )));
                         },
                         child: Container(
@@ -553,48 +629,54 @@ class _DashboardState extends State<Dashboard> {
                             ),
                           ],
                         ),
-
                         const SizedBox(height: 25),
                         SizedBox(
                           height: height * 0.3,
                           width: width,
-                          child: BarChart(BarChartData(
-                            borderData: FlBorderData(
-                                border: const Border(
-                              top: BorderSide.none,
-                              right: BorderSide.none,
-                              left: BorderSide(width: 1),
-                              bottom: BorderSide(width: 1),
-                            )),
-                          gridData: FlGridData(show: false),
-                            groupsSpace: 10,
-                            barGroups: newData.map((dataItem) =>
-                                BarChartGroupData(x: dataItem.x, barRods: [
-                                  BarChartRodData(
-                                      toY: dataItem.y1, width: 7.5, color: leftBarColor),
-                                  BarChartRodData(
-                                      toY: dataItem.y2, width: 7.5, color: rightBarColor),
-                                ])).toList(),
-                              titlesData: FlTitlesData(
-                                show: true,
-                                rightTitles: AxisTitles(
-                                  sideTitles: SideTitles(showTitles: false),
-                                ),
-                                topTitles: AxisTitles(
-                                  sideTitles: SideTitles(showTitles: false),
-                                ),
-                                bottomTitles: AxisTitles(
-                                  sideTitles: SideTitles(
-                                    showTitles: true,
-                                    getTitlesWidget: bottomTitles,
-                                    reservedSize: 42,
+                          child: BarChart(
+                            BarChartData(
+                                borderData: FlBorderData(
+                                    border: const Border(
+                                  top: BorderSide.none,
+                                  right: BorderSide.none,
+                                  left: BorderSide(width: 1),
+                                  bottom: BorderSide(width: 1),
+                                )),
+                                gridData: FlGridData(show: false),
+                                groupsSpace: 10,
+                                barGroups: newData
+                                    .map((dataItem) => BarChartGroupData(
+                                            x: dataItem.x,
+                                            barRods: [
+                                              BarChartRodData(
+                                                  toY: dataItem.y1,
+                                                  width: 7.5,
+                                                  color: leftBarColor),
+                                              BarChartRodData(
+                                                  toY: dataItem.y2,
+                                                  width: 7.5,
+                                                  color: rightBarColor),
+                                            ]))
+                                    .toList(),
+                                titlesData: FlTitlesData(
+                                  show: true,
+                                  rightTitles: AxisTitles(
+                                    sideTitles: SideTitles(showTitles: false),
                                   ),
-                                ),
-                              )
-                            ),
+                                  topTitles: AxisTitles(
+                                    sideTitles: SideTitles(showTitles: false),
+                                  ),
+                                  bottomTitles: AxisTitles(
+                                    sideTitles: SideTitles(
+                                      showTitles: true,
+                                      getTitlesWidget: bottomTitles,
+                                      reservedSize: 42,
+                                    ),
+                                  ),
+                                )),
                           ),
                         ),
-                         const SizedBox(
+                        const SizedBox(
                           height: 38,
                         ),
                         const SizedBox(
@@ -747,8 +829,11 @@ class _DashboardState extends State<Dashboard> {
                       setState(() {
                         isApiCallProcess = false;
                       });
-                      // _handlePaymentInitialization(accountNumber);
-                      _handlePaystackPayment(accountNumber);
+                      if (gateWayResponse!.gatewayName == 'Paystack') {
+                        _handlePaystackPayment(accountNumber);
+                      } else {
+                        _handlePaymentInitialization(accountNumber);
+                      }
                     }
                   },
                   child: const Text('Submit'),
@@ -761,7 +846,7 @@ class _DashboardState extends State<Dashboard> {
 
   _handlePaymentInitialization(String accountNumber) async {
     const String _FLUTTERWAVE_PUB_KEY =
-        "FLWPUBK-6e5f3074b6173fa4ccce77a660b0ef88-X";
+        "FLWPUBK-1598a88367443af15598a00b28119236-X";
     var email = widget.customerWallets[0].email;
     var displayName = widget.customerWallets[0].fullName;
     var phoneNo = widget.customerWallets[0].phoneNo;
@@ -807,7 +892,7 @@ class _DashboardState extends State<Dashboard> {
       if (response.success!) {
         // Call the verify transaction endpoint with the transactionID returned in `response.transactionId` to verify transaction before offering value to customer
         AccountTransactionRequestModel accountTransactionRequestModel =
-            AccountTransactionRequestModel();
+            AccountTransactionRequestModel(amount: fundAmount);
         accountTransactionRequestModel.narration = narration;
         accountTransactionRequestModel.amount = fundAmount;
         accountTransactionRequestModel.accountNumber = accountNumber;
@@ -815,22 +900,7 @@ class _DashboardState extends State<Dashboard> {
             .verifyDeposit(accountTransactionRequestModel,
                 int.parse(response.transactionId!), widget.token)
             .then((value) {
-          showDialog<void>(
-            context: context,
-            barrierDismissible: false, // user must tap button!
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: const Text('Notice!'),
-                content: SingleChildScrollView(
-                  child: ListBody(
-                    children: <Widget>[
-                      Text(value),
-                    ],
-                  ),
-                ),
-              );
-            },
-          );
+          successTransactionAlert(value);
         });
       } else {
         // Transaction not successful
@@ -896,9 +966,8 @@ class _DashboardState extends State<Dashboard> {
           response.message == 'Transaction already succeeded') {
         // Call the verify transaction endpoint with the transactionID returned in `response.transactionId` to verify transaction before offering value to customer
         AccountTransactionRequestModel accountTransactionRequestModel =
-            AccountTransactionRequestModel();
+            AccountTransactionRequestModel(amount: fundAmount);
         accountTransactionRequestModel.narration = narration;
-        accountTransactionRequestModel.amount = fundAmount.toString();
         accountTransactionRequestModel.accountNumber = accountNumber;
         apiService
             .verifyDepositPayStack(
@@ -1005,19 +1074,20 @@ class _DashboardState extends State<Dashboard> {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => HomeDrawer(
-                              value: 0,
-                              page: Dashboard(
-                                token: value.token,
+                                value: 0,
+                                page: Dashboard(
+                                  token: value.token,
+                                  fullName:
+                                      value.customerWalletsList[0].fullName,
+                                  lastTransactions: value.lastTransactionsList,
+                                  customerWallets: value.customerWalletsList,
+                                ),
+                                name: 'wallet',
                                 fullName: value.customerWalletsList[0].fullName,
-                                lastTransactions: value.lastTransactionsList,
+                                token: value.token,
                                 customerWallets: value.customerWalletsList,
-                              ),
-                              name: 'wallet',
-                              fullName: value.customerWalletsList[0].fullName,
-                              token: value.token,
-                              customerWallets: value.customerWalletsList,
-                                lastTransactionsList: value.lastTransactionsList
-                            ),
+                                lastTransactionsList:
+                                    value.lastTransactionsList),
                           ),
                         );
                       } else {
@@ -1040,6 +1110,7 @@ class _DashboardState extends State<Dashboard> {
                                 // contentPadding: EdgeInsets.all(5.0),
                               );
                             });
+                        Navigator.of(context).pop();
                       }
                     });
                   }
@@ -1108,20 +1179,22 @@ class _DashboardState extends State<Dashboard> {
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) => HomeDrawer(
-                                value: 0,
-                                page: Dashboard(
-                                  token: value.token,
+                                  value: 0,
+                                  page: Dashboard(
+                                    token: value.token,
+                                    fullName:
+                                        value.customerWalletsList[0].fullName,
+                                    lastTransactions:
+                                        value.lastTransactionsList,
+                                    customerWallets: value.customerWalletsList,
+                                  ),
+                                  name: 'wallet',
                                   fullName:
                                       value.customerWalletsList[0].fullName,
-                                  lastTransactions: value.lastTransactionsList,
+                                  token: value.token,
                                   customerWallets: value.customerWalletsList,
-                                ),
-                                name: 'wallet',
-                                fullName: value.customerWalletsList[0].fullName,
-                                token: value.token,
-                                customerWallets: value.customerWalletsList,
-                                  lastTransactionsList: value.lastTransactionsList
-                              ),
+                                  lastTransactionsList:
+                                      value.lastTransactionsList),
                             ),
                           );
                         } else {
@@ -1161,7 +1234,6 @@ class _DashboardState extends State<Dashboard> {
         });
   }
 
-
   Widget bottomTitles(double value, TitleMeta meta) {
     final titles = <String>['Mn', 'Te', 'Wd', 'Th', 'Fr', 'St', 'Su'];
 
@@ -1181,7 +1253,6 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  
   Widget makeTransactionsIcon() {
     const width = 4.5;
     const space = 3.5;
@@ -1562,7 +1633,7 @@ class _DashboardState extends State<Dashboard> {
 
 //   _handlePaymentInitialization(String accountNumber) async {
 //     const String _FLUTTERWAVE_PUB_KEY =
-//         "FLWPUBK-6e5f3074b6173fa4ccce77a660b0ef88-X";
+//         "FLWPUBK-1598a88367443af15598a00b28119236-X";
 //     var email = widget.customerWallets[0].email;
 //     var displayName = widget.customerWallets[0].fullName;
 //     var phoneNo = widget.customerWallets[0].phoneNo;

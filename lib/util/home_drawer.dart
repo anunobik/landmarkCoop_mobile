@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:landmarkcoop_mobile_app/api/api_service.dart';
 import 'package:landmarkcoop_mobile_app/model/customer_model.dart';
 import 'package:landmarkcoop_mobile_app/model/other_model.dart';
+import 'package:landmarkcoop_mobile_app/pages/airtime_tabs.dart';
 import 'package:landmarkcoop_mobile_app/pages/bills_payment.dart';
 import 'package:landmarkcoop_mobile_app/pages/customer_care.dart';
 import 'package:landmarkcoop_mobile_app/pages/dashboard.dart';
@@ -251,11 +252,11 @@ class _HomeDrawerState extends State<HomeDrawer> {
                         onTap: () {
                           setState(() {
                             widget.value = 0;
-                            widget.page = BillsPayment(
+                            widget.page = AirtimeTabs(
                               token: widget.token,
                               fullName: widget.fullName,
                               customerWallets: widget.customerWallets,
-                              lastTransactions: widget.lastTransactionsList,
+                              lastTransactionsList: widget.lastTransactionsList,
                             );
                             widget.name = 'Bills Payment';
                           });

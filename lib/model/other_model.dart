@@ -46,17 +46,17 @@ class ProductResponseModel {
 
 class AccountTransactionRequestModel {
   var accountNumber;
-  var amount;
+  double amount;
   var narration;
 
   AccountTransactionRequestModel({
     this.accountNumber,
-    this.amount,
+    required this.amount,
     this.narration
   });
 
   String toJson() {
-    return jsonEncode(<String, String>{
+    return jsonEncode(<String, dynamic>{
       'accountNumber': accountNumber,
       'amount': amount,
       'narration': narration
@@ -403,6 +403,35 @@ class OnlineRateResponseModel {
       tenMonth: json['tenMonth'] ?? 0,
       elevenMonth: json['elevenMonth'] ?? 0,
       twelveMonth: json['twelveMonth'] ?? 0,
+    );
+  }
+}
+
+class GatewayResponseModel {
+  final int id;
+  final String gatewayName;
+  final String publicKey;
+  final String privateKey;
+  final String secretKey;
+  final int isActive;
+
+  GatewayResponseModel({
+    required this.id,
+    required this.gatewayName,
+    required this.publicKey,
+    required this.privateKey,
+    required this.secretKey,
+    required this.isActive,
+  });
+
+  factory GatewayResponseModel.fromJson(Map<String, dynamic> json) {
+    return GatewayResponseModel(
+      id: json['id'] ?? 0,
+      gatewayName: json['gatewayName'] ?? '',
+      publicKey: json['publicKey'] ?? '',
+      privateKey: json['privateKey'] ?? '',
+      secretKey: json['secretKey'] ?? '',
+      isActive: json['isActive'] ?? 0,
     );
   }
 }

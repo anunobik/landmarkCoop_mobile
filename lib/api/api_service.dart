@@ -725,5 +725,18 @@ class APIService {
       );
     }
   }
+
+  Future<GatewayResponseModel> getActivePaymentGateway() async {
+    String url = "$DOMAIN_URL/getActivePaymentGateway";
+
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      return GatewayResponseModel.fromJson(
+        json.decode(response.body),
+      );
+    } else {
+      throw Exception(response.body);
+    }
+  }
   
 }

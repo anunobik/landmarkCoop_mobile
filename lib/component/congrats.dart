@@ -30,7 +30,10 @@ class _CongratsState extends State<Congrats> {
             Container(
               height: height * 0.35,
               width: width * 0.6,
-              child: Lottie.asset('assets/LottieAssets/congrats.zip'),
+                decoration: BoxDecoration(
+                    image: const DecorationImage(
+                        image: AssetImage('assets/congrats.jpg'),
+                        fit: BoxFit.contain)),
             ),
             const SizedBox(height: 20),
             Container(

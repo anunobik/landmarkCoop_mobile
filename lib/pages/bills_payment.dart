@@ -81,9 +81,9 @@ class _BillsPaymentState extends State<BillsPayment> {
                 ),
                 Expanded(
                   child: TabBarView(children: [
-                    AirtimeData(
+                    AirtimePurchase(
                       token: widget.token,
-                      fullName: widget.fullName,
+                      fullName: widget.fullName, customerWallets: widget.customerWallets, lastTransactions: widget.lastTransactions,
                     ),
                     TV(
                       token: widget.token,

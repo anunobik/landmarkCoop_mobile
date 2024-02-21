@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:fluttercontactpicker/fluttercontactpicker.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:landmarkcoop_mobile_app/api/api_service.dart';
+import 'package:landmarkcoop_mobile_app/model/customer_model.dart';
+import 'package:landmarkcoop_mobile_app/model/login_model.dart';
+import 'package:landmarkcoop_mobile_app/model/other_model.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../api/api_service.dart';
-import '../model/customer_model.dart';
-import '../model/login_model.dart';
-import '../model/other_model.dart';
 import '../model/push_notification.dart';
 import '../util/ProgressHUD.dart';
 import '../util/home_drawer.dart';
@@ -218,7 +218,7 @@ class _TransferState extends State<Transfer> {
                         _phoneContact = contact;
                       });
                       setState(() {
-                        _contact = _phoneContact!.phoneNumber!.number!;
+                        _contact = _phoneContact!.phoneNumber!.number!.replaceAll(' ', '');
                       });
                       APIService apiServicePhone =
                           new APIService();
