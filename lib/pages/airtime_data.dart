@@ -270,9 +270,6 @@ class _AirtimePurchaseState extends State<AirtimePurchase> {
                   onPressed: !_enableSubmitBtn
                       ? null
                       : () async {
-                          final prefs = await SharedPreferences.getInstance();
-                          String subdomain = prefs.getString('subdomain') ??
-                              'https://core.myminervahub.com';
                           if (formKey.currentState!.validate()) {
                             setState(() {
                               isApiCallProcess = true;
@@ -307,7 +304,7 @@ class _AirtimePurchaseState extends State<AirtimePurchase> {
                                       widget.token)
                                   .then((valueTransactionRes) {
                                 if (valueTransactionRes.result) {
-                                  rechargePhone(valueTransactionRes, subdomain);
+                                  rechargePhone(valueTransactionRes);
                                 } else {
                                   setState(() {
                                     isApiCallProcess = false;
@@ -354,8 +351,7 @@ class _AirtimePurchaseState extends State<AirtimePurchase> {
   }
 
   void rechargePhone(
-      InstantAirtimeAndDataFeedbackResponseModel valueTransactionRes,
-      String subdomain) {
+      InstantAirtimeAndDataFeedbackResponseModel valueTransactionRes) {
     String displayDate = DateFormat('yyyy-MMM-dd').format(DateTime.now());
     FlutterWaveService apiFlutterWave = FlutterWaveService();
     AirtimeRequestModel airtimeRequestModel = AirtimeRequestModel(

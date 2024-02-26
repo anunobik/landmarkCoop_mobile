@@ -33,8 +33,8 @@ class ProcessingAirtimeRequest extends StatelessWidget {
               child: Column(
                 children: <Widget>[
                   Container(
-                    height: 200,
-                    width: 200,
+                    height: 100,
+                    width: 100,
                     decoration: BoxDecoration(
                       image: DecorationImage(
                           image: NetworkImage('https://core.landmarkcooperative.org/getBizLogo'),

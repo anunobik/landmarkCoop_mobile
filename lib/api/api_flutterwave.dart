@@ -88,7 +88,6 @@ class FlutterWaveService {
     if (response.statusCode == 200) {
       return 'Successful';
     } else if (response.statusCode == 400) {
-      print(response.body);
       return 'Incomplete Transaction';
     } else {
       throw Exception('Failed to load data!');

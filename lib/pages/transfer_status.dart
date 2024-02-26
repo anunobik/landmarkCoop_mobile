@@ -1,4 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:landmarkcoop_mobile_app/api/api_service.dart';
+import 'package:landmarkcoop_mobile_app/model/customer_model.dart';
+import 'package:landmarkcoop_mobile_app/model/other_model.dart';
 import 'package:landmarkcoop_mobile_app/pages/search_status.dart';
 import 'package:landmarkcoop_mobile_app/pages/transfer_details.dart';
 import 'package:flutter/cupertino.dart';
@@ -6,9 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../api/api_service.dart';
-import '../model/customer_model.dart';
-import '../model/other_model.dart';
 import 'package:intl/intl.dart';
 
 class TransferStatus extends StatefulWidget {
@@ -41,12 +41,7 @@ class _TransferStatusState extends State<TransferStatus> {
     loadLastTenTransfers();
   }
 
-  Future<void> loadLastTenTransfers() async {
-    final prefs = await SharedPreferences.getInstance();
-    String subdomain =
-        prefs.getString('subdomain') ?? 'https://core.landmarkcooperative.org';
-    String institution = prefs.getString('institution') ?? 'Minerva Hub';
-
+  loadLastTenTransfers() {
     APIService apiService = APIService();
     apiService.lastTenTransfers(widget.token).then((value) {
       setState(() {
@@ -84,7 +79,7 @@ class _TransferStatusState extends State<TransferStatus> {
                     isStatusDialogShown = true;
                   });
                   searchStatus(
-                    context,
+                    context, data,
                     onClosed: (context) {
                       setState(() {
                         isStatusDialogShown = false;
@@ -166,11 +161,13 @@ class _TransferStatusState extends State<TransferStatus> {
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
-                                    Text(data[index].destinationAccountName,
+                                    Text(
+                                      data[index].destinationAccountName.length > 27
+                                          ? '${data[index].destinationAccountName.substring(0, 27)}...'
+                                          : data[index].destinationAccountName,
                                       style: GoogleFonts.montserrat(
-                                        fontWeight: FontWeight.w700
+                                        fontWeight: FontWeight.w700,
                                       ),
-                                      overflow: TextOverflow.ellipsis,
                                     ),
                                     const SizedBox(height: 15),
                                     AutoSizeText(data[index].completeMessage,

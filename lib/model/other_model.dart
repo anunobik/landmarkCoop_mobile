@@ -253,7 +253,7 @@ class ExternalBankTransferDetailsRequestModel {
       'account_bank': accountBank,
       'account_number': accountNumber,
       'amount': amount,
-      'narration': 'MinervaHub-$narration',
+      'narration': narration,
       'reference': reference,
     });
   }
