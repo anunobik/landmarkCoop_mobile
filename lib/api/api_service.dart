@@ -64,7 +64,7 @@ class APIService {
     if (response.statusCode == 200) {
       return CustomerFeedbackResponseModel(status: true, message: response.body);
     } else if (response.statusCode == 400) {
-      return CustomerFeedbackResponseModel(status: true, message: response.body);
+      return CustomerFeedbackResponseModel(status: false, message: response.body);
     } else {
       throw Exception('Failed to load data!');
     }
@@ -429,7 +429,7 @@ class APIService {
           status: true, message: response.body);
     } else if (response.statusCode == 400) {
       return CustomerFeedbackResponseModel(
-          status: true, message: response.body);
+          status: false, message: response.body);
     } else {
       throw Exception('Failed to load data!');
     }
@@ -452,7 +452,7 @@ class APIService {
           status: true, message: response.body);
     } else if (response.statusCode == 400) {
       return CustomerFeedbackResponseModel(
-          status: true, message: response.body);
+          status: false, message: response.body);
     } else {
       throw Exception('Failed to load data!');
     }

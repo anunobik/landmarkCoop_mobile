@@ -44,6 +44,8 @@ class _FirstRegistrationState extends State<FirstRegistration> {
       Fluttertoast.showToast(msg: 'Last Name cannot be empty');
     } else if (emailController.text.isEmpty) {
       Fluttertoast.showToast(msg: 'E-mail cannot be empty');
+    }else if (phoneController.text.length != 11) {
+      Fluttertoast.showToast(msg: 'Phone number must be 11 digits');
     } else {
       String phone = phoneController.text;
       String email = emailController.text;
