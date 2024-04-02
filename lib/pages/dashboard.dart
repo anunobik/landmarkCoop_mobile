@@ -878,7 +878,7 @@ class _DashboardState extends State<Dashboard> {
         style: style,
         publicKey: _FLUTTERWAVE_PUB_KEY,
         currency: "NGN",
-        redirectUrl: "my_redirect_url",
+        redirectUrl: "https://landmarkcooperative.org/verifyBanktransfer/IHd88sdBGAasdfRYEGRh76asf05052023",
         txRef: txRef,
         amount: fundAmount.toString(),
         customer: customer,
