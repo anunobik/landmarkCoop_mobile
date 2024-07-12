@@ -146,7 +146,7 @@ Future<Object?> updateBVN(
                                                   );
                                                 },
                                                 style: ElevatedButton.styleFrom(
-                                                  primary: Colors.grey.shade200,
+                                                  backgroundColor: Colors.grey.shade200,
                                                   shape: RoundedRectangleBorder(
                                                     borderRadius:
                                                         BorderRadius.circular(
@@ -209,7 +209,7 @@ Future<Object?> updateBVN(
                                                   Navigator.of(context).pop();
                                                 },
                                                 style: ElevatedButton.styleFrom(
-                                                  primary: Colors.grey.shade200,
+                                                  backgroundColor: Colors.grey.shade200,
                                                   shape: RoundedRectangleBorder(
                                                     borderRadius:
                                                         BorderRadius.circular(

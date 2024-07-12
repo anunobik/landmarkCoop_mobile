@@ -351,7 +351,7 @@ class _BookInvestmentState extends State<BookInvestment> {
                                         });
                                       },
                                       style: ElevatedButton.styleFrom(
-                                        primary: Colors.grey.shade200,
+                                        backgroundColor: Colors.grey.shade200,
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(5),
                                         ),
@@ -388,7 +388,7 @@ class _BookInvestmentState extends State<BookInvestment> {
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                        primary: Colors.lightBlue,
+                        backgroundColor: Colors.lightBlue,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15))),
                     child: Padding(

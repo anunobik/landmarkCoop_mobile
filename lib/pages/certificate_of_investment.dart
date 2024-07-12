@@ -322,7 +322,7 @@ class _CertificateOfInvestmentState extends State<CertificateOfInvestment> {
                                 filename: 'investment_certificate.pdf');
                           },
                           style: ElevatedButton.styleFrom(
-                              primary: Colors.lightBlue,
+                              backgroundColor: Colors.lightBlue,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20),
                                 side: const BorderSide(color: Colors.white),

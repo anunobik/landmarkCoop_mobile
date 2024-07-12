@@ -269,7 +269,7 @@ Future<Object?> changePassword(BuildContext context,
                                                           lastTransactionsList: lastTransactions)));
                                                 },
                                                 style: ElevatedButton.styleFrom(
-                                                  primary: Colors.grey.shade200,
+                                                  backgroundColor: Colors.grey.shade200,
                                                   shape: RoundedRectangleBorder(
                                                     borderRadius: BorderRadius.circular(5),
                                                   ),
@@ -311,7 +311,7 @@ Future<Object?> changePassword(BuildContext context,
                             }
                           },
                           style: ElevatedButton.styleFrom(
-                            primary: Colors.lightBlue,
+                            backgroundColor: Colors.lightBlue,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
@@ -570,7 +570,7 @@ Future<Object?> changePassword(BuildContext context,
 //                                     Navigator.pop(context);
 //                                   },
 //                                   style: ElevatedButton.styleFrom(
-//                                     primary: Colors.grey.shade200,
+//                                     backgroundColor: Colors.grey.shade200,
 //                                     shape: RoundedRectangleBorder(
 //                                       borderRadius: BorderRadius.circular(5),
 //                                     ),
@@ -612,7 +612,7 @@ Future<Object?> changePassword(BuildContext context,
 //               }
 //             },
 //             style: ElevatedButton.styleFrom(
-//               primary: Colors.lightBlue,
+//               backgroundColor: Colors.lightBlue,
 //               shape: RoundedRectangleBorder(
 //                 borderRadius: BorderRadius.circular(10),
 //               ),

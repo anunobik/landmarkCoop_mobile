@@ -53,7 +53,7 @@ class _TransferReceiptState extends State<TransferReceipt> {
           IconButton(
             onPressed: () async {
               final imageLogo = await imageFromAssetBundle(
-                "assets/pics/MinervaHub Logo.png",
+                "assets/pics/Logo.png",
               );
               final nairaLogo = await imageFromAssetBundle(
                 "assets/pics/naira-lightBlue.png",
@@ -87,7 +87,7 @@ class _TransferReceiptState extends State<TransferReceipt> {
                   width: 100,
                   decoration: const BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage("assets/pics/MinervaHub Logo.png"),
+                      image: AssetImage("assets/pics/Logo.png"),
                       fit: BoxFit.contain,
                     ),
                   ),

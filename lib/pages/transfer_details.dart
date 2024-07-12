@@ -42,7 +42,7 @@ class _TransferDetailsState extends State<TransferDetails> {
           IconButton(
             onPressed: () async {
               final imageLogo = await imageFromAssetBundle(
-                "assets/pics/MinervaHub Logo.png",
+                "assets/pics/Logo.png",
               );
               final nairaLogo = await imageFromAssetBundle(
                 "assets/pics/naira-lightBlue.png",
@@ -221,7 +221,7 @@ class _TransferDetailsState extends State<TransferDetails> {
     return pw.Column(children: <pw.Widget>[
       pw.SizedBox(height: 20),
       pw.Text(
-        'Minerva Hub',
+        'Landmark Coop',
         style: pw.TextStyle(
           color: PdfColor.fromHex("#091841"),
           fontWeight: pw.FontWeight.bold,

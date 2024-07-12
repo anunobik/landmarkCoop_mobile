@@ -243,7 +243,7 @@ class _HomePageState extends State<HomePage> {
               padding: EdgeInsets.zero,
               minimumSize: Size.zero,
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              primary: Colors.blue[500],
+              backgroundColor: Colors.blue[500],
               textStyle: GoogleFonts.dmSans(fontSize: 15)),
           child: const Text('Open a New Account', style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),),
         ),

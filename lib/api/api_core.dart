@@ -6,7 +6,7 @@ import '../model/other_model.dart';
 class APICore {
   static const String FLUTTERWAVE_URL = "https://api.flutterwave.com/v3/";
   static const String FLUTTERWAVE_SEC_KEY =
-      "FLWSECK-a7ae39340408e2215930f3e919a75ed3-18dc7f28248vt-X";
+      "FLWSECK-b66399ff6845d4a048c1a04ce345ccf2-190984b612cvt-X";
 
   Future<List<BankListResponseModel>> getAllBanks() async {
     String url = '$FLUTTERWAVE_URL/banks/NG';

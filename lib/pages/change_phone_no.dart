@@ -131,7 +131,7 @@ Future<Object?> changePhoneNo(BuildContext context,
                                                   Navigator.pop(context);
                                                 },
                                                 style: ElevatedButton.styleFrom(
-                                                  primary: Colors.grey.shade200,
+                                                  backgroundColor: Colors.grey.shade200,
                                                   shape: RoundedRectangleBorder(
                                                     borderRadius: BorderRadius.circular(5),
                                                   ),
@@ -296,7 +296,7 @@ Future<Object?> changePhoneNo(BuildContext context,
 //                                     Navigator.pop(context);
 //                                   },
 //                                   style: ElevatedButton.styleFrom(
-//                                     primary: Colors.grey.shade200,
+//                                     backgroundColor: Colors.grey.shade200,
 //                                     shape: RoundedRectangleBorder(
 //                                       borderRadius: BorderRadius.circular(5),
 //                                     ),

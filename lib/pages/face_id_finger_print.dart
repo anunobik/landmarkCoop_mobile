@@ -278,7 +278,7 @@ class _FaceIDFingerPrintState extends State<FaceIDFingerPrint> {
               ElevatedButton(
                 onPressed: _cancelAuthentication,
                 style: ElevatedButton.styleFrom(
-                    primary: Colors.lightBlue,
+                    backgroundColor: Colors.lightBlue,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15))),
                 child: Padding(
@@ -305,7 +305,7 @@ class _FaceIDFingerPrintState extends State<FaceIDFingerPrint> {
               ElevatedButton(
                 onPressed: _authenticateWithBiometrics,
                 style: ElevatedButton.styleFrom(
-                    primary: Colors.lightBlue,
+                    backgroundColor: Colors.lightBlue,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15))),
                 child: Padding(

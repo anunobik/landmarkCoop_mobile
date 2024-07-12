@@ -433,7 +433,7 @@ class _TransferState extends State<Transfer> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                      primary: Colors.lightBlue,
+                      backgroundColor: Colors.lightBlue,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10))),
                   child: Text(
@@ -588,7 +588,7 @@ class _TransferState extends State<Transfer> {
                       });
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.grey.shade200,
+                      backgroundColor: Colors.grey.shade200,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5),
                       ),

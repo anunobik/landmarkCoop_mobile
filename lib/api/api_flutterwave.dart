@@ -8,7 +8,7 @@ import '../model/airtime_model.dart';
 class FlutterWaveService {
   static const String FLUTTERWAVE_URL = "https://api.flutterwave.com/v3/";
   static const String FLUTTERWAVE_SEC_KEY =
-      "FLWSECK-a7ae39340408e2215930f3e919a75ed3-18dc7f28248vt-X";
+      "FLWSECK-b66399ff6845d4a048c1a04ce345ccf2-190984b612cvt-X";
 
   Future<List<BillsInfoResponseModel>> getBillsList(String billCode) async {
     print('Bill code - $billCode');
@@ -76,7 +76,7 @@ class FlutterWaveService {
 
   Future<String> buyAirtime(
       AirtimeRequestModel airtimeRequestModel) async {
-    String url = "${FLUTTERWAVE_URL}bills";
+    String url = "${FLUTTERWAVE_URL}billers/BIL099/items/AT099/payment";
 
     final response = await http.post(Uri.parse(url),
         headers: <String, String>{
@@ -95,8 +95,8 @@ class FlutterWaveService {
   }
 
   Future<String> buyDataBundle(
-      DataBundleRequestModel dataBundleRequestModel) async {
-    String url = "${FLUTTERWAVE_URL}bills";
+      DataBundleRequestModel dataBundleRequestModel, String billerCode, String itemCode) async {
+    String url = "${FLUTTERWAVE_URL}billers/${billerCode}/items/${itemCode}/payment";
     print(dataBundleRequestModel.toJson());
 
     final response = await http.post(Uri.parse(url),

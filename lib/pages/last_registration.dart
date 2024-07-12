@@ -168,7 +168,7 @@ class _LastRegistrationState extends State<LastRegistration> {
                           });
                         },
                   style: ElevatedButton.styleFrom(
-                    primary: const Color(0xffd4af37),
+                    backgroundColor: const Color(0xffd4af37),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),

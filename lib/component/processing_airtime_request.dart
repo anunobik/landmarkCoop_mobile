@@ -82,7 +82,7 @@ class ProcessingAirtimeRequest extends StatelessWidget {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.lightBlue,
+                      backgroundColor: Colors.lightBlue,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),

@@ -52,10 +52,8 @@ class AirtimeRequestModel {
   String toJson() {
     return jsonEncode(<String, dynamic>{
       "country": "NG",
-      "customer": '+234'+ phoneNumber.trim().substring(1, phoneNumber.length),
+      "customer_id": '+234'+ phoneNumber.trim().substring(1, phoneNumber.length),
       "amount": amount,
-      "recurrence": "ONCE",
-      "type": "AIRTIME",
       "reference": reference,
     });
   }
@@ -98,10 +96,8 @@ class DataBundleRequestModel {
   String toJson() {
     return jsonEncode(<String, dynamic>{
       "country": "NG",
-      "customer": '+234'+ phoneNumber.trim().substring(1, phoneNumber.length),
+      "customer_id": '+234'+ phoneNumber.trim().substring(1, phoneNumber.length),
       "amount": amount,
-      "recurrence": "ONCE",
-      "type": billerName,
       "reference": reference,
     });
   }

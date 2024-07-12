@@ -474,7 +474,7 @@ class _DataSubscriptionState extends State<DataSubscription> {
                                   widget.token)
                               .then((valueTransactionRes) {
                             if (valueTransactionRes.result) {
-                              rechargeDataPhone(valueTransactionRes);
+                              rechargeDataPhone(valueTransactionRes, selectedDateBundle);
                             } else {
                               setState(() {
                                 isApiCallProcess = false;
@@ -493,6 +493,7 @@ class _DataSubscriptionState extends State<DataSubscription> {
                         }
                       },
                 style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.lightBlue,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
@@ -604,7 +605,7 @@ class _DataSubscriptionState extends State<DataSubscription> {
                       Navigator.of(context).pop();
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.grey.shade200,
+                      backgroundColor: Colors.grey.shade200,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5),
                       ),
@@ -708,6 +709,7 @@ class _DataSubscriptionState extends State<DataSubscription> {
                 viewAmount = displayAmount.format(newValue!.amount);
                 state.didChange(newValue);
                 _enableSubmitBtn = true;
+                selectedDateBundle = newValue!;
               });
             },
             items: dataTo
@@ -779,7 +781,7 @@ class _DataSubscriptionState extends State<DataSubscription> {
                       Navigator.of(context).pop();
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.grey.shade200,
+                      backgroundColor: Colors.grey.shade200,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5),
                       ),
@@ -804,7 +806,7 @@ class _DataSubscriptionState extends State<DataSubscription> {
   }
 
   void rechargeDataPhone(
-      InstantAirtimeAndDataFeedbackResponseModel valueTransactionRes) {
+      InstantAirtimeAndDataFeedbackResponseModel valueTransactionRes, BillsInfoResponseModel billsInfoModel) {
     String displayDate = DateFormat('yyyy-MMM-dd').format(DateTime.now());
     FlutterWaveService apiFlutterWave = FlutterWaveService();
     DataBundleRequestModel dataBundleRequestModel = DataBundleRequestModel(
@@ -813,7 +815,7 @@ class _DataSubscriptionState extends State<DataSubscription> {
       billerName: currentDataBundle!.billerName,
       reference: valueTransactionRes.transactionRef,
     );
-    apiFlutterWave.buyDataBundle(dataBundleRequestModel).then((value) {
+    apiFlutterWave.buyDataBundle(dataBundleRequestModel, billsInfoModel.billerCode, billsInfoModel.itemCode).then((value) {
       if (value == 'Successful') {
         setState(() {
           isApiCallProcess = false;

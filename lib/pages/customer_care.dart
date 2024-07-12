@@ -438,7 +438,7 @@ class _ContactCustomerSupportState extends State<ContactCustomerSupport> {
                       });
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.lightBlue,
+                      backgroundColor: Colors.lightBlue,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),

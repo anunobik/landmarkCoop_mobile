@@ -466,7 +466,7 @@ class _EnterTransactionPinState extends State<EnterTransactionPin> {
                                                 Navigator.of(context).pop();
                                               },
                                               style: ElevatedButton.styleFrom(
-                                                primary: Colors.grey.shade200,
+                                                backgroundColor: Colors.grey.shade200,
                                                 shape: RoundedRectangleBorder(
                                                   borderRadius:
                                                   BorderRadius.circular(10),
@@ -687,7 +687,7 @@ class _EnterTransactionPinState extends State<EnterTransactionPin> {
                                               Navigator.of(context).pop();
                                             },
                                             style: ElevatedButton.styleFrom(
-                                              primary: Colors.grey.shade200,
+                                              backgroundColor: Colors.grey.shade200,
                                               shape: RoundedRectangleBorder(
                                                 borderRadius:
                                                 BorderRadius.circular(10),

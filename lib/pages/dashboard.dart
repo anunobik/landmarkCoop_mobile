@@ -17,7 +17,7 @@ import 'package:landmarkcoop_mobile_app/util/notification_badge.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_paystack/flutter_paystack.dart';
+// import 'package:flutter_paystack/flutter_paystack.dart';
 import 'package:flutterwave_standard/flutterwave.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -105,7 +105,7 @@ class _DashboardState extends State<Dashboard> {
   late ProductResponseModel currentProduct;
   ProductResponseModel? selectedProduct;
   var publicKey = 'pk_live_a6fbbb05e8b8e498674780e7dd0560d0cbc23670';
-  final plugin = PaystackPlugin();
+  // final plugin = PaystackPlugin();
   Future<void>? _launched;
   List<CustomerInvestmentWalletModel> investData =
       <CustomerInvestmentWalletModel>[];
@@ -226,7 +226,7 @@ class _DashboardState extends State<Dashboard> {
     getCustomerWallets();
     getAllInvestment();
     loadGateWay();
-    plugin.initialize(publicKey: publicKey);
+    // plugin.initialize(publicKey: publicKey);
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       // Parse the message received
@@ -309,9 +309,9 @@ class _DashboardState extends State<Dashboard> {
       gateWayResponse = value;
       setState(() {
         gateWayResponse;
-        if (gateWayResponse!.gatewayName == 'Paystack') {
-          plugin.initialize(publicKey: gateWayResponse!.publicKey);
-        }
+        // if (gateWayResponse!.gatewayName == 'Paystack') {
+        //   plugin.initialize(publicKey: gateWayResponse!.publicKey);
+        // }
       });
     });
   }
@@ -829,11 +829,15 @@ class _DashboardState extends State<Dashboard> {
                       setState(() {
                         isApiCallProcess = false;
                       });
-                      if (gateWayResponse!.gatewayName == 'Paystack') {
-                        _handlePaystackPayment(accountNumber);
-                      } else {
-                        _handlePaymentInitialization(accountNumber);
-                      }
+                      _handlePaymentInitialization(
+                          accountNumber);
+                      // if (gateWayResponse.gatewayName ==
+                      //     'Paystack') {
+                      //   _handlePaystackPayment(accountNumber);
+                      // } else {
+                      //   _handlePaymentInitialization(
+                      //       accountNumber);
+                      // }
                     }
                   },
                   child: const Text('Submit'),
@@ -846,7 +850,7 @@ class _DashboardState extends State<Dashboard> {
 
   _handlePaymentInitialization(String accountNumber) async {
     const String _FLUTTERWAVE_PUB_KEY =
-        "FLWPUBK-1598a88367443af15598a00b28119236-X";
+        "FLWPUBK-c0049d19c1c3137f3a3415922541720e-X";
     var email = widget.customerWallets[0].email;
     var displayName = widget.customerWallets[0].fullName;
     var phoneNo = widget.customerWallets[0].phoneNo;
@@ -855,27 +859,27 @@ class _DashboardState extends State<Dashboard> {
     String datePart = DateFormat('yymmddhhmmss').format(DateTime.now());
     String txRef = "$accountNumber.$datePart";
 
-    final style = FlutterwaveStyle(
-        appBarText: "Wallet Funding",
-        appBarTitleTextStyle: const TextStyle(color: Colors.white),
-        buttonColor: const Color(0XFF091841),
-        appBarIcon: const Icon(Icons.message, color: Color(0XFF091841)),
-        buttonTextStyle: const TextStyle(
-            color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
-        appBarColor: const Color(0XFF091841),
-        dialogCancelTextStyle:
-            const TextStyle(color: Colors.redAccent, fontSize: 18),
-        dialogContinueTextStyle:
-            const TextStyle(color: Colors.blue, fontSize: 18),
-        dialogBackgroundColor: Colors.white,
-        buttonText: "Pay NGN$fundAmount");
+    // final style = FlutterwaveStyle(
+    //     appBarText: "Wallet Funding",
+    //     appBarTitleTextStyle: const TextStyle(color: Colors.white),
+    //     buttonColor: const Color(0XFF091841),
+    //     appBarIcon: const Icon(Icons.message, color: Color(0XFF091841)),
+    //     buttonTextStyle: const TextStyle(
+    //         color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+    //     appBarColor: const Color(0XFF091841),
+    //     dialogCancelTextStyle:
+    //         const TextStyle(color: Colors.redAccent, fontSize: 18),
+    //     dialogContinueTextStyle:
+    //         const TextStyle(color: Colors.blue, fontSize: 18),
+    //     dialogBackgroundColor: Colors.white,
+    //     buttonText: "Pay NGN$fundAmount");
 
     final Customer customer =
         Customer(name: displayName, phoneNumber: phoneNo, email: email);
 
     final Flutterwave flutterwave = Flutterwave(
         context: context,
-        style: style,
+        // style: style,
         publicKey: _FLUTTERWAVE_PUB_KEY,
         currency: "NGN",
         redirectUrl: "https://landmarkcooperative.org/verifyBanktransfer/IHd88sdBGAasdfRYEGRh76asf05052023",
@@ -929,65 +933,65 @@ class _DashboardState extends State<Dashboard> {
     }
   }
 
-  _handlePaystackPayment(String accountNumber) async {
-    var email = widget.customerWallets[0].email;
-    var displayName = widget.customerWallets[0].fullName;
-    var phoneNo = widget.customerWallets[0].phoneNo;
-    var amount = (fundAmount * 100).toString();
-
-    String narration = "Mobile App credit";
-    String datePart = DateFormat('yymmddhhmmss').format(DateTime.now());
-
-    PaystackApi paystackApi = PaystackApi();
-    TransactionInitRequestModel transactionInitRequestModel =
-        TransactionInitRequestModel(email: email, amount: amount);
-    print(transactionInitRequestModel.toJson());
-    paystackApi
-        .initializeTransaction(transactionInitRequestModel)
-        .then((value) async {
-      Charge charge = Charge()
-        ..amount = (fundAmount * 100).toInt()
-        ..reference = value.reference
-        ..accessCode = value.access_code
-        ..email = email;
-
-      Uri url = Uri.parse(value.authorization_url);
-      setState(() {
-        _launched = _launchInWebViewOrVC(url);
-        Timer(const Duration(seconds: 10), () {
-          print('Closing WebView after 10 seconds...');
-          closeInAppWebView();
-        });
-      });
-      CheckoutResponse response =
-          await plugin.checkout(context, charge: charge);
-      Navigator.pop(context);
-      if (response.message == 'Success' ||
-          response.message == 'Transaction already succeeded') {
-        // Call the verify transaction endpoint with the transactionID returned in `response.transactionId` to verify transaction before offering value to customer
-        AccountTransactionRequestModel accountTransactionRequestModel =
-            AccountTransactionRequestModel(amount: fundAmount);
-        accountTransactionRequestModel.narration = narration;
-        accountTransactionRequestModel.accountNumber = accountNumber;
-        apiService
-            .verifyDepositPayStack(
-                accountTransactionRequestModel, value.reference, widget.token)
-            .then((valueDep) {
-          successTransactionAlert(valueDep);
-        });
-      } else {
-        // Transaction not successful
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return const AlertDialog(
-                title: Text("Notice"),
-                content: Text("Transaction not successful"),
-              );
-            });
-      }
-    });
-  }
+  // _handlePaystackPayment(String accountNumber) async {
+  //   var email = widget.customerWallets[0].email;
+  //   var displayName = widget.customerWallets[0].fullName;
+  //   var phoneNo = widget.customerWallets[0].phoneNo;
+  //   var amount = (fundAmount * 100).toString();
+  //
+  //   String narration = "Mobile App credit";
+  //   String datePart = DateFormat('yymmddhhmmss').format(DateTime.now());
+  //
+  //   PaystackApi paystackApi = PaystackApi();
+  //   TransactionInitRequestModel transactionInitRequestModel =
+  //       TransactionInitRequestModel(email: email, amount: amount);
+  //   print(transactionInitRequestModel.toJson());
+  //   paystackApi
+  //       .initializeTransaction(transactionInitRequestModel)
+  //       .then((value) async {
+  //     Charge charge = Charge()
+  //       ..amount = (fundAmount * 100).toInt()
+  //       ..reference = value.reference
+  //       ..accessCode = value.access_code
+  //       ..email = email;
+  //
+  //     Uri url = Uri.parse(value.authorization_url);
+  //     setState(() {
+  //       _launched = _launchInWebViewOrVC(url);
+  //       Timer(const Duration(seconds: 10), () {
+  //         print('Closing WebView after 10 seconds...');
+  //         closeInAppWebView();
+  //       });
+  //     });
+  //     CheckoutResponse response =
+  //         await plugin.checkout(context, charge: charge);
+  //     Navigator.pop(context);
+  //     if (response.message == 'Success' ||
+  //         response.message == 'Transaction already succeeded') {
+  //       // Call the verify transaction endpoint with the transactionID returned in `response.transactionId` to verify transaction before offering value to customer
+  //       AccountTransactionRequestModel accountTransactionRequestModel =
+  //           AccountTransactionRequestModel(amount: fundAmount);
+  //       accountTransactionRequestModel.narration = narration;
+  //       accountTransactionRequestModel.accountNumber = accountNumber;
+  //       apiService
+  //           .verifyDepositPayStack(
+  //               accountTransactionRequestModel, value.reference, widget.token)
+  //           .then((valueDep) {
+  //         successTransactionAlert(valueDep);
+  //       });
+  //     } else {
+  //       // Transaction not successful
+  //       showDialog(
+  //           context: context,
+  //           builder: (BuildContext context) {
+  //             return const AlertDialog(
+  //               title: Text("Notice"),
+  //               content: Text("Transaction not successful"),
+  //             );
+  //           });
+  //     }
+  //   });
+  // }
 
   Future<void> _launchInWebViewOrVC(Uri url) async {
     if (!await launchUrl(
@@ -1210,7 +1214,7 @@ class _DashboardState extends State<Dashboard> {
                       });
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.grey.shade200,
+                      backgroundColor: Colors.grey.shade200,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5),
                       ),
@@ -1989,7 +1993,7 @@ class _DashboardState extends State<Dashboard> {
 //                       });
 //                     },
 //                     style: ElevatedButton.styleFrom(
-//                       primary: Colors.grey.shade200,
+//                       backgroundColor: Colors.grey.shade200,
 //                       shape: RoundedRectangleBorder(
 //                         borderRadius: BorderRadius.circular(5),
 //                       ),
