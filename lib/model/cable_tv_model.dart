@@ -98,22 +98,22 @@ class CableTvPayRequestModel {
   }
 }
 
-class BudPayResponseModel {
-  late bool success;
-  var message;
-
-  BudPayResponseModel({
-    required this.success,
-    required this.message,
-  });
-
-  factory BudPayResponseModel.fromJson(Map<String, dynamic> json) {
-    return BudPayResponseModel(
-      success: json['success'] ?? false,
-      message: json['message'] ?? '',
-    );
-  }
-}
+// class BudPayResponseModel {
+//   late bool success;
+//   var message;
+//
+//   BudPayResponseModel({
+//     required this.success,
+//     required this.message,
+//   });
+//
+//   factory BudPayResponseModel.fromJson(Map<String, dynamic> json) {
+//     return BudPayResponseModel(
+//       success: json['success'] ?? false,
+//       message: json['message'] ?? '',
+//     );
+//   }
+// }
 
 class CableTvTransactionRequestModel {
   var provider;
@@ -309,7 +309,7 @@ class CableRequestModel {
   String toJson() {
     return jsonEncode(<String, dynamic>{
       "country": "NG",
-      "customer": smartcardNumber,
+      "smartcardNumber": smartcardNumber,
       "amount": amount,
       "recurrence": "ONCE",
       "type": billerName,

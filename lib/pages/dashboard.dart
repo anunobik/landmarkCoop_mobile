@@ -17,6 +17,7 @@ import 'package:landmarkcoop_mobile_app/util/notification_badge.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+
 // import 'package:flutter_paystack/flutter_paystack.dart';
 import 'package:flutterwave_standard/flutterwave.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -105,6 +106,7 @@ class _DashboardState extends State<Dashboard> {
   late ProductResponseModel currentProduct;
   ProductResponseModel? selectedProduct;
   var publicKey = 'pk_live_a6fbbb05e8b8e498674780e7dd0560d0cbc23670';
+
   // final plugin = PaystackPlugin();
   Future<void>? _launched;
   List<CustomerInvestmentWalletModel> investData =
@@ -586,108 +588,32 @@ class _DashboardState extends State<Dashboard> {
                       )
                     : Container(),
 
-                AspectRatio(
-                  aspectRatio: 0.5,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: <Widget>[
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            makeTransactionsIcon(),
-                            const SizedBox(
-                              width: 38,
-                            ),
-                            const Text(
-                              'Deposit',
-                              style: TextStyle(
-                                  color: Color.fromARGB(255, 13, 155, 22),
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            const SizedBox(
-                              width: 4,
-                            ),
-                            const Text(
-                              '&',
-                              style: TextStyle(
-                                  color: Color(0xff77839a),
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            const SizedBox(
-                              width: 4,
-                            ),
-                            const Text(
-                              'Withdrawal',
-                              style: TextStyle(
-                                  color: Color(0xFFE80054),
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 25),
-                        SizedBox(
-                          height: height * 0.3,
-                          width: width,
-                          child: BarChart(
-                            BarChartData(
-                                borderData: FlBorderData(
-                                    border: const Border(
-                                  top: BorderSide.none,
-                                  right: BorderSide.none,
-                                  left: BorderSide(width: 1),
-                                  bottom: BorderSide(width: 1),
-                                )),
-                                gridData: FlGridData(show: false),
-                                groupsSpace: 10,
-                                barGroups: newData
-                                    .map((dataItem) => BarChartGroupData(
-                                            x: dataItem.x,
-                                            barRods: [
-                                              BarChartRodData(
-                                                  toY: dataItem.y1,
-                                                  width: 7.5,
-                                                  color: leftBarColor),
-                                              BarChartRodData(
-                                                  toY: dataItem.y2,
-                                                  width: 7.5,
-                                                  color: rightBarColor),
-                                            ]))
-                                    .toList(),
-                                titlesData: FlTitlesData(
-                                  show: true,
-                                  rightTitles: AxisTitles(
-                                    sideTitles: SideTitles(showTitles: false),
-                                  ),
-                                  topTitles: AxisTitles(
-                                    sideTitles: SideTitles(showTitles: false),
-                                  ),
-                                  bottomTitles: AxisTitles(
-                                    sideTitles: SideTitles(
-                                      showTitles: true,
-                                      getTitlesWidget: bottomTitles,
-                                      reservedSize: 42,
-                                    ),
-                                  ),
-                                )),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 38,
-                        ),
-                        const SizedBox(
-                          height: 38,
-                        ),
-                        const SizedBox(
-                          height: 12,
-                        ),
-                      ],
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    Center(
+                      child: const Text(
+                        'Our Partners',
+                        style: TextStyle(
+                            color: Color.fromARGB(255, 13, 155, 22),
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold),
+                      ),
                     ),
-                  ),
+                    const SizedBox(height: 5),
+                    Image.asset('assets/partners.jpg', fit: BoxFit.contain),
+                    Image.asset('assets/MinervaHub.png',
+                        fit: BoxFit.contain),
+                    const SizedBox(
+                      height: 38,
+                    ),
+                    const SizedBox(
+                      height: 38,
+                    ),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -829,8 +755,7 @@ class _DashboardState extends State<Dashboard> {
                       setState(() {
                         isApiCallProcess = false;
                       });
-                      _handlePaymentInitialization(
-                          accountNumber);
+                      _handlePaymentInitialization(accountNumber);
                       // if (gateWayResponse.gatewayName ==
                       //     'Paystack') {
                       //   _handlePaystackPayment(accountNumber);
@@ -882,7 +807,8 @@ class _DashboardState extends State<Dashboard> {
         // style: style,
         publicKey: _FLUTTERWAVE_PUB_KEY,
         currency: "NGN",
-        redirectUrl: "https://landmarkcooperative.org/verifyBanktransfer/IHd88sdBGAasdfRYEGRh76asf05052023",
+        redirectUrl:
+            "https://landmarkcooperative.org/verifyBanktransfer/IHd88sdBGAasdfRYEGRh76asf05052023",
         txRef: txRef,
         amount: fundAmount.toString(),
         customer: customer,
@@ -1238,24 +1164,24 @@ class _DashboardState extends State<Dashboard> {
         });
   }
 
-  Widget bottomTitles(double value, TitleMeta meta) {
-    final titles = <String>['Mn', 'Te', 'Wd', 'Th', 'Fr', 'St', 'Su'];
-
-    final Widget text = Text(
-      titles[value.toInt()],
-      style: const TextStyle(
-        color: Color(0xff7589a2),
-        fontWeight: FontWeight.bold,
-        fontSize: 14,
-      ),
-    );
-
-    return SideTitleWidget(
-      axisSide: meta.axisSide,
-      space: 16, //margin top
-      child: text,
-    );
-  }
+  // Widget bottomTitles(double value, TitleMeta meta) {
+  //   final titles = <String>['Mn', 'Te', 'Wd', 'Th', 'Fr', 'St', 'Su'];
+  //
+  //   final Widget text = Text(
+  //     titles[value.toInt()],
+  //     style: const TextStyle(
+  //       color: Color(0xff7589a2),
+  //       fontWeight: FontWeight.bold,
+  //       fontSize: 14,
+  //     ),
+  //   );
+  //
+  //   return SideTitleWidget(
+  //     axisSide: meta.axisSide,
+  //     space: 16, //margin top
+  //     child: text,
+  //   );
+  // }
 
   Widget makeTransactionsIcon() {
     const width = 4.5;

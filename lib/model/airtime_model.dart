@@ -52,7 +52,7 @@ class AirtimeRequestModel {
   String toJson() {
     return jsonEncode(<String, dynamic>{
       "country": "NG",
-      "customer_id": '+234'+ phoneNumber.trim().substring(1, phoneNumber.length),
+      "phoneNumber": '+234'+ phoneNumber.trim().substring(1, phoneNumber.length),
       "amount": amount,
       "reference": reference,
     });
@@ -96,7 +96,7 @@ class DataBundleRequestModel {
   String toJson() {
     return jsonEncode(<String, dynamic>{
       "country": "NG",
-      "customer_id": '+234'+ phoneNumber.trim().substring(1, phoneNumber.length),
+      "phoneNumber": '+234'+ phoneNumber.trim().substring(1, phoneNumber.length),
       "amount": amount,
       "reference": reference,
     });

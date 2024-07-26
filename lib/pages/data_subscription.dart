@@ -156,7 +156,7 @@ class _DataSubscriptionState extends State<DataSubscription> {
   }
 
   getMTNDataBundle() {
-    return flutterWaveService.getBillsList('BIL108').then((value) {
+    return flutterWaveService.getBillsList('BIL108', widget.token).then((value) {
       currentMTNDataBundle = dataMTN[0];
       for (var singleData in value) {
         dataMTN.add(singleData);
@@ -169,7 +169,7 @@ class _DataSubscriptionState extends State<DataSubscription> {
   }
 
   getGloDataBundle() {
-    return flutterWaveService.getBillsList('BIL109').then((value) {
+    return flutterWaveService.getBillsList('BIL109', widget.token).then((value) {
       currentGloDataBundle = dataGlo[0];
       for (var singleData in value) {
         dataGlo.add(singleData);
@@ -181,7 +181,7 @@ class _DataSubscriptionState extends State<DataSubscription> {
   }
 
   get9MobileDataBundle() {
-    return flutterWaveService.getBillsList('BIL111').then((value) {
+    return flutterWaveService.getBillsList('BIL111', widget.token).then((value) {
       current9MobileDataBundle = data9Mobile[0];
       for (var singleData in value) {
         data9Mobile.add(singleData);
@@ -193,7 +193,7 @@ class _DataSubscriptionState extends State<DataSubscription> {
   }
 
   getAirtelDataBundle() {
-    return flutterWaveService.getBillsList('BIL110').then((value) {
+    return flutterWaveService.getBillsList('BIL110', widget.token).then((value) {
       currentAirtelDataBundle = dataAirtel[0];
       for (var singleData in value) {
         dataAirtel.add(singleData);
@@ -815,7 +815,7 @@ class _DataSubscriptionState extends State<DataSubscription> {
       billerName: currentDataBundle!.billerName,
       reference: valueTransactionRes.transactionRef,
     );
-    apiFlutterWave.buyDataBundle(dataBundleRequestModel, billsInfoModel.billerCode, billsInfoModel.itemCode).then((value) {
+    apiFlutterWave.buyDataBundle(dataBundleRequestModel, billsInfoModel.billerCode, billsInfoModel.itemCode, widget.token).then((value) {
       if (value == 'Successful') {
         setState(() {
           isApiCallProcess = false;

@@ -358,7 +358,7 @@ class _AirtimePurchaseState extends State<AirtimePurchase> {
         phoneNumber: valueTransactionRes.phoneNumber,
         amount: valueTransactionRes.amount,
         reference: valueTransactionRes.transactionRef);
-    apiFlutterWave.buyAirtime(airtimeRequestModel).then((value) {
+    apiFlutterWave.buyAirtime(airtimeRequestModel, widget.token).then((value) {
       if (value == 'Successful') {
         setState(() {
           isApiCallProcess = false;

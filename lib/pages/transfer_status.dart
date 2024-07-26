@@ -162,8 +162,8 @@ class _TransferStatusState extends State<TransferStatus> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
                                     Text(
-                                      data[index].destinationAccountName.length > 27
-                                          ? '${data[index].destinationAccountName.substring(0, 27)}...'
+                                      data[index].destinationAccountName.length > 22
+                                          ? '${data[index].destinationAccountName.substring(0, 22)}...'
                                           : data[index].destinationAccountName,
                                       style: GoogleFonts.montserrat(
                                         fontWeight: FontWeight.w700,

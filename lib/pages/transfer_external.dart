@@ -1,7 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:landmarkcoop_mobile_app/api/api_core.dart';
+import 'package:landmarkcoop_mobile_app/api/api_flutterwave.dart';
 import 'package:landmarkcoop_mobile_app/api/api_service.dart';
 import 'package:landmarkcoop_mobile_app/model/customer_model.dart';
 import 'package:landmarkcoop_mobile_app/model/login_model.dart';
@@ -195,8 +195,8 @@ class _TransferExternalState extends State<TransferExternal> {
   }
 
   getBanks() {
-    APICore apiCore = APICore();
-    return apiCore.getAllBanks().then((value) {
+    FlutterWaveService apiCore = FlutterWaveService();
+    return apiCore.getAllBanks(widget.token).then((value) {
       currentBank = bankData[0];
 
       for (var singleData in value) {
@@ -733,7 +733,7 @@ class _TransferExternalState extends State<TransferExternal> {
             onChanged: (value) {
               setState(() {
                 if (value.length == 10) {
-                  APICore apiCore = APICore();
+                  FlutterWaveService apiCore = FlutterWaveService();
                   BankAccountRequestModel bankAcctRequest =
                       BankAccountRequestModel();
                   bankAcctRequest.account_bank = currentBank!.code;
@@ -747,7 +747,7 @@ class _TransferExternalState extends State<TransferExternal> {
                   externalBankTransferDetailsRequestModel.destinationBankName =
                       currentBank!.name;
 
-                  apiCore.bankAccountVerify(bankAcctRequest).then((valueAcct) {
+                  apiCore.bankAccountVerify(bankAcctRequest, widget.token).then((valueAcct) {
                     bankAcctNameController.text = valueAcct;
                     externalBankTransferDetailsRequestModel
                         .destinationAccountName = valueAcct;

@@ -237,6 +237,7 @@ class _LoginState extends State<Login> {
                           ),
                           const SizedBox(height: 20),
                           TextFormField(
+                            controller: passwordController,
                             keyboardType: TextInputType.text,
                             onSaved: (input) =>
                                 loginRequestModel.password = input!,

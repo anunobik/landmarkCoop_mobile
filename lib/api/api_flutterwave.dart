@@ -2,23 +2,21 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:landmarkcoop_mobile_app/model/cable_tv_model.dart';
+import 'package:landmarkcoop_mobile_app/model/other_model.dart';
 
 import '../model/airtime_model.dart';
 
 class FlutterWaveService {
-  static const String FLUTTERWAVE_URL = "https://api.flutterwave.com/v3/";
-  static const String FLUTTERWAVE_SEC_KEY =
-      "FLWSECK-b66399ff6845d4a048c1a04ce345ccf2-190984b612cvt-X";
+  static const String DOMAIN_URL = "https://core.landmarkcooperative.org";
 
-  Future<List<BillsInfoResponseModel>> getBillsList(String billCode) async {
+  Future<List<BillsInfoResponseModel>> getBillsList(String billCode, String token) async {
     print('Bill code - $billCode');
-    String url = "${FLUTTERWAVE_URL}bill-categories?biller_code=$billCode";
+    String url = "$DOMAIN_URL/getBillsList/$billCode/$token";
 
     final response = await http.get(
       Uri.parse(url),
       headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': 'Bearer $FLUTTERWAVE_SEC_KEY',
+        'Content-Type': 'application/json; charset=UTF-8',        
       },
     );
     print(response.body);
@@ -75,13 +73,12 @@ class FlutterWaveService {
   }
 
   Future<String> buyAirtime(
-      AirtimeRequestModel airtimeRequestModel) async {
-    String url = "${FLUTTERWAVE_URL}billers/BIL099/items/AT099/payment";
+      AirtimeRequestModel airtimeRequestModel, String token) async {
+    String url = "$DOMAIN_URL/buyAirtime/$token";
 
     final response = await http.post(Uri.parse(url),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization': 'Bearer $FLUTTERWAVE_SEC_KEY',
         },
         body: airtimeRequestModel.toJson());
 
@@ -95,14 +92,13 @@ class FlutterWaveService {
   }
 
   Future<String> buyDataBundle(
-      DataBundleRequestModel dataBundleRequestModel, String billerCode, String itemCode) async {
-    String url = "${FLUTTERWAVE_URL}billers/${billerCode}/items/${itemCode}/payment";
+      DataBundleRequestModel dataBundleRequestModel, String billerCode, String itemCode, String token) async {
+    String url = "$DOMAIN_URL/buyDataBundle/$billerCode/$itemCode/$token";
     print(dataBundleRequestModel.toJson());
 
     final response = await http.post(Uri.parse(url),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization': 'Bearer $FLUTTERWAVE_SEC_KEY',
         },
         body: dataBundleRequestModel.toJson());
     print(response.body);
@@ -116,13 +112,12 @@ class FlutterWaveService {
     }
   }
 
-  Future<String> buyTvCable(CableRequestModel cableRequestModel) async {
-    String url = "${FLUTTERWAVE_URL}bills";
+  Future<String> buyTvCable(CableRequestModel cableRequestModel, String token) async {
+    String url = "$DOMAIN_URL/buyTvCable/$token";
 
     final response = await http.post(Uri.parse(url),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization': 'Bearer $FLUTTERWAVE_SEC_KEY',
         },
         body: cableRequestModel.toJson());
 
@@ -137,15 +132,14 @@ class FlutterWaveService {
   }
 
   Future<ValidateBillsInfoResponseModel> validateFlutterwaveBill(
-      String itemCode, String billerCode, String customerNo) async {
+      String itemCode, String billerCode, String customerNo, String token) async {
     String url =
-        "${FLUTTERWAVE_URL}bill-items/$itemCode/validate?customer=$customerNo&code=$billerCode";
+        "$DOMAIN_URL/validateFlutterwaveBill/$itemCode/$customerNo/$billerCode/$token";
 
     final response = await http.get(
       Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': 'Bearer $FLUTTERWAVE_SEC_KEY',
       },
     );
 
@@ -166,6 +160,54 @@ class FlutterWaveService {
           fee: 0,
           maximum: 0,
           minimum: 0);
+    }
+  }
+
+  Future<List<BankListResponseModel>> getAllBanks(String token) async {
+    String url = '$DOMAIN_URL/getAllBanks/$token';
+    final response = await http.get(
+      Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body)['data'];
+
+      List<BankListResponseModel> banksList = [];
+      for (var singleBank in data) {
+        BankListResponseModel bankResponseModel = BankListResponseModel(
+          id: singleBank['id'] ?? 0,
+          code: singleBank['code'] ?? '',
+          name: singleBank['name'] ?? '',
+        );
+
+        //Adding user to the list.
+        banksList.add(bankResponseModel);
+      }
+
+      return banksList;
+    } else {
+      throw Exception(response.body);
+    }
+  }
+
+  Future<String> bankAccountVerify(BankAccountRequestModel requestModel, String token) async {
+    String url = '$DOMAIN_URL/bankAccountVerify/$token';
+    final response = await http.post(
+      Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: requestModel.toJson(),
+    );
+
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body)['data']['account_name'];
+      return data;
+    } else {
+      return 'Incorrect Details';
     }
   }
 }
