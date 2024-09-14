@@ -15,7 +15,11 @@ class TransactionPin extends StatefulWidget {
   final List<LastTransactionsModel> lastTransactions;
 
   const TransactionPin(
-      {super.key, required this.customerWallets, required this.fullName, required this.token, required this.lastTransactions});
+      {super.key,
+      required this.customerWallets,
+      required this.fullName,
+      required this.token,
+      required this.lastTransactions});
 
   @override
   State<TransactionPin> createState() => _TransactionPinState();
@@ -62,12 +66,12 @@ class _TransactionPinState extends State<TransactionPin> {
     APIService apiService = APIService();
     apiService.isPinCreated(widget.token).then((value) {
       print(value.status);
-      if(value.status){
+      if (value.status) {
         setState(() {
           createPin = false;
           editPin = true;
         });
-      }else{
+      } else {
         setState(() {
           createPin = true;
           editPin = false;
@@ -168,7 +172,7 @@ class _TransactionPinState extends State<TransactionPin> {
               const SizedBox(height: 50),
               createPin
                   ? Center(
-                    child: Column(
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Align(
@@ -179,12 +183,17 @@ class _TransactionPinState extends State<TransactionPin> {
                                   fontSize: 16, fontWeight: FontWeight.w700),
                             ),
                           ),
-                          SizedBox(height: 5,),
+                          SizedBox(
+                            height: 5,
+                          ),
                           AnimatedContainer(
                             duration: const Duration(seconds: 1),
                             decoration: focusNode.hasFocus
                                 ? BoxDecoration(
-                                    boxShadow: const [BoxShadow(color: Colors.black38,blurRadius: 6)],
+                                    boxShadow: const [
+                                      BoxShadow(
+                                          color: Colors.black38, blurRadius: 6)
+                                    ],
                                     borderRadius: BorderRadius.circular(20),
                                   )
                                 : BoxDecoration(
@@ -206,7 +215,8 @@ class _TransactionPinState extends State<TransactionPin> {
                                 ),
                                 errorBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20),
-                                  borderSide: const BorderSide(color: Colors.red),
+                                  borderSide:
+                                      const BorderSide(color: Colors.red),
                                 ),
                                 suffixIcon: obscure
                                     ? IconButton(
@@ -240,7 +250,10 @@ class _TransactionPinState extends State<TransactionPin> {
                             duration: const Duration(seconds: 1),
                             decoration: focusNode1.hasFocus
                                 ? BoxDecoration(
-                                    boxShadow: const [BoxShadow(color: Colors.black38,blurRadius: 6)],
+                                    boxShadow: const [
+                                      BoxShadow(
+                                          color: Colors.black38, blurRadius: 6)
+                                    ],
                                     borderRadius: BorderRadius.circular(20),
                                   )
                                 : BoxDecoration(
@@ -262,7 +275,8 @@ class _TransactionPinState extends State<TransactionPin> {
                                 ),
                                 errorBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20),
-                                  borderSide: const BorderSide(color: Colors.red),
+                                  borderSide:
+                                      const BorderSide(color: Colors.red),
                                 ),
                                 suffixIcon: obscure1
                                     ? IconButton(
@@ -295,195 +309,125 @@ class _TransactionPinState extends State<TransactionPin> {
                             height: 30,
                           ),
                           Center(
-                                child: ElevatedButton(
-                                    onPressed: () async {
-                                      if(createPinController.text.length == 4){
-                                        if(createPinController.text == conCreatePinController.text) {
-                                          setState(() {
-                                            isApiCallProcess = true;
-                                          });
-                                          UserPinCodeRequestModel requestModel = UserPinCodeRequestModel(pinCode: createPinController.text, confirmPinCode: conCreatePinController.text);
-                                          APIService apiService = APIService();
-                                          apiService.createPincode(requestModel, widget.token).then((value) {
-                                            if(value.status){
-                                              showDialog(
-                                                  context: context,
-                                                  builder: (BuildContext context) {
-                                                    return AlertDialog(
-                                                      title: Container(
-                                                        height: 50,
-                                                        alignment: Alignment.centerLeft,
-                                                        padding: const EdgeInsets.only(left: 15),
-                                                        color: Colors.blueAccent,
-                                                        child: Center(
-                                                          child: Text(
-                                                            'Message',
-                                                            style: GoogleFonts.montserrat(
-                                                                color: Colors.white,
-                                                                fontSize: 16,
-                                                                fontWeight: FontWeight.w600),
+                            child: ElevatedButton(
+                              onPressed: () async {
+                                if (createPinController.text.length == 4) {
+                                  if (createPinController.text ==
+                                      conCreatePinController.text) {
+                                    setState(() {
+                                      isApiCallProcess = true;
+                                    });
+                                    UserPinCodeRequestModel requestModel =
+                                        UserPinCodeRequestModel(
+                                            pinCode: createPinController.text,
+                                            confirmPinCode:
+                                                conCreatePinController.text);
+                                    APIService apiService = APIService();
+                                    apiService
+                                        .createPincode(
+                                            requestModel, widget.token)
+                                        .then((value) {
+                                      if (value.status) {
+                                        showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                title: Container(
+                                                  height: 50,
+                                                  alignment:
+                                                      Alignment.centerLeft,
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 15),
+                                                  color: Colors.blueAccent,
+                                                  child: Center(
+                                                    child: Text(
+                                                      'Message',
+                                                      style: GoogleFonts
+                                                          .montserrat(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600),
+                                                    ),
+                                                  ),
+                                                ),
+                                                content: Text(
+                                                  value.message,
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                                actionsAlignment:
+                                                    MainAxisAlignment.start,
+                                                actions: <Widget>[
+                                                  Center(
+                                                    child: ElevatedButton(
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .push(
+                                                                MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              HomeDrawer(
+                                                            value: 0,
+                                                            page: Dashboard(
+                                                              token:
+                                                                  widget.token,
+                                                              fullName: widget
+                                                                  .fullName,
+                                                              customerWallets:
+                                                                  widget
+                                                                      .customerWallets,
+                                                              lastTransactions:
+                                                                  widget
+                                                                      .lastTransactions,
+                                                            ),
+                                                            name: 'wallet',
+                                                            token: widget.token,
+                                                            fullName:
+                                                                widget.fullName,
+                                                            customerWallets: widget
+                                                                .customerWallets,
+                                                            lastTransactionsList:
+                                                                widget
+                                                                    .lastTransactions,
                                                           ),
+                                                        ));
+                                                      },
+                                                      style: ElevatedButton
+                                                          .styleFrom(
+                                                        backgroundColor: Colors
+                                                            .grey.shade200,
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(10),
                                                         ),
                                                       ),
-                                                      content: Text(value.message, textAlign: TextAlign.center,),
-                                                      actionsAlignment: MainAxisAlignment.start,
-                                                      actions: <Widget>[
-                                                        Center(
-                                                          child: ElevatedButton(
-                                                            onPressed: () {
-                                                              Navigator.of(context).push(MaterialPageRoute(
-                                                                builder: (context) => HomeDrawer(
-                                                                  value: 0,
-                                                                  page: Dashboard(
-                                                                    token: widget.token,
-                                                                    fullName: widget.fullName, customerWallets: widget.customerWallets,
-                                                                    lastTransactions: widget.lastTransactions,
-                                                                  ),
-                                                                  name: 'wallet',
-                                                                  token: widget.token,
-                                                                  fullName: widget.fullName, customerWallets: widget.customerWallets, lastTransactionsList: widget.lastTransactions,
-                                                                ),
-                                                              )
-                                                              );
-                                                            },
-                                                            style: ElevatedButton.styleFrom(
-                                                              backgroundColor: Colors.grey.shade200,
-                                                              shape: RoundedRectangleBorder(
-                                                                borderRadius:
-                                                                BorderRadius.circular(10),
-                                                              ),
-                                                            ),
-                                                            child: Padding(
-                                                              padding: const EdgeInsets.symmetric(
-                                                                  vertical: 10, horizontal: 15),
-                                                              child: Text(
-                                                                "Close",
-                                                                style: GoogleFonts.montserrat(
-                                                                  color: Colors.black,
-                                                                  fontWeight: FontWeight.w600,
-                                                                  fontSize: 16,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    );
-                                                  });
-                                            }else{
-                                              setState(() {
-                                                isApiCallProcess = false;
-                                              });
-                                              showDialog(
-                                                  context: context,
-                                                  builder: (BuildContext context) {
-                                                    return AlertDialog(
-                                                      title: Container(
-                                                        height: 50,
-                                                        alignment: Alignment.centerLeft,
-                                                        padding: const EdgeInsets.only(left: 15),
-                                                        color: Colors.blueAccent,
-                                                        child: Center(
-                                                          child: Text(
-                                                            'Message',
-                                                            style: GoogleFonts.montserrat(
-                                                                color: Colors.white,
-                                                                fontSize: 16,
-                                                                fontWeight: FontWeight.w600),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      content: Text(value.message, textAlign: TextAlign.center,),
-                                                      actionsAlignment: MainAxisAlignment.start,
-                                                      actions: <Widget>[
-                                                        Center(
-                                                          child: ElevatedButton(
-                                                            onPressed: () {
-                                                              Navigator.of(context).pop();
-                                                            },
-                                                            style: ElevatedButton.styleFrom(
-                                                              backgroundColor: Colors.grey.shade200,
-                                                              shape: RoundedRectangleBorder(
-                                                                borderRadius:
-                                                                BorderRadius.circular(10),
-                                                              ),
-                                                            ),
-                                                            child: Padding(
-                                                              padding: const EdgeInsets.symmetric(
-                                                                  vertical: 10, horizontal: 15),
-                                                              child: Text(
-                                                                "Close",
-                                                                style: GoogleFonts.montserrat(
-                                                                  color: Colors.black,
-                                                                  fontWeight: FontWeight.w600,
-                                                                  fontSize: 16,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    );
-                                                  });
-                                            }
-                                          });
-                                        }else{
-                                          setState(() {
-                                            isApiCallProcess = false;
-                                          });
-                                          showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return AlertDialog(
-                                                  title: Container(
-                                                    height: 50,
-                                                    alignment: Alignment.centerLeft,
-                                                    padding: const EdgeInsets.only(left: 15),
-                                                    color: Colors.blueAccent,
-                                                    child: Center(
-                                                      child: Text(
-                                                        'Message',
-                                                        style: GoogleFonts.montserrat(
-                                                            color: Colors.white,
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                                vertical: 10,
+                                                                horizontal: 15),
+                                                        child: Text(
+                                                          "Close",
+                                                          style: GoogleFonts
+                                                              .montserrat(
+                                                            color: Colors.black,
+                                                            fontWeight:
+                                                                FontWeight.w600,
                                                             fontSize: 16,
-                                                            fontWeight: FontWeight.w600),
+                                                          ),
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
-                                                  content: const Text("PIN not the same", textAlign: TextAlign.center,),
-                                                  actionsAlignment: MainAxisAlignment.start,
-                                                  actions: <Widget>[
-                                                    Center(
-                                                      child: ElevatedButton(
-                                                        onPressed: () {
-                                                          Navigator.of(context).pop();
-                                                        },
-                                                        style: ElevatedButton.styleFrom(
-                                                          backgroundColor: Colors.grey.shade200,
-                                                          shape: RoundedRectangleBorder(
-                                                            borderRadius:
-                                                            BorderRadius.circular(10),
-                                                          ),
-                                                        ),
-                                                        child: Padding(
-                                                          padding: const EdgeInsets.symmetric(
-                                                              vertical: 10, horizontal: 15),
-                                                          child: Text(
-                                                            "Close",
-                                                            style: GoogleFonts.montserrat(
-                                                              color: Colors.black,
-                                                              fontWeight: FontWeight.w600,
-                                                              fontSize: 16,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                );
-                                              });
-                                        }
-                                      }else{
+                                                ],
+                                              );
+                                            });
+                                      } else {
                                         setState(() {
                                           isApiCallProcess = false;
                                         });
@@ -493,42 +437,63 @@ class _TransactionPinState extends State<TransactionPin> {
                                               return AlertDialog(
                                                 title: Container(
                                                   height: 50,
-                                                  alignment: Alignment.centerLeft,
-                                                  padding: const EdgeInsets.only(left: 15),
+                                                  alignment:
+                                                      Alignment.centerLeft,
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 15),
                                                   color: Colors.blueAccent,
                                                   child: Center(
                                                     child: Text(
                                                       'Message',
-                                                      style: GoogleFonts.montserrat(
-                                                          color: Colors.white,
-                                                          fontSize: 16,
-                                                          fontWeight: FontWeight.w600),
+                                                      style: GoogleFonts
+                                                          .montserrat(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600),
                                                     ),
                                                   ),
                                                 ),
-                                                content: const Text("PIN must be 4 digits ****", textAlign: TextAlign.center,),
-                                                actionsAlignment: MainAxisAlignment.start,
+                                                content: Text(
+                                                  value.message,
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                                actionsAlignment:
+                                                    MainAxisAlignment.start,
                                                 actions: <Widget>[
                                                   Center(
                                                     child: ElevatedButton(
                                                       onPressed: () {
-                                                        Navigator.of(context).pop();
+                                                        Navigator.of(context)
+                                                            .pop();
                                                       },
-                                                      style: ElevatedButton.styleFrom(
-                                                        backgroundColor: Colors.grey.shade200,
-                                                        shape: RoundedRectangleBorder(
+                                                      style: ElevatedButton
+                                                          .styleFrom(
+                                                        backgroundColor: Colors
+                                                            .grey.shade200,
+                                                        shape:
+                                                            RoundedRectangleBorder(
                                                           borderRadius:
-                                                          BorderRadius.circular(10),
+                                                              BorderRadius
+                                                                  .circular(10),
                                                         ),
                                                       ),
                                                       child: Padding(
-                                                        padding: const EdgeInsets.symmetric(
-                                                            vertical: 10, horizontal: 15),
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                                vertical: 10,
+                                                                horizontal: 15),
                                                         child: Text(
                                                           "Close",
-                                                          style: GoogleFonts.montserrat(
+                                                          style: GoogleFonts
+                                                              .montserrat(
                                                             color: Colors.black,
-                                                            fontWeight: FontWeight.w600,
+                                                            fontWeight:
+                                                                FontWeight.w600,
                                                             fontSize: 16,
                                                           ),
                                                         ),
@@ -539,29 +504,166 @@ class _TransactionPinState extends State<TransactionPin> {
                                               );
                                             });
                                       }
-
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                    ),
-                                    child: Text(
-                                      "Submit",
-                                      style: GoogleFonts.montserrat(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
+                                    });
+                                  } else {
+                                    setState(() {
+                                      isApiCallProcess = false;
+                                    });
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: Container(
+                                              height: 50,
+                                              alignment: Alignment.centerLeft,
+                                              padding: const EdgeInsets.only(
+                                                  left: 15),
+                                              color: Colors.blueAccent,
+                                              child: Center(
+                                                child: Text(
+                                                  'Message',
+                                                  style: GoogleFonts.montserrat(
+                                                      color: Colors.white,
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                ),
+                                              ),
+                                            ),
+                                            content: const Text(
+                                              "PIN not the same",
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            actionsAlignment:
+                                                MainAxisAlignment.start,
+                                            actions: <Widget>[
+                                              Center(
+                                                child: ElevatedButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                    backgroundColor:
+                                                        Colors.grey.shade200,
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                    ),
+                                                  ),
+                                                  child: Padding(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        vertical: 10,
+                                                        horizontal: 15),
+                                                    child: Text(
+                                                      "Close",
+                                                      style: GoogleFonts
+                                                          .montserrat(
+                                                        color: Colors.black,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontSize: 16,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                        });
+                                  }
+                                } else {
+                                  setState(() {
+                                    isApiCallProcess = false;
+                                  });
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Container(
+                                            height: 50,
+                                            alignment: Alignment.centerLeft,
+                                            padding:
+                                                const EdgeInsets.only(left: 15),
+                                            color: Colors.blueAccent,
+                                            child: Center(
+                                              child: Text(
+                                                'Message',
+                                                style: GoogleFonts.montserrat(
+                                                    color: Colors.white,
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.w600),
+                                              ),
+                                            ),
+                                          ),
+                                          content: const Text(
+                                            "PIN must be 4 digits ****",
+                                            textAlign: TextAlign.center,
+                                          ),
+                                          actionsAlignment:
+                                              MainAxisAlignment.start,
+                                          actions: <Widget>[
+                                            Center(
+                                              child: ElevatedButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor:
+                                                      Colors.grey.shade200,
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                  ),
+                                                ),
+                                                child: Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      vertical: 10,
+                                                      horizontal: 15),
+                                                  child: Text(
+                                                    "Close",
+                                                    style:
+                                                        GoogleFonts.montserrat(
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      fontSize: 16,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                      });
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
                               ),
+                              child: Text(
+                                "Submit",
+                                style: GoogleFonts.montserrat(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
-                  )
+                    )
                   : Container(),
-
               editPin
                   ? Center(
-                    child: Column(
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Align(
@@ -572,12 +674,17 @@ class _TransactionPinState extends State<TransactionPin> {
                                   fontSize: 16, fontWeight: FontWeight.w700),
                             ),
                           ),
-                          SizedBox(height: 5,),
+                          SizedBox(
+                            height: 5,
+                          ),
                           AnimatedContainer(
                             duration: const Duration(seconds: 1),
                             decoration: focusNode2.hasFocus
                                 ? BoxDecoration(
-                                    boxShadow: const [BoxShadow(color: Colors.black38,blurRadius: 6)],
+                                    boxShadow: const [
+                                      BoxShadow(
+                                          color: Colors.black38, blurRadius: 6)
+                                    ],
                                     borderRadius: BorderRadius.circular(20),
                                   )
                                 : BoxDecoration(
@@ -599,7 +706,8 @@ class _TransactionPinState extends State<TransactionPin> {
                                 ),
                                 errorBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20),
-                                  borderSide: const BorderSide(color: Colors.red),
+                                  borderSide:
+                                      const BorderSide(color: Colors.red),
                                 ),
                                 suffixIcon: obscure2
                                     ? IconButton(
@@ -633,7 +741,10 @@ class _TransactionPinState extends State<TransactionPin> {
                             duration: const Duration(seconds: 1),
                             decoration: focusNode3.hasFocus
                                 ? BoxDecoration(
-                                    boxShadow: const [BoxShadow(color: Colors.black38,blurRadius: 6)],
+                                    boxShadow: const [
+                                      BoxShadow(
+                                          color: Colors.black38, blurRadius: 6)
+                                    ],
                                     borderRadius: BorderRadius.circular(20),
                                   )
                                 : BoxDecoration(
@@ -655,7 +766,8 @@ class _TransactionPinState extends State<TransactionPin> {
                                 ),
                                 errorBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20),
-                                  borderSide: const BorderSide(color: Colors.red),
+                                  borderSide:
+                                      const BorderSide(color: Colors.red),
                                 ),
                                 suffixIcon: obscure3
                                     ? IconButton(
@@ -689,7 +801,10 @@ class _TransactionPinState extends State<TransactionPin> {
                             duration: const Duration(seconds: 1),
                             decoration: focusNode3.hasFocus
                                 ? BoxDecoration(
-                                    boxShadow: const [BoxShadow(color: Colors.black38,blurRadius: 6)],
+                                    boxShadow: const [
+                                      BoxShadow(
+                                          color: Colors.black38, blurRadius: 6)
+                                    ],
                                     borderRadius: BorderRadius.circular(20),
                                   )
                                 : BoxDecoration(
@@ -711,7 +826,8 @@ class _TransactionPinState extends State<TransactionPin> {
                                 ),
                                 errorBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20),
-                                  borderSide: const BorderSide(color: Colors.red),
+                                  borderSide:
+                                      const BorderSide(color: Colors.red),
                                 ),
                                 suffixIcon: obscure4
                                     ? IconButton(
@@ -745,198 +861,131 @@ class _TransactionPinState extends State<TransactionPin> {
                           ),
                           Center(
                             child: ElevatedButton(
-                                    onPressed: () async {
-                                      if(newPinController.text.length == 4){
-                                        if(newPinController.text == conNewPinController.text) {
-                                          setState(() {
-                                            isApiCallProcess = true;
-                                          });
-                                          UserPinCodeModifyRequestModel requestModel = UserPinCodeModifyRequestModel(oldPinCode: oldPinController.text, newPinCode: newPinController.text, confirmNewPinCode: conNewPinController.text);
-                                          final prefs = await SharedPreferences.getInstance();
-                                          String subdomain = prefs.getString('subdomain') ??
-                                              'https://core.landmarkcooperative.org';
+                              onPressed: () async {
+                                if (newPinController.text.length == 4) {
+                                  if (newPinController.text ==
+                                      conNewPinController.text) {
+                                    setState(() {
+                                      isApiCallProcess = true;
+                                    });
+                                    UserPinCodeModifyRequestModel requestModel =
+                                        UserPinCodeModifyRequestModel(
+                                            oldPinCode: oldPinController.text,
+                                            newPinCode: newPinController.text,
+                                            confirmNewPinCode:
+                                                conNewPinController.text);
+                                    final prefs =
+                                        await SharedPreferences.getInstance();
+                                    String subdomain = prefs
+                                            .getString('subdomain') ??
+                                        'https://core.landmarkcooperative.org';
 
-                                          APIService apiService = APIService();
-                                          apiService.changePincode(requestModel, widget.token).then((value) {
-                                            if(value.status){
-                                              showDialog(
-                                                  context: context,
-                                                  builder: (BuildContext context) {
-                                                    return AlertDialog(
-                                                      title: Container(
-                                                        height: 50,
-                                                        alignment: Alignment.centerLeft,
-                                                        padding: const EdgeInsets.only(left: 15),
-                                                        color: Colors.blueAccent,
-                                                        child: Center(
-                                                          child: Text(
-                                                            'Message',
-                                                            style: GoogleFonts.montserrat(
-                                                                color: Colors.white,
-                                                                fontSize: 16,
-                                                                fontWeight: FontWeight.w600),
+                                    APIService apiService = APIService();
+                                    apiService
+                                        .changePincode(
+                                            requestModel, widget.token)
+                                        .then((value) {
+                                      if (value.status) {
+                                        showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                title: Container(
+                                                  height: 50,
+                                                  alignment:
+                                                      Alignment.centerLeft,
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 15),
+                                                  color: Colors.blueAccent,
+                                                  child: Center(
+                                                    child: Text(
+                                                      'Message',
+                                                      style: GoogleFonts
+                                                          .montserrat(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600),
+                                                    ),
+                                                  ),
+                                                ),
+                                                content: Text(
+                                                  value.message,
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                                actionsAlignment:
+                                                    MainAxisAlignment.start,
+                                                actions: <Widget>[
+                                                  Center(
+                                                    child: ElevatedButton(
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .push(
+                                                                MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              HomeDrawer(
+                                                            value: 0,
+                                                            page: Dashboard(
+                                                              token:
+                                                                  widget.token,
+                                                              fullName: widget
+                                                                  .fullName,
+                                                              customerWallets:
+                                                                  widget
+                                                                      .customerWallets,
+                                                              lastTransactions:
+                                                                  widget
+                                                                      .lastTransactions,
+                                                            ),
+                                                            name: 'wallet',
+                                                            token: widget.token,
+                                                            fullName:
+                                                                widget.fullName,
+                                                            customerWallets: widget
+                                                                .customerWallets,
+                                                            lastTransactionsList:
+                                                                widget
+                                                                    .lastTransactions,
                                                           ),
+                                                        ));
+                                                      },
+                                                      style: ElevatedButton
+                                                          .styleFrom(
+                                                        backgroundColor: Colors
+                                                            .grey.shade200,
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(10),
                                                         ),
                                                       ),
-                                                      content: Text(value.message, textAlign: TextAlign.center,),
-                                                      actionsAlignment: MainAxisAlignment.start,
-                                                      actions: <Widget>[
-                                                        Center(
-                                                          child: ElevatedButton(
-                                                            onPressed: () {
-                                                              Navigator.of(context).push(MaterialPageRoute(
-                                                                builder: (context) => HomeDrawer(
-                                                                  value: 0,
-                                                                  page: Dashboard(
-                                                                    token: widget.token,
-                                                                    fullName: widget.fullName, customerWallets: widget.customerWallets,
-                                                                    lastTransactions: widget.lastTransactions,
-                                                                  ),
-                                                                  name: 'wallet',
-                                                                  token: widget.token,
-                                                                  fullName: widget.fullName, customerWallets: widget.customerWallets, lastTransactionsList: widget.lastTransactions,
-                                                                ),
-                                                              )
-                                                              );
-                                                            },
-                                                            style: ElevatedButton.styleFrom(
-                                                              backgroundColor: Colors.grey.shade200,
-                                                              shape: RoundedRectangleBorder(
-                                                                borderRadius:
-                                                                BorderRadius.circular(10),
-                                                              ),
-                                                            ),
-                                                            child: Padding(
-                                                              padding: const EdgeInsets.symmetric(
-                                                                  vertical: 10, horizontal: 15),
-                                                              child: Text(
-                                                                "Close",
-                                                                style: GoogleFonts.montserrat(
-                                                                  color: Colors.black,
-                                                                  fontWeight: FontWeight.w600,
-                                                                  fontSize: 16,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    );
-                                                  });
-                                            }else{
-                                              setState(() {
-                                                isApiCallProcess = false;
-                                              });
-                                              showDialog(
-                                                  context: context,
-                                                  builder: (BuildContext context) {
-                                                    return AlertDialog(
-                                                      title: Container(
-                                                        height: 50,
-                                                        alignment: Alignment.centerLeft,
-                                                        padding: const EdgeInsets.only(left: 15),
-                                                        color: Colors.blueAccent,
-                                                        child: Center(
-                                                          child: Text(
-                                                            'Message',
-                                                            style: GoogleFonts.montserrat(
-                                                                color: Colors.white,
-                                                                fontSize: 16,
-                                                                fontWeight: FontWeight.w600),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      content: Text(value.message, textAlign: TextAlign.center,),
-                                                      actionsAlignment: MainAxisAlignment.start,
-                                                      actions: <Widget>[
-                                                        Center(
-                                                          child: ElevatedButton(
-                                                            onPressed: () {
-                                                              Navigator.of(context).pop();
-                                                            },
-                                                            style: ElevatedButton.styleFrom(
-                                                              backgroundColor: Colors.grey.shade200,
-                                                              shape: RoundedRectangleBorder(
-                                                                borderRadius:
-                                                                BorderRadius.circular(10),
-                                                              ),
-                                                            ),
-                                                            child: Padding(
-                                                              padding: const EdgeInsets.symmetric(
-                                                                  vertical: 10, horizontal: 15),
-                                                              child: Text(
-                                                                "Close",
-                                                                style: GoogleFonts.montserrat(
-                                                                  color: Colors.black,
-                                                                  fontWeight: FontWeight.w600,
-                                                                  fontSize: 16,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    );
-                                                  });
-                                            }
-                                          });
-                                        }else{
-                                          setState(() {
-                                            isApiCallProcess = false;
-                                          });
-                                          showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return AlertDialog(
-                                                  title: Container(
-                                                    height: 50,
-                                                    alignment: Alignment.centerLeft,
-                                                    padding: const EdgeInsets.only(left: 15),
-                                                    color: Colors.blueAccent,
-                                                    child: Center(
-                                                      child: Text(
-                                                        'Message',
-                                                        style: GoogleFonts.montserrat(
-                                                            color: Colors.white,
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                                vertical: 10,
+                                                                horizontal: 15),
+                                                        child: Text(
+                                                          "Close",
+                                                          style: GoogleFonts
+                                                              .montserrat(
+                                                            color: Colors.black,
+                                                            fontWeight:
+                                                                FontWeight.w600,
                                                             fontSize: 16,
-                                                            fontWeight: FontWeight.w600),
+                                                          ),
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
-                                                  content: const Text("PIN not the same", textAlign: TextAlign.center,),
-                                                  actionsAlignment: MainAxisAlignment.start,
-                                                  actions: <Widget>[
-                                                    Center(
-                                                      child: ElevatedButton(
-                                                        onPressed: () {
-                                                          Navigator.of(context).pop();
-                                                        },
-                                                        style: ElevatedButton.styleFrom(
-                                                          backgroundColor: Colors.grey.shade200,
-                                                          shape: RoundedRectangleBorder(
-                                                            borderRadius:
-                                                            BorderRadius.circular(10),
-                                                          ),
-                                                        ),
-                                                        child: Padding(
-                                                          padding: const EdgeInsets.symmetric(
-                                                              vertical: 10, horizontal: 15),
-                                                          child: Text(
-                                                            "Close",
-                                                            style: GoogleFonts.montserrat(
-                                                              color: Colors.black,
-                                                              fontWeight: FontWeight.w600,
-                                                              fontSize: 16,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                );
-                                              });
-                                        }
-                                      }else{
+                                                ],
+                                              );
+                                            });
+                                      } else {
                                         setState(() {
                                           isApiCallProcess = false;
                                         });
@@ -946,42 +995,63 @@ class _TransactionPinState extends State<TransactionPin> {
                                               return AlertDialog(
                                                 title: Container(
                                                   height: 50,
-                                                  alignment: Alignment.centerLeft,
-                                                  padding: const EdgeInsets.only(left: 15),
+                                                  alignment:
+                                                      Alignment.centerLeft,
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 15),
                                                   color: Colors.blueAccent,
                                                   child: Center(
                                                     child: Text(
                                                       'Message',
-                                                      style: GoogleFonts.montserrat(
-                                                          color: Colors.white,
-                                                          fontSize: 16,
-                                                          fontWeight: FontWeight.w600),
+                                                      style: GoogleFonts
+                                                          .montserrat(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600),
                                                     ),
                                                   ),
                                                 ),
-                                                content: const Text("PIN must be 4 digits ****", textAlign: TextAlign.center,),
-                                                actionsAlignment: MainAxisAlignment.start,
+                                                content: Text(
+                                                  value.message,
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                                actionsAlignment:
+                                                    MainAxisAlignment.start,
                                                 actions: <Widget>[
                                                   Center(
                                                     child: ElevatedButton(
                                                       onPressed: () {
-                                                        Navigator.of(context).pop();
+                                                        Navigator.of(context)
+                                                            .pop();
                                                       },
-                                                      style: ElevatedButton.styleFrom(
-                                                        backgroundColor: Colors.grey.shade200,
-                                                        shape: RoundedRectangleBorder(
+                                                      style: ElevatedButton
+                                                          .styleFrom(
+                                                        backgroundColor: Colors
+                                                            .grey.shade200,
+                                                        shape:
+                                                            RoundedRectangleBorder(
                                                           borderRadius:
-                                                          BorderRadius.circular(10),
+                                                              BorderRadius
+                                                                  .circular(10),
                                                         ),
                                                       ),
                                                       child: Padding(
-                                                        padding: const EdgeInsets.symmetric(
-                                                            vertical: 10, horizontal: 15),
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                                vertical: 10,
+                                                                horizontal: 15),
                                                         child: Text(
                                                           "Close",
-                                                          style: GoogleFonts.montserrat(
+                                                          style: GoogleFonts
+                                                              .montserrat(
                                                             color: Colors.black,
-                                                            fontWeight: FontWeight.w600,
+                                                            fontWeight:
+                                                                FontWeight.w600,
                                                             fontSize: 16,
                                                           ),
                                                         ),
@@ -992,24 +1062,162 @@ class _TransactionPinState extends State<TransactionPin> {
                                               );
                                             });
                                       }
-
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                    ),
-                                    child: Text(
-                                      "Submit",
-                                      style: GoogleFonts.montserrat(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
+                                    });
+                                  } else {
+                                    setState(() {
+                                      isApiCallProcess = false;
+                                    });
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: Container(
+                                              height: 50,
+                                              alignment: Alignment.centerLeft,
+                                              padding: const EdgeInsets.only(
+                                                  left: 15),
+                                              color: Colors.blueAccent,
+                                              child: Center(
+                                                child: Text(
+                                                  'Message',
+                                                  style: GoogleFonts.montserrat(
+                                                      color: Colors.white,
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                ),
+                                              ),
+                                            ),
+                                            content: const Text(
+                                              "PIN not the same",
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            actionsAlignment:
+                                                MainAxisAlignment.start,
+                                            actions: <Widget>[
+                                              Center(
+                                                child: ElevatedButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                    backgroundColor:
+                                                        Colors.grey.shade200,
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                    ),
+                                                  ),
+                                                  child: Padding(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        vertical: 10,
+                                                        horizontal: 15),
+                                                    child: Text(
+                                                      "Close",
+                                                      style: GoogleFonts
+                                                          .montserrat(
+                                                        color: Colors.black,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontSize: 16,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                        });
+                                  }
+                                } else {
+                                  setState(() {
+                                    isApiCallProcess = false;
+                                  });
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Container(
+                                            height: 50,
+                                            alignment: Alignment.centerLeft,
+                                            padding:
+                                                const EdgeInsets.only(left: 15),
+                                            color: Colors.blueAccent,
+                                            child: Center(
+                                              child: Text(
+                                                'Message',
+                                                style: GoogleFonts.montserrat(
+                                                    color: Colors.white,
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.w600),
+                                              ),
+                                            ),
+                                          ),
+                                          content: const Text(
+                                            "PIN must be 4 digits ****",
+                                            textAlign: TextAlign.center,
+                                          ),
+                                          actionsAlignment:
+                                              MainAxisAlignment.start,
+                                          actions: <Widget>[
+                                            Center(
+                                              child: ElevatedButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor:
+                                                      Colors.grey.shade200,
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                  ),
+                                                ),
+                                                child: Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      vertical: 10,
+                                                      horizontal: 15),
+                                                  child: Text(
+                                                    "Close",
+                                                    style:
+                                                        GoogleFonts.montserrat(
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      fontSize: 16,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                      });
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              child: Text(
+                                "Submit",
+                                style: GoogleFonts.montserrat(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
                           ),
                         ],
                       ),
-                  )
+                    )
                   : Container(),
             ],
           ),

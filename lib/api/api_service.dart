@@ -738,5 +738,25 @@ class APIService {
       throw Exception(response.body);
     }
   }
+
+  Future<CustomerFeedbackResponseModel> resetPinCode(
+      String password, String token) async {
+    String url =
+        "$DOMAIN_URL/resetPincode/$password/$token";
+
+    final response = await http.delete(Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8'
+      },);
+    if (response.statusCode == 200) {
+      return CustomerFeedbackResponseModel(
+          status: true, message: response.body);
+    } else if (response.statusCode == 400) {
+      return CustomerFeedbackResponseModel(
+          status: false, message: response.body);
+    } else {
+      throw Exception('Failed to load data!');
+    }
+  }
   
 }

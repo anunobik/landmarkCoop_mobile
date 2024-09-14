@@ -10,6 +10,7 @@ import 'package:landmarkcoop_mobile_app/model/push_notification.dart';
 import 'package:landmarkcoop_mobile_app/pages/change_password.dart';
 import 'package:landmarkcoop_mobile_app/pages/change_phone_no.dart';
 import 'package:landmarkcoop_mobile_app/pages/dashboard.dart';
+import 'package:landmarkcoop_mobile_app/pages/pin_reset.dart';
 import 'package:landmarkcoop_mobile_app/pages/transaction_pin.dart';
 import 'package:landmarkcoop_mobile_app/pages/update_bvn.dart';
 import 'package:landmarkcoop_mobile_app/util/home_drawer.dart';
@@ -48,10 +49,13 @@ class _SettingState extends State<Setting> {
   bool isTransactionPinDialogShown = false;
   bool isBvnLinked = false;
   bool isMinervaHub = true;
+  bool createPin = false;
+  bool isPinResetDialogShown = false;
 
   @override
   void initState() {
     super.initState();
+    checkPinCreated();
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       // Parse the message received
       PushNotification notification = PushNotification(
@@ -149,6 +153,20 @@ class _SettingState extends State<Setting> {
         isBvnLinked = true;
       });
     }
+  }
+
+  Future<void> checkPinCreated() async {
+    final prefs = await SharedPreferences.getInstance();
+    String subdomain =
+        prefs.getString('subdomain') ?? 'https://core.myminervahub.com';
+    String institution = prefs.getString('institution') ?? 'Minerva Hub';
+    APIService apiService = APIService();
+    apiService.isPinCreated(widget.token).then((value) {
+      print(value.status);
+      setState(() {
+        createPin = value.status;
+      });
+    });
   }
 
   void pushNotify() async {
@@ -462,6 +480,61 @@ class _SettingState extends State<Setting> {
                 )
                     : Container(),
                 const SizedBox(height: 20),
+                createPin ? Container(
+                  decoration: BoxDecoration(color: Colors.white, boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xff091841).withOpacity(0.3),
+                      spreadRadius: 2,
+                      blurRadius: 4,
+                      offset: const Offset(3, 3),
+                    ),
+                  ]),
+                  child: ListTile(
+                    onTap: () {
+                      Future.delayed(const Duration(milliseconds: 800), () {
+                        setState(() {
+                          isPinResetDialogShown = true;
+                        });
+                        pinReset(
+                          context,
+                          onClosed: (context) {
+                            setState(() {
+                              isPinResetDialogShown = false;
+                            });
+                          },
+                          fullName: widget.fullName,
+                          token: widget.token,
+                          customerWallets: widget.customerWallets, lastTransactions: widget.lastTransactions,
+                        );
+                      });
+                    },
+                    leading: Container(
+                      height: 35,
+                      width: 35,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Colors.lightBlue,
+                        ),
+                      ),
+                      child: const Icon(Icons.edit_note_outlined,
+                          color: Color(0xff000080)),
+                    ),
+                    title: Text(
+                      'Reset Pin Code',
+                      style: GoogleFonts.openSans(
+                        color: const Color(0xff000080),
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    trailing: const Icon(
+                      Icons.arrow_forward_ios_outlined,
+                      color: Colors.lightBlue,
+                    ),
+                  ),
+                ) : Container(),
+                SizedBox(height: 20,),
                 Container(
                   decoration: BoxDecoration(color: Colors.white, boxShadow: [
                     BoxShadow(
