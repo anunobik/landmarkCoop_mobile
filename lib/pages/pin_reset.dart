@@ -3,6 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:landmarkcoop_mobile_app/model/customer_model.dart';
 import 'package:landmarkcoop_mobile_app/model/other_model.dart';
+import 'package:landmarkcoop_mobile_app/pages/setting.dart';
 import 'package:landmarkcoop_mobile_app/pages/transaction_pin.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -191,11 +192,11 @@ Future<Object?> pinReset(BuildContext context,
                                               child: ElevatedButton(
                                                 onPressed: () {
                                                   Navigator.of(context).push(MaterialPageRoute(
-                                                      builder: (context) => TransactionPin(
+                                                      builder: (context) => Setting(
                                                         fullName: fullName,
                                                         token: token,
                                                         lastTransactions: lastTransactions,
-                                                        customerWallets: customerWallets,
+                                                        customerWallets: customerWallets, phoneNumber: customerWallets[0].phoneNo,
                                                       )));
                                                 },
                                                 style: ElevatedButton.styleFrom(

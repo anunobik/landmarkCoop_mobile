@@ -645,6 +645,7 @@ class _TransactionPinState extends State<TransactionPin> {
                                 }
                               },
                               style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.lightBlue,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
@@ -1203,6 +1204,7 @@ class _TransactionPinState extends State<TransactionPin> {
                                 }
                               },
                               style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.lightBlue,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
