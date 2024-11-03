@@ -20,12 +20,11 @@ class ContactCustomerSupport extends StatefulWidget {
   final String token;
   final List<CustomerWalletsBalanceModel> customerWallets;
   final List<LastTransactionsModel> lastTransactions;
-  const ContactCustomerSupport({Key? key,
+  const ContactCustomerSupport({super.key,
     required this.customerWallets,
     required this.fullName,
     required this.lastTransactions,
-    required this.token})
-      : super(key: key);
+    required this.token});
 
   @override
   State<ContactCustomerSupport> createState() => _ContactCustomerSupportState();

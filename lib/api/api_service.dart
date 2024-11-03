@@ -5,7 +5,6 @@ import 'package:landmarkcoop_mobile_app/model/customer_model.dart';
 import 'package:landmarkcoop_mobile_app/model/login_model.dart';
 import 'package:landmarkcoop_mobile_app/model/other_model.dart';
 import 'package:landmarkcoop_mobile_app/model/statement_model.dart';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import '../model/airtime_model.dart';
@@ -75,7 +74,7 @@ class APIService {
     String browserInfo = 'mobile_app';
     try {
       ipAddress = await Ipify.ipv4();
-    } on Exception catch (e) {
+    } on Exception {
       // TODO
       ipAddress = "IP failed to load";
     }
@@ -302,7 +301,7 @@ class APIService {
     String browserInfo = 'mobile_app';
     try {
       ipAddress = await Ipify.ipv4();
-    } on Exception catch (e) {
+    } on Exception {
       // TODO
       ipAddress = "IP failed to load";
     }
@@ -363,7 +362,7 @@ class APIService {
     String browserInfo = 'mobile_app';
     try {
       ipAddress = await Ipify.ipv4();
-    } on Exception catch (e) {
+    } on Exception {
       // TODO
       ipAddress = "IP failed to load";
     }
@@ -394,7 +393,7 @@ class APIService {
     String browserInfo = 'mobile_app';
     try {
       ipAddress = await Ipify.ipv4();
-    } on Exception catch (e) {
+    } on Exception {
       // TODO
       ipAddress = "IP failed to load";
     }

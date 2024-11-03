@@ -2,17 +2,12 @@ import 'package:landmarkcoop_mobile_app/api/api_service.dart';
 import 'package:landmarkcoop_mobile_app/component/custom_text_form_field.dart';
 import 'package:landmarkcoop_mobile_app/model/customer_model.dart';
 import 'package:landmarkcoop_mobile_app/model/other_model.dart';
-import 'package:landmarkcoop_mobile_app/model/push_notification.dart';
 import 'package:landmarkcoop_mobile_app/pages/dashboard.dart';
 import 'package:landmarkcoop_mobile_app/pages/investment.dart';
-import 'package:landmarkcoop_mobile_app/pushNotifications/push_messages.dart';
 import 'package:landmarkcoop_mobile_app/util/ProgressHUD.dart';
 import 'package:landmarkcoop_mobile_app/util/home_drawer.dart';
-import 'package:landmarkcoop_mobile_app/util/notification_badge.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:overlay_support/overlay_support.dart';
 
 class BookInvestment extends StatefulWidget {
   final String fullName;
@@ -22,13 +17,12 @@ class BookInvestment extends StatefulWidget {
   final OnlineRateResponseModel interestRate;
 
   const BookInvestment(
-      {Key? key,
+      {super.key,
       required this.customerWallets,
       required this.interestRate,
       required this.fullName,
       required this.lastTransactions,
-      required this.token})
-      : super(key: key);
+      required this.token});
 
   @override
   State<BookInvestment> createState() => _BookInvestmentState();

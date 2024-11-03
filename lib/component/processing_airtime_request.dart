@@ -13,12 +13,12 @@ class ProcessingAirtimeRequest extends StatelessWidget {
   final List<LastTransactionsModel> lastTransactions;
 
   const ProcessingAirtimeRequest({
-    Key? key,
+    super.key,
     required this.customerWallets,
     required this.fullName,
     required this.token,
     required this.lastTransactions,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class ProcessingAirtimeRequest extends StatelessWidget {
                   Container(
                     height: 100,
                     width: 100,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       image: DecorationImage(
                           image: NetworkImage('https://core.landmarkcooperative.org/getBizLogo'),
                           fit: BoxFit.contain),

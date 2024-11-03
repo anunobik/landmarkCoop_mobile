@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttercontactpicker/fluttercontactpicker.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 import 'package:landmarkcoop_mobile_app/api/api_service.dart';
 import 'package:landmarkcoop_mobile_app/model/customer_model.dart';
 import 'package:landmarkcoop_mobile_app/model/login_model.dart';
@@ -221,7 +220,7 @@ class _TransferState extends State<Transfer> {
                         _contact = _phoneContact!.phoneNumber!.number!.replaceAll(' ', '');
                       });
                       APIService apiServicePhone =
-                          new APIService();
+                          APIService();
                       apiServicePhone
                           .getAccountFromPhone(
                               _contact.replaceAll(' ', ''), widget.token)
@@ -348,7 +347,7 @@ class _TransferState extends State<Transfer> {
                   Form(
                     key: formKeyTrf,
                     child: TextFormField(
-                      style: TextStyle(fontSize: 18.0),
+                      style: const TextStyle(fontSize: 18.0),
                       autofocus: true,
                       onSaved: (input) =>
                           fundTrfAmount = double.parse(input!.trim()),
@@ -413,7 +412,7 @@ class _TransferState extends State<Transfer> {
                     if (validateAndSaveTrf()) {
                       AccountToAccountRequestModel
                           accountToAccountRequestModel =
-                          new AccountToAccountRequestModel(
+                          AccountToAccountRequestModel(
                               fromAccountNumber: selectedWallet!.accountNumber,
                               toAccountNumber:
                                   customerAccountDisplayModel!.accountNumber,
@@ -512,7 +511,7 @@ class _TransferState extends State<Transfer> {
                 height: 50,
                 alignment: Alignment.centerLeft,
                 padding: const EdgeInsets.only(left: 15),
-                color: Color.fromRGBO(0, 0, 139, 1),
+                color: const Color.fromRGBO(0, 0, 139, 1),
                 child: Center(
                   child: Text(
                     'Message',
@@ -599,7 +598,7 @@ class _TransferState extends State<Transfer> {
                       child: Text(
                         "Ok",
                         style: GoogleFonts.montserrat(
-                          color: Color.fromRGBO(0, 0, 139, 1),
+                          color: const Color.fromRGBO(0, 0, 139, 1),
                           fontSize: 16,
                         ),
                       ),

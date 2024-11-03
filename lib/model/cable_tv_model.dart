@@ -220,31 +220,23 @@ class BillsInfoResponseModel {
 
   factory BillsInfoResponseModel.fromJson(Map<String, dynamic> json) {
     return BillsInfoResponseModel(
-      id: json['data']['id'] != null ? json['data']['id'] : '',
-      billerCode: json['data']['biller_code'] != null
-          ? json['data']['biller_code']
-          : '',
-      name: json['data']['name'] != null ? json['data']['name'] : '',
-      defaultCommission: json['data']['default_commission'] != null
-          ? json['data']['default_commission']
-          : '',
-      country: json['data']['country'] != null ? json['data']['country'] : '',
+      id: json['data']['id'] ?? '',
+      billerCode: json['data']['biller_code'] ?? '',
+      name: json['data']['name'] ?? '',
+      defaultCommission: json['data']['default_commission'] ?? '',
+      country: json['data']['country'] ?? '',
       isAirtime:
-          json['data']['is_airtime'] != null ? json['data']['is_airtime'] : '',
-      billerName: json['data']['biller_name'] != null
-          ? json['data']['biller_name']
-          : '',
+          json['data']['is_airtime'] ?? '',
+      billerName: json['data']['biller_name'] ?? '',
       itemCode:
-          json['data']['item_code'] != null ? json['data']['item_code'] : '',
+          json['data']['item_code'] ?? '',
       shortName:
-          json['data']['short_name'] != null ? json['data']['short_name'] : '',
-      fee: json['data']['fee'] != null ? json['data']['fee'] : '',
-      commissionOnFee: json['data']['commission_on_fee'] != null
-          ? json['data']['commission_on_fee']
-          : '',
+          json['data']['short_name'] ?? '',
+      fee: json['data']['fee'] ?? '',
+      commissionOnFee: json['data']['commission_on_fee'] ?? '',
       labelName:
-          json['data']['label_name'] != null ? json['data']['label_name'] : '',
-      amount: json['data']['amount'] != null ? json['data']['amount'] : '',
+          json['data']['label_name'] ?? '',
+      amount: json['data']['amount'] ?? '',
     );
   }
 }

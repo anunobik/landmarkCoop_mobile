@@ -1,10 +1,6 @@
 import 'package:landmarkcoop_mobile_app/api/api_service.dart';
 import 'package:landmarkcoop_mobile_app/model/customer_model.dart';
-import 'package:landmarkcoop_mobile_app/model/login_model.dart';
 import 'package:landmarkcoop_mobile_app/model/other_model.dart';
-import 'package:landmarkcoop_mobile_app/pages/completed.dart';
-import 'package:landmarkcoop_mobile_app/pages/ongoing.dart';
-import 'package:landmarkcoop_mobile_app/pages/pending.dart';
 import 'package:landmarkcoop_mobile_app/util/home_drawer.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
@@ -229,7 +225,7 @@ class _InvestmentState extends State<Investment> {
                         }
                     ) : Column(
                       children: [
-                        SizedBox(height: 50,),
+                        const SizedBox(height: 50,),
                         Align(
                           alignment: Alignment.center,
                           child: Text(
@@ -311,7 +307,7 @@ class _InvestmentState extends State<Investment> {
               ),
             ) : Column(
               children: [
-                SizedBox(height: 50,),
+                const SizedBox(height: 50,),
                 Align(
                   alignment: Alignment.center,
                   child: Text(

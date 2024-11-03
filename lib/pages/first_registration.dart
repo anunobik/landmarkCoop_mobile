@@ -6,7 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../component/custom_text_form_field.dart';
 
 class FirstRegistration extends StatefulWidget {
-  const FirstRegistration({Key? key}) : super(key: key);
+  const FirstRegistration({super.key});
 
   @override
   State<FirstRegistration> createState() => _FirstRegistrationState();

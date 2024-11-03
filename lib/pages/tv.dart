@@ -10,8 +10,7 @@ import '../util/ProgressHUD.dart';
 class TV extends StatefulWidget {
   final String fullName;
   final String token;
-  const TV({Key? key, required this.fullName, required this.token})
-      : super(key: key);
+  const TV({super.key, required this.fullName, required this.token});
 
   @override
   State<TV> createState() => _TVState();
@@ -303,7 +302,7 @@ class _TVState extends State<TV> {
                 items: dataTo
                     .map((map) => DropdownMenuItem<BillsResponseModel>(
                   value: map,
-                  child: Center(child: Text(map.biller_name + ' -> NGN' + map.amount.toString(), overflow: TextOverflow.ellipsis,)),
+                  child: Center(child: Text('${map.biller_name} -> NGN${map.amount}', overflow: TextOverflow.ellipsis,)),
                 ))
                     .toList(),
               ),

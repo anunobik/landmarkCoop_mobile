@@ -24,12 +24,12 @@ class TransferExternal extends StatefulWidget {
   final List<LastTransactionsModel> lastTransactions;
 
   const TransferExternal({
-    Key? key,
+    super.key,
     required this.customerWallets,
     required this.fullName,
     required this.token,
     required this.lastTransactions,
-  }) : super(key: key);
+  });
 
   @override
   State<TransferExternal> createState() => _TransferExternalState();

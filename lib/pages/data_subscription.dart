@@ -25,12 +25,12 @@ class DataSubscription extends StatefulWidget {
   final List<LastTransactionsModel> lastTransactions;
 
   const DataSubscription({
-    Key? key,
+    super.key,
     required this.customerWallets,
     required this.fullName,
     required this.token,
     required this.lastTransactions,
-  }) : super(key: key);
+  });
 
   @override
   State<DataSubscription> createState() => _DataSubscriptionState();
@@ -709,7 +709,7 @@ class _DataSubscriptionState extends State<DataSubscription> {
                 viewAmount = displayAmount.format(newValue!.amount);
                 state.didChange(newValue);
                 _enableSubmitBtn = true;
-                selectedDateBundle = newValue!;
+                selectedDateBundle = newValue;
               });
             },
             items: dataTo

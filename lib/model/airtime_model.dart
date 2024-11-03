@@ -29,11 +29,11 @@ class AirtimeResponseModel {
 
   factory AirtimeResponseModel.fromJson(Map<String, dynamic> json) {
     return AirtimeResponseModel(
-      phoneNumber: json['data']['phone_number'] != null ? json['data']['phone_number'] : '',
-      amount: json['data']['amount'] != null ? json['data']['amount'] : '',
-      network: json['data']['network'] != null ? json['data']['network'] : '',
-      flwRef: json['data']['flw_ref'] != null ? json['data']['flw_ref'] : '',
-      reference: json['data']['reference'] != null ? json['data']['reference'] : '',
+      phoneNumber: json['data']['phone_number'] ?? '',
+      amount: json['data']['amount'] ?? '',
+      network: json['data']['network'] ?? '',
+      flwRef: json['data']['flw_ref'] ?? '',
+      reference: json['data']['reference'] ?? '',
     );
   }
 }
@@ -71,11 +71,11 @@ class DataBundleResponseModel {
 
   factory DataBundleResponseModel.fromJson(Map<String, dynamic> json) {
     return DataBundleResponseModel(
-      phoneNumber: json['data']['phone_number'] != null ? json['data']['phone_number'] : '',
-      amount: json['data']['amount'] != null ? json['data']['amount'] : '',
-      network: json['data']['network'] != null ? json['data']['network'] : '',
-      flwRef: json['data']['flw_ref'] != null ? json['data']['flw_ref'] : '',
-      reference: json['data']['reference'] != null ? json['data']['reference'] : '',
+      phoneNumber: json['data']['phone_number'] ?? '',
+      amount: json['data']['amount'] ?? '',
+      network: json['data']['network'] ?? '',
+      flwRef: json['data']['flw_ref'] ?? '',
+      reference: json['data']['reference'] ?? '',
     );
   }
 }

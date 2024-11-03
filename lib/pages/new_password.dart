@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'login.dart';
 
 class NewPassword extends StatefulWidget {
-  const NewPassword({ Key? key }) : super(key: key);
+  const NewPassword({ super.key });
 
   @override
   _NewPasswordState createState() => _NewPasswordState();
@@ -46,14 +46,14 @@ class _NewPasswordState extends State<NewPassword> {
     }
   @override
   Widget build(BuildContext context) {
-    var _height = MediaQuery.of(context).size.height;
-    var _width = MediaQuery.of(context).size.width;
+    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        iconTheme: IconThemeData(
+        iconTheme: const IconThemeData(
           color: Colors.black
         ),
       ),
@@ -76,8 +76,8 @@ class _NewPasswordState extends State<NewPassword> {
               ),
             ),
             Container(
-              height: _height * 0.50,
-              width: _width * 0.9,
+              height: height * 0.50,
+              width: width * 0.9,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(25.0),
                 color: Colors.lightGreen.shade500
@@ -94,7 +94,7 @@ class _NewPasswordState extends State<NewPassword> {
                       obscuringCharacter: 'x',
                       maxLength: 6,
                       decoration: InputDecoration(
-                        icon: Icon(
+                        icon: const Icon(
                           Icons.lock,
                           color: Colors.white
                         ),
@@ -108,7 +108,7 @@ class _NewPasswordState extends State<NewPassword> {
                         ),
                         hintText: 'Enter Default Password',
                         hintStyle: GoogleFonts.montserrat(color: Colors.black38),
-                        focusedBorder: UnderlineInputBorder(
+                        focusedBorder: const UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.white)
                         ) 
                       ),
@@ -126,7 +126,7 @@ class _NewPasswordState extends State<NewPassword> {
                       obscuringCharacter: 'x',
                       maxLength: 6,
                       decoration: InputDecoration(
-                        icon: Icon(
+                        icon: const Icon(
                           Icons.lock,
                           color: Colors.white
                         ),
@@ -142,7 +142,7 @@ class _NewPasswordState extends State<NewPassword> {
                           ),
                           onPressed: _visible1,
                         ),
-                        focusedBorder: UnderlineInputBorder(
+                        focusedBorder: const UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.white)
                         ) 
                       ),
@@ -160,7 +160,7 @@ class _NewPasswordState extends State<NewPassword> {
                       obscuringCharacter: 'x',
                       maxLength: 6,
                       decoration: InputDecoration(
-                        icon: Icon(
+                        icon: const Icon(
                           Icons.lock,
                           color: Colors.white
                         ),
@@ -176,7 +176,7 @@ class _NewPasswordState extends State<NewPassword> {
                           ),
                           onPressed: _visible2,
                         ),
-                        focusedBorder: UnderlineInputBorder(
+                        focusedBorder: const UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.white)
                         ) 
                       ),
@@ -187,23 +187,23 @@ class _NewPasswordState extends State<NewPassword> {
                       },
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left:20, right: 20, bottom: 10, top: 10),
+                      padding: const EdgeInsets.only(left:20, right: 20, bottom: 10, top: 10),
                       child: TextButton(
                         onPressed: () => Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (context) => Login())
+                          MaterialPageRoute(builder: (context) => const Login())
+                        ),
+                        style: ButtonStyle(
+                          foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
+                          backgroundColor: WidgetStateProperty.all<Color>(Colors.white),
+                          shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(borderRadius: BorderRadius.circular(30))
+                          )
                         ), 
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 50),
                           child: Text('Reset Password',
                           style:  GoogleFonts.montserrat(color: Colors.lightGreen.shade500, fontWeight: FontWeight.bold),
                           ),
-                        ),
-                        style: ButtonStyle(
-                          foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                          backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(borderRadius: BorderRadius.circular(30))
-                          )
                         ),
                       ),
                     ),

@@ -7,7 +7,7 @@ import 'package:landmarkcoop_mobile_app/pages/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CheckMail extends StatefulWidget {
-  const CheckMail({Key? key}) : super(key: key);
+  const CheckMail({super.key});
 
   @override
   State<CheckMail> createState() => _CheckMailState();
@@ -69,14 +69,14 @@ class _CheckMailState extends State<CheckMail> {
                       'https://core.landmarkcooperative.org';
 
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => Login()));
+                      builder: (context) => const Login()));
                 },
                 style: ButtonStyle(
                     foregroundColor:
-                        MaterialStateProperty.all<Color>(Colors.blue),
+                        WidgetStateProperty.all<Color>(Colors.blue),
                     backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.blue),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        WidgetStateProperty.all<Color>(Colors.blue),
+                    shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20)))),
                 child: Padding(
@@ -109,7 +109,7 @@ class _CheckMailState extends State<CheckMail> {
                                 prefs.getString('institution') ?? 'Minerva Hub';
                             Navigator.of(context)
                                 .pushReplacement(MaterialPageRoute(
-                              builder: (context) => ForgotPassword(),
+                              builder: (context) => const ForgotPassword(),
                             ));
                           })
                   ])),

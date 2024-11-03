@@ -26,7 +26,7 @@ class LoginResponseModel {
         balance: singleStatement['balance'] ?? 0,
         productName: singleStatement['products']['displayName'] ?? '',
         fullName: singleStatement['customer']['firstName'] ??
-            '' + ' ' + singleStatement['customer']['lastName'] ??
+            '' ' ' + singleStatement['customer']['lastName'] ??
             '',
         email: singleStatement['customer']['email'] ?? '',
         phoneNo: singleStatement['customer']['phoneNumber'] ?? '',

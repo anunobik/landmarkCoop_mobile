@@ -22,12 +22,12 @@ class AirtimePurchase extends StatefulWidget {
   final List<LastTransactionsModel> lastTransactions;
 
   const AirtimePurchase({
-    Key? key,
+    super.key,
     required this.customerWallets,
     required this.fullName,
     required this.token,
     required this.lastTransactions,
-  }) : super(key: key);
+  });
 
   @override
   State<AirtimePurchase> createState() => _AirtimePurchaseState();
@@ -42,7 +42,7 @@ class _AirtimePurchaseState extends State<AirtimePurchase> {
   PhoneContact? _phoneContact;
   String phone = "";
   int amount = 0;
-  bool _value = false;
+  final bool _value = false;
   bool _enableSubmitBtn = false;
   bool isApiCallProcess = false;
   String datePart = DateFormat('yymmddhhmmss').format(DateTime.now());

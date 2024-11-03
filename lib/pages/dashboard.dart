@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:landmarkcoop_mobile_app/api/api_paystack.dart';
 import 'package:landmarkcoop_mobile_app/api/api_service.dart';
 import 'package:landmarkcoop_mobile_app/main.dart';
@@ -34,12 +33,11 @@ class Dashboard extends StatefulWidget {
   final List<LastTransactionsModel> lastTransactions;
 
   const Dashboard(
-      {Key? key,
+      {super.key,
       required this.customerWallets,
       required this.lastTransactions,
       required this.fullName,
-      required this.token})
-      : super(key: key);
+      required this.token});
 
   @override
   State<Dashboard> createState() => _DashboardState();
@@ -84,8 +82,8 @@ class _DashboardState extends State<Dashboard> {
         trackNumber: 'Select Account')
   ];
   List<CustomerWalletsBalanceModel> viewWallet = [];
-  final CarouselController _controller = CarouselController();
-  int _currentIndex = 0;
+  // final CarouselController _controller = CarouselController();
+  final int _currentIndex = 0;
   GatewayResponseModel? gateWayResponse;
 
   List<ProductResponseModel> data = <ProductResponseModel>[
@@ -375,7 +373,7 @@ class _DashboardState extends State<Dashboard> {
     }
 
     setState(() {
-      if (chartList.length >= 1) {
+      if (chartList.isNotEmpty) {
         newData = chartList[0];
       }
     });
@@ -443,42 +441,18 @@ class _DashboardState extends State<Dashboard> {
                             fontWeight: FontWeight.bold),
                       ),
                       showWallet
-                          ? Expanded(
-                              child: CarouselSlider(
-                                items: itemData.map((card) {
-                                  return Builder(
-                                      builder: (BuildContext context) {
-                                    return SizedBox(
-                                      height: 0.5 * height,
-                                      width: width,
-                                      child: Card(
-                                        color: Colors.grey.shade100,
-                                        child: card,
-                                      ),
-                                    );
-                                  });
-                                }).toList(),
-                                carouselController: _controller,
-                                options: CarouselOptions(
-                                  height: 330.8,
-                                  autoPlay: false,
-                                  enlargeCenterPage: true,
-                                  autoPlayInterval: const Duration(seconds: 3),
-                                  autoPlayAnimationDuration:
-                                      const Duration(milliseconds: 800),
-                                  autoPlayCurve: Curves.fastOutSlowIn,
-                                  enableInfiniteScroll: false,
-                                  pauseAutoPlayOnTouch: true,
-                                  onPageChanged: (index, reason) {
-                                    setState(() {
-                                      _currentIndex = index;
-                                      if (chartList.length >= 1) {
-                                        newData = chartList[index];
-                                      }
-                                    });
-                                  },
-                                ),
-                              ),
+                          ? Container(
+                              padding: const EdgeInsets.only(left: 10),
+                              height: 180,
+                              width: width,
+                              child: ListView.builder(
+                                  physics: const BouncingScrollPhysics(),
+                                  scrollDirection: Axis.horizontal,
+                                  shrinkWrap: true,
+                                  itemCount: itemData.length,
+                                  itemBuilder: (context, index) {
+                                    return itemData[index];
+                                  }),
                             )
                           : Center(
                               child: Text(
@@ -502,7 +476,7 @@ class _DashboardState extends State<Dashboard> {
                               child: Text(
                                 'Swipe to view your wallets',
                                 style: GoogleFonts.roboto(
-                                  color: Color(0xff000080),
+                                  color: const Color(0xff000080),
                                   fontSize: 13,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -591,8 +565,8 @@ class _DashboardState extends State<Dashboard> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
-                    Center(
-                      child: const Text(
+                    const Center(
+                      child: Text(
                         'Our Partners',
                         style: TextStyle(
                             color: Color.fromARGB(255, 13, 155, 22),
@@ -774,7 +748,7 @@ class _DashboardState extends State<Dashboard> {
       );
 
   _handlePaymentInitialization(String accountNumber) async {
-    const String _FLUTTERWAVE_PUB_KEY =
+    const String flutterwavePubKey =
         "FLWPUBK-c0049d19c1c3137f3a3415922541720e-X";
     var email = widget.customerWallets[0].email;
     var displayName = widget.customerWallets[0].fullName;
@@ -805,7 +779,7 @@ class _DashboardState extends State<Dashboard> {
     final Flutterwave flutterwave = Flutterwave(
         context: context,
         // style: style,
-        publicKey: _FLUTTERWAVE_PUB_KEY,
+        publicKey: flutterwavePubKey,
         currency: "NGN",
         redirectUrl:
             "https://landmarkcooperative.org/verifyBanktransfer/IHd88sdBGAasdfRYEGRh76asf05052023",
@@ -818,46 +792,31 @@ class _DashboardState extends State<Dashboard> {
 
     final ChargeResponse response = await flutterwave.charge();
     Navigator.pop(context);
-    if (response != null) {
-      if (response.success!) {
-        // Call the verify transaction endpoint with the transactionID returned in `response.transactionId` to verify transaction before offering value to customer
-        AccountTransactionRequestModel accountTransactionRequestModel =
-            AccountTransactionRequestModel(amount: fundAmount);
-        accountTransactionRequestModel.narration = narration;
-        accountTransactionRequestModel.amount = fundAmount;
-        accountTransactionRequestModel.accountNumber = accountNumber;
-        apiService
-            .verifyDeposit(accountTransactionRequestModel,
-                int.parse(response.transactionId!), widget.token)
-            .then((value) {
-          successTransactionAlert(value);
-        });
-      } else {
-        // Transaction not successful
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return const AlertDialog(
-                title: Text("Notice"),
-                content: Text("Transaction not successful"),
-              );
-            });
-      }
+    if (response.success!) {
+      // Call the verify transaction endpoint with the transactionID returned in `response.transactionId` to verify transaction before offering value to customer
+      AccountTransactionRequestModel accountTransactionRequestModel =
+          AccountTransactionRequestModel(amount: fundAmount);
+      accountTransactionRequestModel.narration = narration;
+      accountTransactionRequestModel.amount = fundAmount;
+      accountTransactionRequestModel.accountNumber = accountNumber;
+      apiService
+          .verifyDeposit(accountTransactionRequestModel,
+              int.parse(response.transactionId!), widget.token)
+          .then((value) {
+        successTransactionAlert(value);
+      });
     } else {
-      // User cancelled
+      // Transaction not successful
       showDialog(
           context: context,
           builder: (BuildContext context) {
             return const AlertDialog(
-              title: Text("Message"),
-              content: Text("You cancelled the transaction!"),
+              title: Text("Notice"),
+              content: Text("Transaction not successful"),
             );
           });
-      setState(() {
-        isApiCallProcess = false;
-      });
     }
-  }
+    }
 
   // _handlePaystackPayment(String accountNumber) async {
   //   var email = widget.customerWallets[0].email;

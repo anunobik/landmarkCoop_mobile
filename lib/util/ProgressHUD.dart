@@ -8,13 +8,13 @@ class ProgressHUD extends StatelessWidget {
   final Color color;
   
 
-  ProgressHUD({
-    Key? key,
+  const ProgressHUD({
+    super.key,
     required this.child,
     required this.inAsyncCall,
     this.opacity = 0.3,
     this.color = Colors.grey,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,7 @@ class ProgressHUD extends StatelessWidget {
             child: ModalBarrier(dismissible: false, color: color),
           ),
           const Center(
-            child: const CircularProgressIndicator()
+            child: CircularProgressIndicator()
           ),
         ],
       );

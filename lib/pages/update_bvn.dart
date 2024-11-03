@@ -3,7 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:landmarkcoop_mobile_app/api/api_service.dart';
 import 'package:landmarkcoop_mobile_app/model/other_model.dart';
 import 'package:landmarkcoop_mobile_app/pages/login.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../component/custom_text_form_field.dart';
 import '../model/customer_model.dart';
@@ -141,7 +140,7 @@ Future<Object?> updateBVN(
                                                   });
                                                   Navigator.popUntil(context, (route) => route.isFirst);
                                                   Navigator.of(context).pushReplacement(
-                                                    MaterialPageRoute(builder: (context) => Login(),
+                                                    MaterialPageRoute(builder: (context) => const Login(),
                                                     ),
                                                   );
                                                 },

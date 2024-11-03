@@ -8,9 +8,8 @@ class Congrats extends StatefulWidget {
   final String response;
 
   const Congrats(
-      {Key? key,
-        required this.response})
-      : super(key: key);
+      {super.key,
+        required this.response});
 
   @override
   State<Congrats> createState() => _CongratsState();
@@ -30,8 +29,8 @@ class _CongratsState extends State<Congrats> {
             Container(
               height: height * 0.35,
               width: width * 0.6,
-                decoration: BoxDecoration(
-                    image: const DecorationImage(
+                decoration: const BoxDecoration(
+                    image: DecorationImage(
                         image: AssetImage('assets/congrats.jpg'),
                         fit: BoxFit.contain)),
             ),
@@ -55,7 +54,7 @@ class _CongratsState extends State<Congrats> {
                   String subdomain = prefs.getString('subdomain') ?? 'subdomain';
                   print('This is the institution $institution');
                   Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => Login())
+                      MaterialPageRoute(builder: (context) => const Login())
                   );
                 },
                 style: ElevatedButton.styleFrom(

@@ -11,9 +11,9 @@ class CertificateOfInvestment extends StatefulWidget {
   final CustomerInvestmentWalletModel customerInvestmentWalletModel;
 
   const CertificateOfInvestment({
-    Key? key,
+    super.key,
     required this.customerInvestmentWalletModel,
-  }) : super(key: key);
+  });
 
   @override
   State<CertificateOfInvestment> createState() =>

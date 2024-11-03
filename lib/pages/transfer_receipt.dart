@@ -17,12 +17,12 @@ class TransferReceipt extends StatefulWidget {
 
 
   const TransferReceipt({
-    Key? key,
+    super.key,
     required this.customerWallets,
     required this.fullName,
     required this.token,
     required this.externalBankTransferDetailsRequestModel,
-  }) : super(key: key);
+  });
 
   @override
   State<TransferReceipt> createState() => _TransferReceiptState();

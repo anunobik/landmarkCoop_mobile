@@ -1,13 +1,11 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:landmarkcoop_mobile_app/util/notification_badge.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import "package:flutter/material.dart";
 import 'package:google_fonts/google_fonts.dart';
 import 'package:overlay_support/overlay_support.dart';
 
-import '../main.dart';
 import '../model/push_notification.dart';
 
 class PushMessages extends StatefulWidget {

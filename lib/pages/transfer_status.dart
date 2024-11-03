@@ -7,7 +7,6 @@ import 'package:landmarkcoop_mobile_app/pages/transfer_details.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:intl/intl.dart';
 
@@ -18,12 +17,12 @@ class TransferStatus extends StatefulWidget {
   final List<LastTransactionsModel> lastTransactions;
 
   const TransferStatus({
-    Key? key,
+    super.key,
     required this.customerWallets,
     required this.fullName,
     required this.token,
     required this.lastTransactions,
-  }) : super(key: key);
+  });
 
   @override
   State<TransferStatus> createState() => _TransferStatusState();

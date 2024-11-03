@@ -26,11 +26,10 @@ class Setting extends StatefulWidget {
   final List<LastTransactionsModel> lastTransactions;
 
   const Setting(
-      {Key? key,
+      {super.key,
         required this.customerWallets,
         required this.fullName,
-        required this.token, required this.phoneNumber, required this.lastTransactions})
-      : super(key: key);
+        required this.token, required this.phoneNumber, required this.lastTransactions});
 
   @override
   State<Setting> createState() => _SettingState();
@@ -534,7 +533,7 @@ class _SettingState extends State<Setting> {
                     ),
                   ),
                 ) : Container(),
-                SizedBox(height: 20,),
+                const SizedBox(height: 20,),
                 Container(
                   decoration: BoxDecoration(color: Colors.white, boxShadow: [
                     BoxShadow(

@@ -9,13 +9,13 @@ class CustomTextFormField extends StatefulWidget {
   final VoidCallback? enableButton;
 
   const CustomTextFormField({
-    Key? key,
+    super.key,
     required this.keyboardType,
     required this.controller,
     required this.hintText,
     required this.enabled,
     this.enableButton,
-  }) : super(key: key);
+  });
 
   @override
   State<CustomTextFormField> createState() => _CustomTextFormFieldState();

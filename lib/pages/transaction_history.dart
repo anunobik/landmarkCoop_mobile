@@ -23,12 +23,11 @@ class TransactionHistory extends StatefulWidget {
   final List<LastTransactionsModel> lastTransactions;
 
   const TransactionHistory(
-      {Key? key,
+      {super.key,
       required this.fullName,
       required this.token,
       required this.customerWallets,
-      required this.lastTransactions})
-      : super(key: key);
+      required this.lastTransactions});
 
   @override
   State<TransactionHistory> createState() => _TransactionHistoryState();
@@ -222,16 +221,16 @@ class _TransactionHistoryState extends State<TransactionHistory> {
                         TextButton(
                           onPressed: () => dateBottomSheet(context),
                           style: ButtonStyle(
-                            elevation: MaterialStateProperty.all(10.0),
-                            foregroundColor: MaterialStateProperty.all<Color>(
+                            elevation: WidgetStateProperty.all(10.0),
+                            foregroundColor: WidgetStateProperty.all<Color>(
                                 Colors.lightBlue),
-                            shape: MaterialStateProperty.all<
+                            shape: WidgetStateProperty.all<
                                 RoundedRectangleBorder>(
                               RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
                             ),
-                            backgroundColor: MaterialStateProperty.all<Color>(
+                            backgroundColor: WidgetStateProperty.all<Color>(
                                 Colors.lightBlue),
                           ),
                           child: Padding(
@@ -401,14 +400,14 @@ class _TransactionHistoryState extends State<TransactionHistory> {
                   },
                   style: ButtonStyle(
                       foregroundColor:
-                          MaterialStateProperty.all<Color>(Colors.blue),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          WidgetStateProperty.all<Color>(Colors.blue),
+                      shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
                       backgroundColor:
-                          MaterialStateProperty.all<Color>(Colors.blue)),
+                          WidgetStateProperty.all<Color>(Colors.blue)),
                   child: Padding(
                     padding: EdgeInsets.symmetric(
                         horizontal: MediaQuery.of(context).size.width * 0.25,

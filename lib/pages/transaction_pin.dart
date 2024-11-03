@@ -183,7 +183,7 @@ class _TransactionPinState extends State<TransactionPin> {
                                   fontSize: 16, fontWeight: FontWeight.w700),
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 5,
                           ),
                           AnimatedContainer(
@@ -675,7 +675,7 @@ class _TransactionPinState extends State<TransactionPin> {
                                   fontSize: 16, fontWeight: FontWeight.w700),
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 5,
                           ),
                           AnimatedContainer(

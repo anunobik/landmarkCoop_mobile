@@ -7,7 +7,7 @@ class PwdResetResponseModel {
 
   factory PwdResetResponseModel.fromJson(Map<String, dynamic> json) {
     return PwdResetResponseModel(
-      feedback: json['feedback'] != null ? json['feedback'] : '',
+      feedback: json['feedback'] ?? '',
     );
   }
 }

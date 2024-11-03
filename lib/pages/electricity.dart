@@ -3,7 +3,6 @@ import 'package:landmarkcoop_mobile_app/component/custom_text_form_field.dart';
 import 'package:landmarkcoop_mobile_app/model/push_notification.dart';
 import 'package:landmarkcoop_mobile_app/pushNotifications/push_messages.dart';
 import 'package:landmarkcoop_mobile_app/util/ProgressHUD.dart';
-import 'package:landmarkcoop_mobile_app/util/home_drawer.dart';
 import 'package:landmarkcoop_mobile_app/util/notification_badge.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -13,8 +12,7 @@ import 'package:overlay_support/overlay_support.dart';
 class Electricity extends StatefulWidget {
   final String fullName;
   final String token;
-  const Electricity({Key? key, required this.fullName, required this.token})
-      : super(key: key);
+  const Electricity({super.key, required this.fullName, required this.token});
 
   @override
   State<Electricity> createState() => _ElectricityState();

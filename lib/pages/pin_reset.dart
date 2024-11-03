@@ -4,7 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:landmarkcoop_mobile_app/model/customer_model.dart';
 import 'package:landmarkcoop_mobile_app/model/other_model.dart';
 import 'package:landmarkcoop_mobile_app/pages/setting.dart';
-import 'package:landmarkcoop_mobile_app/pages/transaction_pin.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api/api_service.dart';

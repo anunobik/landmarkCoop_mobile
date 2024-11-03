@@ -4,22 +4,18 @@ import 'package:landmarkcoop_mobile_app/api/api_service.dart';
 import 'package:landmarkcoop_mobile_app/model/customer_model.dart';
 import 'package:landmarkcoop_mobile_app/model/other_model.dart';
 import 'package:landmarkcoop_mobile_app/pages/airtime_tabs.dart';
-import 'package:landmarkcoop_mobile_app/pages/bills_payment.dart';
 import 'package:landmarkcoop_mobile_app/pages/customer_care.dart';
 import 'package:landmarkcoop_mobile_app/pages/dashboard.dart';
 import 'package:landmarkcoop_mobile_app/pages/investment.dart';
 import 'package:landmarkcoop_mobile_app/pages/login.dart';
-import 'package:landmarkcoop_mobile_app/pages/manage_cards.dart';
 import 'package:landmarkcoop_mobile_app/pages/setting.dart';
 import 'package:landmarkcoop_mobile_app/pages/transaction_history.dart';
 import 'package:landmarkcoop_mobile_app/pages/transfer_tabs.dart';
-import 'package:landmarkcoop_mobile_app/pages/withdrawal_request.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../pages/transfer_ozi.dart';
 
 // ignore: must_be_immutable
 class HomeDrawer extends StatefulWidget {
@@ -32,15 +28,14 @@ class HomeDrawer extends StatefulWidget {
   List<LastTransactionsModel> lastTransactionsList;
 
   HomeDrawer(
-      {Key? key,
+      {super.key,
       required this.value,
       required this.page,
       required this.name,
       required this.fullName,
       required this.token,
       required this.lastTransactionsList,
-      required this.customerWallets})
-      : super(key: key);
+      required this.customerWallets});
 
   @override
   State<HomeDrawer> createState() => _HomeDrawerState();

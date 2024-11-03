@@ -19,7 +19,7 @@ import 'package:local_auth/local_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
-  const Login({Key? key}) : super(key: key);
+  const Login({super.key});
 
   @override
   _LoginState createState() => _LoginState();
@@ -39,8 +39,8 @@ class _LoginState extends State<Login> {
   bool rememberPassword = false;
   bool? _canCheckBiometrics;
   List<BiometricType>? _availableBiometrics;
-  String _authorized = 'Not Authorized';
-  bool _isAuthenticating = false;
+  final String _authorized = 'Not Authorized';
+  final bool _isAuthenticating = false;
   final LocalAuthentication auth = LocalAuthentication();
 
   @override
@@ -111,7 +111,7 @@ class _LoginState extends State<Login> {
     await Firebase.initializeApp();
 
     messaging = FirebaseMessaging.instance;
-    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+    // FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
     NotificationSettings settings = await messaging.requestPermission(
       alert: true,
@@ -183,28 +183,28 @@ class _LoginState extends State<Login> {
                           Container(
                             height: 100,
                             width: 150,
-                            decoration: BoxDecoration(
-                                image: const DecorationImage(
+                            decoration: const BoxDecoration(
+                                image: DecorationImage(
                                     image: AssetImage('assets/Logo.png'),
                                     fit: BoxFit.contain)),
                           ),
                           Container(
                             height: 40,
                             width: 150,
-                            decoration: BoxDecoration(
-                                image: const DecorationImage(
+                            decoration: const BoxDecoration(
+                                image: DecorationImage(
                                     image: AssetImage('assets/landmark.png'),
                                     fit: BoxFit.contain)),
                           ),
                           Container(
                             height: 20,
                             width: 150,
-                            decoration: BoxDecoration(
-                                image: const DecorationImage(
+                            decoration: const BoxDecoration(
+                                image: DecorationImage(
                                     image: AssetImage('assets/coop.png'),
                                     fit: BoxFit.contain)),
                           ),
-                          SizedBox(height: 10,),
+                          const SizedBox(height: 10,),
                           Center(
                             child: Text(
                               "Login",

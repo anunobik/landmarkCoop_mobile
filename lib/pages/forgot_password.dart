@@ -8,7 +8,7 @@ import 'check_your_mail.dart';
 import 'new_password.dart';
 
 class ForgotPassword extends StatefulWidget {
-  const ForgotPassword({Key? key}) : super(key: key);
+  const ForgotPassword({super.key});
 
   @override
   _ForgotPasswordState createState() => _ForgotPasswordState();
@@ -30,9 +30,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   @override
   Widget build(BuildContext context) {
     return ProgressHUD(
-      child: _uiSetup(context),
       inAsyncCall: isApiCallProcess,
       opacity: 0.3,
+      child: _uiSetup(context),
     );
   }
 
@@ -73,25 +73,25 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                   fontWeight: FontWeight.normal)),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   Container(
                     width: double.infinity,
-                    padding: EdgeInsets.symmetric(vertical: 30, horizontal: 20),
-                    margin: EdgeInsets.symmetric(vertical: 100, horizontal: 20),
+                    padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+                    margin: const EdgeInsets.symmetric(vertical: 100, horizontal: 20),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
                       color: Colors.white,
                       boxShadow: [
                         BoxShadow(
                             color: Theme.of(context).hintColor.withOpacity(0.2),
-                            offset: Offset(0, 10),
+                            offset: const Offset(0, 10),
                             blurRadius: 50)
                       ],
                     ),
@@ -102,14 +102,14 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                           Container(
                             height: 80,
                             width: 80,
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                                 color: Colors.blue,
                                 shape: BoxShape.circle,
                                 image: DecorationImage(
                                     image: AssetImage('assets/lg1.png'),
                                     fit: BoxFit.contain)),
                           ),
-                          SizedBox(height: 30),
+                          const SizedBox(height: 30),
                           TextFormField(
                             keyboardType: TextInputType.emailAddress,
                             onSaved: (input) =>
@@ -131,7 +131,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                               ),
                             ),
                           ),
-                          SizedBox(height: 40),
+                          const SizedBox(height: 40),
                           // Padding(
                           //   padding: const EdgeInsets.only(bottom: 10.0),
                           //   child: Row(
@@ -171,13 +171,13 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                   if (value == 'Success') {
                                     Navigator.of(context).push(
                                       MaterialPageRoute(
-                                          builder: (context) => CheckMail()),
+                                          builder: (context) => const CheckMail()),
                                     );
                                   } else {
                                     showDialog(
                                         context: context,
                                         builder: (BuildContext context) {
-                                          return AlertDialog(
+                                          return const AlertDialog(
                                             title: Text("Message"),
                                             content: Text(
                                                 "Incorrect Email Details"),

@@ -19,13 +19,13 @@ class AirtimeTabs extends StatefulWidget {
   final List<CustomerWalletsBalanceModel> customerWallets;
   final List<LastTransactionsModel> lastTransactionsList;
 
-  AirtimeTabs({
-    Key? key,
+  const AirtimeTabs({
+    super.key,
     required this.customerWallets,
     required this.fullName,
     required this.token,
     required this.lastTransactionsList,
-  }) : super(key: key);
+  });
 
   @override
   State<AirtimeTabs> createState() => _AirtimeTabsState();

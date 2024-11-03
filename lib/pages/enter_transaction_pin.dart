@@ -19,13 +19,13 @@ class EnterTransactionPin extends StatefulWidget {
   final ExternalBankTransferDetailsRequestModel externalBankTransferDetailsRequestModel;
 
   const EnterTransactionPin({
-    Key? key,
+    super.key,
     required this.customerWallets,
     required this.fullName,
     required this.token,
     required this.externalBankTransferDetailsRequestModel,
     required this.lastTransactions
-  }) : super(key: key);
+  });
 
   @override
   State<EnterTransactionPin> createState() => _EnterTransactionPinState();

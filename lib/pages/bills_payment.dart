@@ -12,8 +12,7 @@ class BillsPayment extends StatefulWidget {
   final String token;
   final List<CustomerWalletsBalanceModel> customerWallets;
   final List<LastTransactionsModel> lastTransactions;
-  const BillsPayment({Key? key, required this.fullName, required this.lastTransactions, required this.token, required this.customerWallets})
-      : super(key: key);
+  const BillsPayment({super.key, required this.fullName, required this.lastTransactions, required this.token, required this.customerWallets});
 
   @override
   State<BillsPayment> createState() => _BillsPaymentState();

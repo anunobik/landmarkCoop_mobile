@@ -29,7 +29,7 @@ class DefaultFirebaseOptions {
  }
 
  static const FirebaseOptions android = FirebaseOptions(
-   apiKey: 'AIzaSyClkuHcZ5nEkhhwNPZW_5aLsdtnkAmTxac',
+   apiKey: 'AIzaSyAz_ZT1Uw_P8tincrWWjLdmxo8G6aQu8kA',
    appId: '1:492486980221:android:3a374543e52a88aa0e7714',
    messagingSenderId: '492486980221',
    projectId: 'desal-mcs',
@@ -37,7 +37,7 @@ class DefaultFirebaseOptions {
  );
 
  static const FirebaseOptions ios = FirebaseOptions(
-   apiKey: 'AIzaSyAYF8wSYlcysvpdkcGkOzwoY3_HzLMZdu8',
+   apiKey: 'AIzaSyAz_ZT1Uw_P8tincrWWjLdmxo8G6aQu8kA',
    appId: '1:492486980221:ios:42f2575a974681120e7714',
    messagingSenderId: '492486980221',
    projectId: 'desal-mcs',

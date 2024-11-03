@@ -35,31 +35,23 @@ class FlutterWaveService {
       List<BillsInfoResponseModel> billTypesList = [];
       for (var singleBill in restList) {
         BillsInfoResponseModel billsInfoResponseModel = BillsInfoResponseModel(
-          id: singleBill['id'] != null ? singleBill['id'] : '',
-          billerCode: singleBill['biller_code'] != null
-              ? singleBill['biller_code']
-              : '',
-          name: singleBill['name'] != null ? singleBill['name'] : '',
-          defaultCommission: singleBill['default_commission'] != null
-              ? singleBill['default_commission']
-              : '',
-          country: singleBill['country'] != null ? singleBill['country'] : '',
+          id: singleBill['id'] ?? '',
+          billerCode: singleBill['biller_code'] ?? '',
+          name: singleBill['name'] ?? '',
+          defaultCommission: singleBill['default_commission'] ?? '',
+          country: singleBill['country'] ?? '',
           isAirtime:
-              singleBill['is_airtime'] != null ? singleBill['is_airtime'] : '',
-          billerName: singleBill['biller_name'] != null
-              ? singleBill['biller_name']
-              : '',
+              singleBill['is_airtime'] ?? '',
+          billerName: singleBill['biller_name'] ?? '',
           itemCode:
-              singleBill['item_code'] != null ? singleBill['item_code'] : '',
+              singleBill['item_code'] ?? '',
           shortName:
-              singleBill['short_name'] != null ? singleBill['short_name'] : '',
-          fee: singleBill['fee'] != null ? singleBill['fee'] : '',
-          commissionOnFee: singleBill['commission_on_fee'] != null
-              ? singleBill['commission_on_fee']
-              : '',
+              singleBill['short_name'] ?? '',
+          fee: singleBill['fee'] ?? '',
+          commissionOnFee: singleBill['commission_on_fee'] ?? '',
           labelName:
-              singleBill['label_name'] != null ? singleBill['label_name'] : '',
-          amount: singleBill['amount'] != null ? singleBill['amount'] : '',
+              singleBill['label_name'] ?? '',
+          amount: singleBill['amount'] ?? '',
         );
 
         //Adding user to the list.

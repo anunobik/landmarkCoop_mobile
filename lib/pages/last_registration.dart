@@ -16,13 +16,12 @@ class LastRegistration extends StatefulWidget {
   final String email;
   final String phone;
   const LastRegistration(
-      {Key? key,
+      {super.key,
       required this.email,
       required this.phone,
       required this.fName,
       required this.sName,
-      required this.mName})
-      : super(key: key);
+      required this.mName});
 
   @override
   State<LastRegistration> createState() => _LastRegistrationState();
@@ -64,9 +63,9 @@ class _LastRegistrationState extends State<LastRegistration> {
   @override
   Widget build(BuildContext context) {
     return ProgressHUD(
-      child: _uiSetup(context),
       inAsyncCall: isApiCallProcess,
       opacity: 0.3,
+      child: _uiSetup(context),
     );
   }
 
@@ -102,7 +101,7 @@ class _LastRegistrationState extends State<LastRegistration> {
                                         fontSize: 20),
                                   ),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 15,
                                 ),
                                 Center(
@@ -218,7 +217,7 @@ class _LastRegistrationState extends State<LastRegistration> {
           isApiCallProcess = false;
         });
         Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (context) => Congrats(
+            builder: (context) => const Congrats(
                   response: "Your account has been successfully opened.\n\nKindly check email Inbox/Spam for login details.",
                 )));
       } else {
@@ -229,7 +228,7 @@ class _LastRegistrationState extends State<LastRegistration> {
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: Text(
+                title: const Text(
                   "Message",
                   textAlign: TextAlign.center,
                 ),

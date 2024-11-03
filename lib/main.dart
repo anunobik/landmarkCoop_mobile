@@ -1,24 +1,23 @@
 import 'package:landmarkcoop_mobile_app/pages/first_registration.dart';
 import 'package:landmarkcoop_mobile_app/pages/login.dart';
 import 'package:landmarkcoop_mobile_app/util/firebase_options.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+// import 'package:firebase_core/firebase_core.dart';
+// import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:lottie/lottie.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'component/clipper_paint_design/curve_painter.dart';
 
 
-Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // If you're going to use other Firebase services in the background, such as Firestore,
-  // make sure you call `initializeApp` before using other Firebase services.
-  await Firebase.initializeApp();
+// Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+//   // If you're going to use other Firebase services in the background, such as Firestore,
+//   // make sure you call `initializeApp` before using other Firebase services.
+//   await Firebase.initializeApp();
 
-  print("Handling a background message: ${message.messageId}");
-}
+//   print("Handling a background message: ${message.messageId}");
+// }
 
 const AndroidNotificationChannel channel = AndroidNotificationChannel(
   //for notificaiton initialization
@@ -34,35 +33,35 @@ FlutterLocalNotificationsPlugin();
 
 
 void main() async{
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  // WidgetsFlutterBinding.ensureInitialized();
+  // await Firebase.initializeApp(
+  //   options: DefaultFirebaseOptions.currentPlatform,
+  // );
 
-  //for background messaging
-  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
-  //Local Notification implementation
-  await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-      AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(channel);
-  //for firebase  plugin and messaging required
+  // //for background messaging
+  // FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+  // //Local Notification implementation
+  // await flutterLocalNotificationsPlugin
+  //     .resolvePlatformSpecificImplementation<
+  //     AndroidFlutterLocalNotificationsPlugin>()
+  //     ?.createNotificationChannel(channel);
+  // //for firebase  plugin and messaging required
 
-  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-      alert: true, badge: true, sound: true);
-  NotificationSettings settings = await FirebaseMessaging.instance.requestPermission(
-    alert: true,
-    badge: true,
-    provisional: false,
-    sound: true,
-  );
-  if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      print('User granted permission');
-      String? token = await FirebaseMessaging.instance.getToken();
-      print("The token is "+token!);
-  } else {
-      print('User declined or has not accepted permission');
-    }
+  // await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+  //     alert: true, badge: true, sound: true);
+  // NotificationSettings settings = await FirebaseMessaging.instance.requestPermission(
+  //   alert: true,
+  //   badge: true,
+  //   provisional: false,
+  //   sound: true,
+  // );
+  // if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+  //     print('User granted permission');
+  //     String? token = await FirebaseMessaging.instance.getToken();
+  //     print("The token is ${token!}");
+  // } else {
+  //     print('User declined or has not accepted permission');
+  //   }
   runApp(const MobileBank());
 }
 
@@ -91,7 +90,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _currentIndex = 0;
+  final int _currentIndex = 0;
   List cardList = [
     const Item1(),
     const Item2(),
@@ -106,8 +105,6 @@ class _HomePageState extends State<HomePage> {
     }
     return result;
   }
-
-  final CarouselController _controller = CarouselController();
 
   @override
   Widget build(BuildContext context) {
@@ -125,24 +122,24 @@ class _HomePageState extends State<HomePage> {
             Container(
               height: 100,
               width: 150,
-              decoration: BoxDecoration(
-                  image: const DecorationImage(
+              decoration: const BoxDecoration(
+                  image: DecorationImage(
                       image: AssetImage('assets/Logo.png'),
                       fit: BoxFit.contain)),
             ),
             Container(
               height: 40,
               width: 150,
-              decoration: BoxDecoration(
-                  image: const DecorationImage(
+              decoration: const BoxDecoration(
+                  image: DecorationImage(
                       image: AssetImage('assets/landmark.png'),
                       fit: BoxFit.contain)),
             ),
             Container(
               height: 20,
               width: 150,
-              decoration: BoxDecoration(
-                  image: const DecorationImage(
+              decoration: const BoxDecoration(
+                  image: DecorationImage(
                       image: AssetImage('assets/coop.png'),
                       fit: BoxFit.contain)),
             ),
@@ -159,41 +156,19 @@ class _HomePageState extends State<HomePage> {
             // )
           ],
         ),
-        Expanded(
-          child: CarouselSlider(
-            items: cardList.map((card) {
-              return Builder(builder: (BuildContext context) {
-                return SizedBox(
-                  height: 0.45 * height,
+        Container(
+                  padding: const EdgeInsets.only(left: 10),
+                  height: 350.8,
                   width: width,
-                  child: Card(
-                    elevation: 5.0, // Add elevation for shadow
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0), // Set border radius
-                    ),
-                    color: Colors.blue.shade800,
-                    child: card,
-                  ),
-                );
-              });
-            }).toList(),
-            carouselController: _controller,
-            options: CarouselOptions(
-              height: 350.8,
-              autoPlay: true,
-              enlargeCenterPage: true,
-              autoPlayInterval: const Duration(seconds: 3),
-              autoPlayAnimationDuration: const Duration(milliseconds: 800),
-              autoPlayCurve: Curves.fastOutSlowIn,
-              pauseAutoPlayOnTouch: true,
-              onPageChanged: (index, reason) {
-                setState(() {
-                  _currentIndex = index;
-                });
-              },
-            ),
-          ),
-        ),
+                  child: ListView.builder(
+                      physics: const BouncingScrollPhysics(),
+                      scrollDirection: Axis.horizontal,
+                      shrinkWrap: true,
+                      itemCount: cardList.length,
+                      itemBuilder: (context, index) {
+                        return cardList[index];
+                      }),
+                ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: map<Widget>(cardList, ((index, url) {
@@ -213,13 +188,13 @@ class _HomePageState extends State<HomePage> {
           onPressed: () => Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (context) => const Login())),
           style: ButtonStyle(
-            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
+            shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15),
               side: BorderSide(color: Colors.blue.shade800),
             )),
-            backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+            backgroundColor: WidgetStateProperty.all<Color>(Colors.white),
           ),
           child: Padding(
             padding: EdgeInsets.symmetric(

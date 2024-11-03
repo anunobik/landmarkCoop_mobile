@@ -4,7 +4,6 @@ import 'package:landmarkcoop_mobile_app/model/other_model.dart';
 import 'package:landmarkcoop_mobile_app/pages/transfer_external.dart';
 import 'package:landmarkcoop_mobile_app/pages/transfer_ozi.dart';
 import 'package:landmarkcoop_mobile_app/pages/transfer_status.dart';
-import 'package:landmarkcoop_mobile_app/pages/withdrawal_request.dart';
 import 'package:landmarkcoop_mobile_app/pushNotifications/push_messages.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -75,8 +74,8 @@ class _TransferTabsState extends State<TransferTabs> {
               ]),
             );
           } else {
-            return Column(
-              children: const [
+            return const Column(
+              children: [
                 SizedBox(height: 50),
                 SizedBox(
                   child: Center(child: Text('Please wait Accounts loading...')),
