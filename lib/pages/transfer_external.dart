@@ -3,33 +3,32 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:landmarkcoop_mobile_app/api/api_flutterwave.dart';
 import 'package:landmarkcoop_mobile_app/api/api_service.dart';
+import 'package:landmarkcoop_mobile_app/component/custom_text_form_field.dart';
 import 'package:landmarkcoop_mobile_app/model/customer_model.dart';
 import 'package:landmarkcoop_mobile_app/model/login_model.dart';
 import 'package:landmarkcoop_mobile_app/model/other_model.dart';
+import 'package:landmarkcoop_mobile_app/model/push_notification.dart';
+import 'package:landmarkcoop_mobile_app/pages/enter_transaction_pin.dart';
+import 'package:landmarkcoop_mobile_app/utils/ProgressHUD.dart';
+import 'package:landmarkcoop_mobile_app/utils/notification_badge.dart';
+import 'package:landmarkcoop_mobile_app/utils/saved_beneficiaries.dart';
+import 'package:landmarkcoop_mobile_app/widgets/bottom_nav_bar.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../component/custom_text_form_field.dart';
-import '../model/push_notification.dart';
-import '../util/ProgressHUD.dart';
+
 import 'package:intl/intl.dart';
-import '../util/home_drawer.dart';
-import '../util/notification_badge.dart';
-import 'dashboard.dart';
-import 'enter_transaction_pin.dart';
 
 class TransferExternal extends StatefulWidget {
   final String fullName;
   final String token;
   final List<CustomerWalletsBalanceModel> customerWallets;
-  final List<LastTransactionsModel> lastTransactions;
 
   const TransferExternal({
-    super.key,
+    Key? key,
     required this.customerWallets,
     required this.fullName,
     required this.token,
-    required this.lastTransactions,
-  });
+  }) : super(key: key);
 
   @override
   State<TransferExternal> createState() => _TransferExternalState();
@@ -45,7 +44,6 @@ class _TransferExternalState extends State<TransferExternal> {
   TextEditingController bankAcctNumController = TextEditingController();
   TextEditingController bankAcctNameController = TextEditingController();
   TextEditingController narrationController = TextEditingController();
-  String bank = 'Select Bank';
   List<CustomerWalletsBalanceModel> data = <CustomerWalletsBalanceModel>[
     CustomerWalletsBalanceModel(
         id: 0,
@@ -56,7 +54,9 @@ class _TransferExternalState extends State<TransferExternal> {
         email: '',
         phoneNo: '',
         interBankName: '',
-        nubanAccountNumber: 'Select Account', trackNumber: '')
+        nubanAccountNumber: 'Select Account',limitsEnabled: false,
+        limitAmount: 50000,
+      limitBalance: 0,)
   ];
   CustomerWalletsBalanceModel? currentWallet;
   bool showBankWidgets = true;
@@ -75,6 +75,10 @@ class _TransferExternalState extends State<TransferExternal> {
   final displayAmount = NumberFormat("#,##0.00", "en_US");
   late ExternalBankTransferDetailsRequestModel
       externalBankTransferDetailsRequestModel;
+  bool saveBeneficiary = false;
+  TextEditingController bankController = TextEditingController();
+  String selectedBankName = ''; // Holds the selected bank name
+
 
   @override
   void initState() {
@@ -113,7 +117,7 @@ class _TransferExternalState extends State<TransferExternal> {
               notificationInfo!.body!,
               style: GoogleFonts.montserrat(),
             ),
-            background: const Color(0XFF091841).withOpacity(0.7),
+            background: Color(0xff000080).withOpacity(0.7),
             duration: const Duration(seconds: 2),
           );
         }
@@ -133,30 +137,27 @@ class _TransferExternalState extends State<TransferExternal> {
             'notificationTitle', message.notification!.title.toString());
         await prefs.setString(
             'notificationBody', message.notification!.body.toString());
+        String subdomain =
+            prefs.getString('subdomain') ?? 'core.landmarkcooperative.org';
         setState(() {
           notificationInfo = notification;
           totalNotifications++;
         });
 
         // API Sign in token
-        APIService apiService = APIService();
+        APIService apiService = APIService(subdomain_url: subdomain);
         apiService.login(loginRequestModel).then((value) {
           if (value.customerWalletsList.isNotEmpty) {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (context) => HomeDrawer(
-                  value: 0,
-                  page: Dashboard(
-                    token: widget.token,
-                    fullName: widget.fullName, customerWallets: widget.customerWallets,
-                    lastTransactions: widget.lastTransactions,
-                  ),
-                  name: 'wallet',
-                  token: widget.token,
-                  fullName: widget.fullName, customerWallets: widget.customerWallets, lastTransactionsList: widget.lastTransactions,
-                ),
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (context) => BottomNavBar(
+                pageIndex: 0,
+                fullName: value.customerWalletsList[0].fullName,
+                token: value.token,
+                subdomain: subdomain,
+                customerWallets: value.customerWalletsList,
+                phoneNumber: value.customerWalletsList[0].phoneNo,
               ),
-            );
+            ));
             notificationList.add({
               'title': message.notification!.title,
               'body': message.notification!.body,
@@ -195,8 +196,8 @@ class _TransferExternalState extends State<TransferExternal> {
   }
 
   getBanks() {
-    FlutterWaveService apiCore = FlutterWaveService();
-    return apiCore.getAllBanks(widget.token).then((value) {
+    FlutterWaveService flutterWaveService = FlutterWaveService();
+    return flutterWaveService.getAllBanks(widget.token).then((value) {
       currentBank = bankData[0];
 
       for (var singleData in value) {
@@ -206,6 +207,25 @@ class _TransferExternalState extends State<TransferExternal> {
         bankData;
       });
     });
+  }
+
+  Future<void> _navigateToSignInScreen() async {
+    final prefs = await SharedPreferences.getInstance();
+    String subdomain = prefs.getString('subdomain') ?? 'https://core.landmarkcooperative.org';
+
+    APIService apiService = APIService(subdomain_url: subdomain);
+    final value = await apiService.pageReload(widget.token); // Assuming pageReload gets necessary data
+
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => BottomNavBar(
+        pageIndex: 0,
+        fullName: value.customerWalletsList[0].fullName,
+        token: value.token,
+        subdomain: subdomain,
+        customerWallets: value.customerWalletsList,
+        phoneNumber: value.customerWalletsList[0].phoneNo,
+      ),
+    ));
   }
 
   @override
@@ -220,13 +240,21 @@ class _TransferExternalState extends State<TransferExternal> {
   Widget _uiSetup(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Color(0xff000080)),
+          onPressed: _navigateToSignInScreen,
+        ),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(20),
                 child: Column(children: <Widget>[
                   const SizedBox(height: 20),
                   dropDownWallets(),
@@ -238,6 +266,56 @@ class _TransferExternalState extends State<TransferExternal> {
                     enabled: true,
                   ),
                   const SizedBox(height: 30),
+                  Row(
+                    children: <Widget>[
+                      Container(),
+                      const Spacer(),
+                      GestureDetector(
+                        onTap: () {
+                          showModalBottomSheet(
+                            shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(30.0),
+                                    topRight: Radius.circular(30.0))),
+                            backgroundColor: Colors.white,
+                            isScrollControlled: true,
+                            context: context,
+                            builder: (BuildContext context) {
+                              return SavedBeneficiary(
+                                onBeneficiarySelected: (bankCode, bankName, accountNumber, accountName) {
+                                  setState(() {
+                                    bankController.text = bankName;
+                                    bankAcctNumController.text = accountNumber;
+                                    bankAcctNameController.text = accountName;
+                                    selectedBankName = bankName; // Update the selected bank name
+                                  });
+                                  externalBankTransferDetailsRequestModel.accountBank =
+                                      bankCode;
+                                  externalBankTransferDetailsRequestModel
+                                      .destinationAccountNumber = accountNumber;
+                                  externalBankTransferDetailsRequestModel.destinationBankName = bankName;
+                                  externalBankTransferDetailsRequestModel.destinationAccountName = accountName;
+                                  externalBankTransferDetailsRequestModel.accountNumber = accountNumber;
+                                },
+                                bankController: bankController,
+                                bankAcctNumController: bankAcctNumController,
+                                bankAcctNameController: bankAcctNameController,
+                                token: widget.token,
+                              );
+                            },
+                          );
+                        },
+                        child: Text(
+                          "Select Beneficiary",
+                          style: GoogleFonts.montserrat(
+                            color: Colors.blue.shade800,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
                   //Todo display the bank info here
                   showBankWidgets ? displayBankWidget() : Container(),
                   const SizedBox(height: 30),
@@ -275,7 +353,8 @@ class _TransferExternalState extends State<TransferExternal> {
                       String subdomain = prefs.getString('subdomain') ??
                           'https://core.landmarkcooperative.org';
 
-                      APIService apiService = APIService();
+                      APIService apiService =
+                          APIService(subdomain_url: subdomain);
                       if (double.parse(amountController.text) <
                               currentWallet!.balance ||
                           double.parse(amountController.text) ==
@@ -297,23 +376,41 @@ class _TransferExternalState extends State<TransferExternal> {
                                 );
                               });
                         } else {
-                          setState(() {
-                            isTransferDialogShown = true;
-                          });
-                          externalBankTransferDetailsRequestModel.amount =
-                              amountController.text.trim();
-                          externalBankTransferDetailsRequestModel.narration =
-                              narrationController.text;
+                          if((currentWallet!.limitBalance - double.parse(amountController.text)) > 0){
+                            setState(() {
+                              isTransferDialogShown = true;
+                            });
+                            externalBankTransferDetailsRequestModel.amount =
+                                amountController.text.trim();
+                            externalBankTransferDetailsRequestModel.narration =
+                                narrationController.text;
 
-                          confirmTransferDetails(
-                            externalBankTransferDetailsRequestModel,
-                            context,
-                            onClosed: (context) {
-                              setState(() {
-                                isTransferDialogShown = false;
-                              });
-                            },
-                          );
+                            confirmTransferDetails(
+                              externalBankTransferDetailsRequestModel,
+                              context,
+                              onClosed: (context) {
+                                setState(() {
+                                  isTransferDialogShown = false;
+                                });
+                              },
+                            );
+                          }else{
+                            setState(() {
+                              isApiCallProcess = false;
+                            });
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return const AlertDialog(
+                                    title: Text("Notice",
+                                        textAlign: TextAlign.center),
+                                    content: Text(
+                                      "You cannot exceed your daily limit!",
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  );
+                                });
+                          }
                         }
                       } else {
                         setState(() {
@@ -330,7 +427,7 @@ class _TransferExternalState extends State<TransferExternal> {
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.lightBlue,
+                      backgroundColor: Color.fromRGBO(49, 88, 203, 1.0),
                       elevation: 0,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15)),
@@ -343,7 +440,8 @@ class _TransferExternalState extends State<TransferExternal> {
                         style: GoogleFonts.montserrat(
                             color: Colors.white,
                             fontSize: 16,
-                            fontWeight: FontWeight.w600),
+                            // fontWeight: FontWeight.w600
+                          ),
                       ),
                     ),
                   ),
@@ -412,7 +510,6 @@ class _TransferExternalState extends State<TransferExternal> {
       {required ValueChanged onClosed,
       required List<BankListResponseModel> bankList}) {
     var width = MediaQuery.of(context).size.width;
-    TextEditingController bankController = TextEditingController();
     bankList.sort(
       (a, b) => a.name.compareTo(b.name),
     );
@@ -473,7 +570,7 @@ class _TransferExternalState extends State<TransferExternal> {
                       Row(
                         children: [
                           SizedBox(
-                            width: width * 0.55,
+                            width: width * 0.51,
                             child: TextFormField(
                               keyboardType: TextInputType.text,
                               controller: bankController,
@@ -536,7 +633,7 @@ class _TransferExternalState extends State<TransferExternal> {
                                             setState(() {
                                               currentBank = searchList[index];
                                               selectedBank = searchList[index];
-                                              bank = searchList[index].name;
+                                              selectedBankName = searchList[index].name;
                                             });
                                             Navigator.pop(context);
                                           },
@@ -555,8 +652,7 @@ class _TransferExternalState extends State<TransferExternal> {
                                                     .name
                                                     .toString(),
                                                 style: GoogleFonts.montserrat(
-                                                  color:
-                                                      const Color(0XFF091841),
+                                                  color: Color(0xff000080),
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.bold,
                                                 ),
@@ -590,7 +686,7 @@ class _TransferExternalState extends State<TransferExternal> {
                                                   currentBank = bankList[index];
                                                   selectedBank =
                                                       bankList[index];
-                                                  bank = bankList[index].name;
+                                                  selectedBankName = bankList[index].name;
                                                   bankAcctNameController.text =
                                                       '';
                                                 });
@@ -615,7 +711,7 @@ class _TransferExternalState extends State<TransferExternal> {
                                                     style:
                                                         GoogleFonts.montserrat(
                                                       color: const Color(
-                                                          0XFF091841),
+                                                          0xff01440a),
                                                       fontSize: 16,
                                                       fontWeight:
                                                           FontWeight.bold,
@@ -635,7 +731,7 @@ class _TransferExternalState extends State<TransferExternal> {
                                   child: Text(
                                     'Please check your internet connection',
                                     style: GoogleFonts.montserrat(
-                                      color: const Color(0XFF091841),
+                                      color: Color(0xff000080),
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -700,7 +796,7 @@ class _TransferExternalState extends State<TransferExternal> {
               children: <Widget>[
                 const Spacer(),
                 Text(
-                  bank,
+                  selectedBankName.isEmpty ? 'Select Bank' : selectedBankName, // Use selectedBankName,
                   style: GoogleFonts.montserrat(
                     fontSize: 15,
                   ),
@@ -733,7 +829,7 @@ class _TransferExternalState extends State<TransferExternal> {
             onChanged: (value) {
               setState(() {
                 if (value.length == 10) {
-                  FlutterWaveService apiCore = FlutterWaveService();
+                  FlutterWaveService flutterWaveService = FlutterWaveService();
                   BankAccountRequestModel bankAcctRequest =
                       BankAccountRequestModel();
                   bankAcctRequest.account_bank = currentBank!.code;
@@ -747,7 +843,9 @@ class _TransferExternalState extends State<TransferExternal> {
                   externalBankTransferDetailsRequestModel.destinationBankName =
                       currentBank!.name;
 
-                  apiCore.bankAccountVerify(bankAcctRequest, widget.token).then((valueAcct) {
+                  flutterWaveService
+                      .bankAccountVerify(bankAcctRequest, widget.token)
+                      .then((valueAcct) {
                     bankAcctNameController.text = valueAcct;
                     externalBankTransferDetailsRequestModel
                         .destinationAccountName = valueAcct;
@@ -785,7 +883,7 @@ class _TransferExternalState extends State<TransferExternal> {
           enabled: false,
           style: GoogleFonts.montserrat(
               fontSize: 15,
-              color: const Color(0XFF091841),
+              color: Color(0xff000080),
               fontWeight: FontWeight.w800),
           decoration: InputDecoration(
             isDense: true,
@@ -867,7 +965,7 @@ class _TransferExternalState extends State<TransferExternal> {
                       const SizedBox(height: 20),
                       const Divider(
                         height: 1,
-                        color: Color(0XFF091841),
+                        color: Color(0xff01440a),
                       ),
                       const SizedBox(height: 10),
                       Row(
@@ -896,7 +994,7 @@ class _TransferExternalState extends State<TransferExternal> {
                       const SizedBox(height: 10),
                       const Divider(
                         height: 1,
-                        color: Color(0XFF091841),
+                        color: Color(0xff01440a),
                       ),
                       const SizedBox(height: 10),
                       Row(
@@ -925,7 +1023,7 @@ class _TransferExternalState extends State<TransferExternal> {
                       const SizedBox(height: 10),
                       const Divider(
                         height: 1,
-                        color: Color(0XFF091841),
+                        color: Color(0xff01440a),
                       ),
                       const SizedBox(height: 10),
                       Row(
@@ -954,7 +1052,7 @@ class _TransferExternalState extends State<TransferExternal> {
                       const SizedBox(height: 10),
                       const Divider(
                         height: 1,
-                        color: Color(0XFF091841),
+                        color: Color(0xff01440a),
                       ),
                       const SizedBox(height: 10),
                       Row(
@@ -984,12 +1082,12 @@ class _TransferExternalState extends State<TransferExternal> {
                       const SizedBox(height: 10),
                       const Divider(
                         height: 1,
-                        color: Color(0XFF091841),
+                        color: Color(0xff01440a),
                       ),
                       const SizedBox(height: 10),
                       // const Divider(
                       //   height: 1,
-                      //   color: Color(0XFF091841),
+                      //   color: Color(0xff01440a),
                       // ),
                       // const SizedBox(height: 15),
                       // Row(
@@ -1073,11 +1171,32 @@ class _TransferExternalState extends State<TransferExternal> {
                       const SizedBox(height: 10),
                       const Divider(
                         height: 1,
-                        color: Color(0XFF091841),
+                        color: Color(0xff01440a),
+                      ),
+                      const SizedBox(height: 10),
+                      CheckboxListTile(
+                        title: Text(
+                          'Save Beneficiary',
+                          style: GoogleFonts.montserrat(
+                              fontWeight: FontWeight.w500),
+                        ),
+                        autofocus: false,
+                        activeColor: Colors.lightBlue,
+                        checkColor: Colors.white,
+                        selected: saveBeneficiary,
+                        value: saveBeneficiary,
+                        onChanged: (value) {
+                          setState(() {
+                            saveBeneficiary = value!;
+                          });
+                        },
                       ),
                       const SizedBox(height: 60),
                       ElevatedButton(
                         onPressed: () {
+                          externalBankTransferDetailsRequestModel.token = widget.token;
+                          externalBankTransferDetailsRequestModel.pinCode = '';
+                          print(externalBankTransferDetailsRequestModel.toJson());
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => EnterTransactionPin(
                                     customerWallets: widget.customerWallets,
@@ -1085,7 +1204,7 @@ class _TransferExternalState extends State<TransferExternal> {
                                     token: widget.token,
                                     externalBankTransferDetailsRequestModel:
                                         externalBankTransferDetailsRequestModel,
-                                    lastTransactions: widget.lastTransactions,
+                                    saveBeneficiary: saveBeneficiary,
                                   )));
                         },
                         style: ElevatedButton.styleFrom(

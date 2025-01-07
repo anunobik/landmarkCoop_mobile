@@ -1,101 +1,184 @@
-import 'package:landmarkcoop_mobile_app/model/customer_model.dart';
-import 'package:landmarkcoop_mobile_app/model/other_model.dart';
-import 'package:landmarkcoop_mobile_app/pages/airtime_data.dart';
-import 'package:landmarkcoop_mobile_app/pages/electricity.dart';
-import 'package:landmarkcoop_mobile_app/pages/tv.dart';
-import 'package:landmarkcoop_mobile_app/util/home_drawer.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:landmarkcoop_mobile_app/api/api_service.dart';
+import 'package:landmarkcoop_mobile_app/entry_point.dart';
+import 'package:landmarkcoop_mobile_app/model/customer_model.dart';
+import 'package:landmarkcoop_mobile_app/model/login_model.dart';
+import 'package:landmarkcoop_mobile_app/model/push_notification.dart';
+import 'package:landmarkcoop_mobile_app/pages/airtime_purchase.dart';
+import 'package:landmarkcoop_mobile_app/pages/tv_subscription.dart';
+import 'package:landmarkcoop_mobile_app/utils/notification_badge.dart';
+import 'package:overlay_support/overlay_support.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BillsPayment extends StatefulWidget {
   final String fullName;
   final String token;
   final List<CustomerWalletsBalanceModel> customerWallets;
-  final List<LastTransactionsModel> lastTransactions;
-  const BillsPayment({super.key, required this.fullName, required this.lastTransactions, required this.token, required this.customerWallets});
+
+  const BillsPayment({
+    Key? key,
+    required this.customerWallets,
+    required this.fullName,
+    required this.token,
+  }) : super(key: key);
 
   @override
   State<BillsPayment> createState() => _BillsPaymentState();
 }
 
 class _BillsPaymentState extends State<BillsPayment> {
+  late int totalNotifications;
+  late final FirebaseMessaging messaging;
+  PushNotification? notificationInfo;
+  List notificationList = [];
+  LoginRequestModel loginRequestModel = LoginRequestModel();
+
+  Widget futureTabWidgetBuilder(){
+    return Expanded(
+      child: TabBarView(
+          children: [
+            // ElectricityPayment(),
+            AirtimePurchase(customerWallets: widget.customerWallets, fullName: widget.fullName, token: widget.token,),
+            TVSubscription(),
+          ]
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) async{
+        // Parse the message received
+        PushNotification notification = PushNotification(
+          title: message.notification!.title,
+          body: message.notification!.body,
+        );
+        if (mounted) {
+          final SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setString('notificationTitle', message.notification!.title.toString());
+          await prefs.setString('notificationBody', message.notification!.body.toString());
+          setState(() {
+            notificationInfo = notification;
+            totalNotifications++;
+          });
+          if (notificationInfo != null) {
+            // For displaying the notification as an overlay
+            showSimpleNotification(
+              Text(notificationInfo!.title!,
+                style: GoogleFonts.montserrat(),
+              ),
+              leading: NotificationBadge(totalNotifications: totalNotifications),
+              subtitle: Text(notificationInfo!.body!,
+                style: GoogleFonts.montserrat(),
+              ),
+              background: Color(0xff000080).withOpacity(0.7),
+              duration: const Duration(seconds: 2),
+            );
+          }
+          pushNotify();
+        }
+      });
+
+    // Open to notification screen
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async{
+      PushNotification notification = PushNotification(
+        title: message.notification!.title,
+        body: message.notification!.body,
+      );
+      if(mounted) {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('notificationTitle', message.notification!.title.toString());
+        await prefs.setString('notificationBody', message.notification!.body.toString());
+        String subdomain = prefs.getString('subdomain') ?? 'core.landmarkcooperative.org';
+        setState(() {
+          notificationInfo = notification;
+          totalNotifications++;
+        });
+
+        // API Sign in token
+        APIService apiService = APIService(subdomain_url: subdomain);
+        apiService.login(loginRequestModel).then((value) {
+          if (value.customerWalletsList.isNotEmpty) {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context)=> EntryPoint(
+                customerWallets: value.customerWalletsList, 
+                fullName: value.customerWalletsList[0].fullName, 
+                screenName: 'Notification', 
+                subdomain: subdomain, 
+                token: value.token, 
+                referralId: value.customerWalletsList[0].phoneNo,))
+            );
+            notificationList.add({
+              'title' : message.notification!.title,
+              'body' : message.notification!.body,
+            });
+        }});
+      }}
+    );
+    totalNotifications = 0;
+    pushNotify();
+    super.initState();
+  }
+
+  void pushNotify() async{
+    final prefs = await SharedPreferences.getInstance();
+    String notificationTitle = prefs.getString('notificationTitle') ?? '';
+    String notificationBody = prefs.getString('notificationBody') ?? '';
+    print('Body - $notificationBody');
+    if(notificationTitle != '') {
+      setState((){
+        notificationList.add({
+          'title' : notificationTitle,
+          'body' : notificationBody,
+        });
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: DefaultTabController(
         length: 3,
         child: Scaffold(
-            backgroundColor: Colors.white,
-            body: Column(
-              children: <Widget>[
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: IconButton(
-                  padding: EdgeInsets.zero,
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => HomeDrawer(
-                        value: 1,
-                        page: BillsPayment(token: widget.token,
-                          fullName: widget.fullName, customerWallets: widget.customerWallets, lastTransactions: widget.lastTransactions,
-                        ),
-                        name: 'Bills Payment',
-                        token: widget.token,
-                        fullName: widget.fullName, 
-                        customerWallets: widget.customerWallets,
-                        lastTransactionsList: widget.lastTransactions,
-                        ))
-                    );
-                  },
-                  icon: Icon(
-                    Icons.menu,
-                    color: Colors.grey.shade600,
-                  ),
-                              ),
+          backgroundColor: Colors.white,
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              const SizedBox(height: 10),
+              Container(
+                margin: const EdgeInsets.fromLTRB(8,60,8,20),
+                height: 45,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade300,
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 8),
-                  height: 45,
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade300,
-                    borderRadius: BorderRadius.circular(25),
+                child: TabBar(
+                  indicator: BoxDecoration(
+                    color: const Color(0xff000080),
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                  child: TabBar(
-                    indicator: BoxDecoration(
-                      color: Colors.blue.shade800,
-                      borderRadius: BorderRadius.circular(25),
-                    ),
-                    labelColor:Colors.white,
-                    unselectedLabelColor: Colors.grey,
-                    labelStyle:
-                        GoogleFonts.openSans(fontWeight: FontWeight.bold),
-                    unselectedLabelStyle:
-                        GoogleFonts.openSans(fontWeight: FontWeight.bold),
-                    tabs: const [
-                      Tab(text: 'Airtime/Data'),
-                      Tab(text: 'TV'),
-                      Tab(text: 'Electricity'),
-                    ],
+                  labelColor: Colors.white,
+                  unselectedLabelColor: Colors.grey,
+                  labelStyle: GoogleFonts.montserrat(
+                    fontWeight: FontWeight.bold
                   ),
+                  unselectedLabelStyle: GoogleFonts.montserrat(
+                    fontWeight: FontWeight.bold
+                  ),
+                  tabs: const [
+                    Tab(text: 'Electicity Payment'),
+                    Tab(text: 'Airtime Purchase'),
+                    Tab(text: 'TV Subscription'),
+                  ],
                 ),
-                Expanded(
-                  child: TabBarView(children: [
-                    AirtimePurchase(
-                      token: widget.token,
-                      fullName: widget.fullName, customerWallets: widget.customerWallets, lastTransactions: widget.lastTransactions,
-                    ),
-                    TV(
-                      token: widget.token,
-                      fullName: widget.fullName,
-                    ),
-                    Electricity(
-                      token: widget.token,
-                      fullName: widget.fullName,
-                    ),
-                  ]),
-                ),
-              ],
-            )),
+              ),
+              futureTabWidgetBuilder(),
+            ],
+          )
+        ),
       ),
     );
   }

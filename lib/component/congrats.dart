@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:landmarkcoop_mobile_app/pages/login.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:landmarkcoop_mobile_app/main_view.dart';
+import '../utils/financial_institution_list.dart';
 
 class Congrats extends StatefulWidget {
   final String response;
 
   const Congrats(
-      {super.key,
-        required this.response});
+      {Key? key,
+      required this.response})
+      : super(key: key);
 
   @override
   State<Congrats> createState() => _CongratsState();
@@ -29,10 +31,7 @@ class _CongratsState extends State<Congrats> {
             Container(
               height: height * 0.35,
               width: width * 0.6,
-                decoration: const BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage('assets/congrats.jpg'),
-                        fit: BoxFit.contain)),
+              child: Lottie.asset('assets/LottieAssets/congrats.zip'),
             ),
             const SizedBox(height: 20),
             Container(
@@ -53,12 +52,11 @@ class _CongratsState extends State<Congrats> {
                   String institution =  prefs.getString('institution') ?? 'institution';
                   String subdomain = prefs.getString('subdomain') ?? 'subdomain';
                   print('This is the institution $institution');
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => const Login())
-                  );
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => MainView()));
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xffd4af37),
+                    backgroundColor: const Color(0xffd4af37),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),

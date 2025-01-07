@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:landmarkcoop_mobile_app/api/api_service.dart';
-import 'package:landmarkcoop_mobile_app/model/other_model.dart';
-import 'package:landmarkcoop_mobile_app/pages/login.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:landmarkcoop_mobile_app/main_view.dart';
 import '../component/custom_text_form_field.dart';
+import '../entry_point.dart';
 import '../model/customer_model.dart';
 
 Future<Object?> updateBVN(
@@ -13,7 +13,6 @@ Future<Object?> updateBVN(
   required final String fullName,
   required final String token,
   required final List<CustomerWalletsBalanceModel> customerWallets,
-      required List<LastTransactionsModel> lastTransactions,
 }) {
   TextEditingController bvnController = TextEditingController();
   bool isDisabled = true;
@@ -92,10 +91,16 @@ Future<Object?> updateBVN(
                           )
                         : ElevatedButton(
                             onPressed: () async {
+                              final prefs =
+                                  await SharedPreferences.getInstance();
+                              String subdomain = prefs.getString('subdomain') ??
+                                  'https://core.landmarkcooperative.org';
+                              // To Do
                               setState(() {
                                 isApiCallProcess = true;
                               });
-                              APIService apiService = APIService();
+                              APIService apiService =
+                                  APIService(subdomain_url: subdomain);
                               apiService
                                   .updateAccountWithBVN(
                                       bvnController.text.trim(), token)
@@ -135,12 +140,19 @@ Future<Object?> updateBVN(
                                             Center(
                                               child: ElevatedButton(
                                                 onPressed: () async{
-                                                  APIService apiService = APIService();
+                                                  final prefs = await SharedPreferences.getInstance();
+                                                  String institution =
+                                                      prefs.getString('institution') ?? 'Minerva Hub';
+                                                  String subdomain = prefs.getString('subdomain') ??
+                                                      'https://core.landmarkcooperative.org';
+                                                  APIService apiService = APIService(subdomain_url: subdomain);
                                                   apiService.logout(token).then((value) {
+                                                    prefs.setString('biometricToken', value);
+                                                    print('Token at Logout - $value');
                                                   });
                                                   Navigator.popUntil(context, (route) => route.isFirst);
                                                   Navigator.of(context).pushReplacement(
-                                                    MaterialPageRoute(builder: (context) => const Login(),
+                                                    MaterialPageRoute(builder: (context) => MainView(),
                                                     ),
                                                   );
                                                 },
@@ -240,6 +252,7 @@ Future<Object?> updateBVN(
                               });
                             },
                             style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.lightBlue,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),

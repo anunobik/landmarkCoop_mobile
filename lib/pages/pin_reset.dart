@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:landmarkcoop_mobile_app/model/customer_model.dart';
-import 'package:landmarkcoop_mobile_app/model/other_model.dart';
-import 'package:landmarkcoop_mobile_app/pages/setting.dart';
+import 'package:landmarkcoop_mobile_app/pages/transaction_pin.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api/api_service.dart';
@@ -13,8 +12,7 @@ Future<Object?> pinReset(BuildContext context,
     {required ValueChanged onClosed,
       required final String fullName,
       required final String token,
-      required final List<CustomerWalletsBalanceModel> customerWallets,
-      required final List<LastTransactionsModel> lastTransactions,
+      required final List<CustomerWalletsBalanceModel> customerWallets
     }){
   bool isApiCallProcess = false;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -146,9 +144,9 @@ Future<Object?> pinReset(BuildContext context,
                             : ElevatedButton(
                           onPressed: () async {
                             final prefs = await SharedPreferences.getInstance();
-                            String subdomain = prefs.getString('subdomain') ?? 'https://core.myminervahub.com';
+                            String subdomain = prefs.getString('subdomain') ?? 'https://core.landmarkcooperative.org';
 
-                            APIService apiService = APIService();
+                            APIService apiService = APIService(subdomain_url: subdomain);
                             if (passwordController.text.isEmpty) {
                               Fluttertoast.showToast(msg: 'Password cannot be empty');
                             } else {
@@ -191,11 +189,11 @@ Future<Object?> pinReset(BuildContext context,
                                               child: ElevatedButton(
                                                 onPressed: () {
                                                   Navigator.of(context).push(MaterialPageRoute(
-                                                      builder: (context) => Setting(
+                                                      builder: (context) => TransactionPin(
                                                         fullName: fullName,
                                                         token: token,
-                                                        lastTransactions: lastTransactions,
-                                                        customerWallets: customerWallets, phoneNumber: customerWallets[0].phoneNo,
+                                                        customerWallets:
+                                                        customerWallets,
                                                       )));
                                                 },
                                                 style: ElevatedButton.styleFrom(
@@ -449,7 +447,7 @@ Future<Object?> pinReset(BuildContext context,
 //           ElevatedButton(
 //             onPressed: () async {
 //               final prefs = await SharedPreferences.getInstance();
-//               String subdomain = prefs.getString('subdomain') ?? 'https://core.myminervahub.com';
+//               String subdomain = prefs.getString('subdomain') ?? 'https://core.landmarkcooperative.org';
 
 //               APIService apiService = APIService(subdomain_url: subdomain);
 //               if (passwordController.text.isEmpty) {

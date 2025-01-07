@@ -2,12 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:landmarkcoop_mobile_app/pages/forgot_password.dart';
-import 'package:landmarkcoop_mobile_app/pages/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:landmarkcoop_mobile_app/main_view.dart';
+import 'registration/forgot_password.dart';
+
 class CheckMail extends StatefulWidget {
-  const CheckMail({super.key});
+  const CheckMail({Key? key}) : super(key: key);
 
   @override
   State<CheckMail> createState() => _CheckMailState();
@@ -69,14 +70,14 @@ class _CheckMailState extends State<CheckMail> {
                       'https://core.landmarkcooperative.org';
 
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const Login()));
+                      builder: (context) => MainView()));
                 },
                 style: ButtonStyle(
                     foregroundColor:
-                        WidgetStateProperty.all<Color>(Colors.blue),
+                        MaterialStateProperty.all<Color>(Colors.blue),
                     backgroundColor:
-                        WidgetStateProperty.all<Color>(Colors.blue),
-                    shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                        MaterialStateProperty.all<Color>(Colors.blue),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20)))),
                 child: Padding(
@@ -109,7 +110,10 @@ class _CheckMailState extends State<CheckMail> {
                                 prefs.getString('institution') ?? 'Minerva Hub';
                             Navigator.of(context)
                                 .pushReplacement(MaterialPageRoute(
-                              builder: (context) => const ForgotPassword(),
+                              builder: (context) => ForgotPassword(
+                                institution: institution,
+                                subdomain: subdomain,
+                              ),
                             ));
                           })
                   ])),

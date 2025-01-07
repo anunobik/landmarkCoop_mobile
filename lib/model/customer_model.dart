@@ -26,8 +26,8 @@ class CustomerRequestModel {
       'gender': 'female',
       'maritalStatus': 'single',
       'country': 'Nigeria',
-      'countryState': 'Abuja',
-      'homeAddress': 'FCT',
+      'countryState': 'Plateau',
+      'homeAddress': 'Jos',
     });
   }
 }
@@ -35,7 +35,6 @@ class CustomerRequestModel {
 class CustomerWalletsBalanceModel {
   final int id;
   final String accountNumber;
-  final String trackNumber;
   final String nubanAccountNumber;
   final double balance;
   final String productName;
@@ -43,38 +42,44 @@ class CustomerWalletsBalanceModel {
   final String email;
   final String phoneNo;
   final String interBankName;
+  final bool limitsEnabled;
+  final int limitAmount;
+  final double limitBalance;
 
-  CustomerWalletsBalanceModel(
-      {required this.id,
-        required this.accountNumber,
-        required this.trackNumber,
-        required this.nubanAccountNumber,
-        required this.balance,
-        required this.productName,
-        required this.fullName,
-        required this.email,
-        required this.phoneNo,
-        required this.interBankName,
-      });
+  CustomerWalletsBalanceModel({
+    required this.id,
+    required this.accountNumber,
+    required this.nubanAccountNumber,
+    required this.balance,
+    required this.productName,
+    required this.fullName,
+    required this.email,
+    required this.phoneNo,
+    required this.interBankName,
+    required this.limitsEnabled,
+    required this.limitAmount,
+    required this.limitBalance,
+  });
 
   factory CustomerWalletsBalanceModel.fromJson(Map<String, dynamic> json) {
     return CustomerWalletsBalanceModel(
-        id: json['id'] ?? 0,
-        accountNumber: json['accountNumber'] ?? '',
-        trackNumber: json['trackNumber'] ?? '',
-        nubanAccountNumber: json['nubanAccountNumber'] ?? '',
-        balance: json['balance'] ?? 0,
-        productName: json['products']['displayName'] ?? '',
-        fullName:
-        json['customer']['firstName'] + ' ' + json['customer']['lastName'] ??
-            '',
-        email: json['customer']['email'] ?? '',
-        phoneNo: json['customer']['phoneNumber'] ?? '',
-        interBankName: json['interBankName']
+      id: json['id'] ?? 0,
+      accountNumber: json['accountNumber'] ?? '',
+      nubanAccountNumber: json['nubanAccountNumber'] ?? '',
+      balance: json['balance'] ?? 0,
+      productName: json['products']['displayName'] ?? '',
+      fullName:
+          json['customer']['firstName'] + ' ' + json['customer']['lastName'] ??
+              '',
+      email: json['customer']['email'] ?? '',
+      phoneNo: json['customer']['phoneNumber'] ?? '',
+      interBankName: json['interBankName'] ?? '',
+      limitsEnabled: json['limitsEnabled'] ?? false,
+      limitAmount: json['limitAmount'] ?? 50000,
+      limitBalance: json['limitBalance'] ?? 0,
     );
   }
 }
-
 
 class CustomerInvestmentWalletModel {
   final int id;
@@ -89,12 +94,22 @@ class CustomerInvestmentWalletModel {
   final int tenor;
   final String timeCreated;
   final double wht;
-  final String displayName;
+  final String product;
 
   CustomerInvestmentWalletModel(
-      {required this.id, required this.amount, required this.accountNumber, required this.instruction,
-        required this.interest, required this.fullName, required this.maturityAmount, required this.maturityTime,
-        required this.rate, required this.tenor, required this.timeCreated, required this.wht, required this.displayName});
+      {required this.id,
+      required this.amount,
+      required this.accountNumber,
+      required this.instruction,
+      required this.interest,
+      required this.fullName,
+      required this.maturityAmount,
+      required this.maturityTime,
+      required this.rate,
+      required this.tenor,
+      required this.timeCreated,
+      required this.wht,
+      required this.product});
 
   factory CustomerInvestmentWalletModel.fromJson(Map<String, dynamic> json) {
     return CustomerInvestmentWalletModel(
@@ -103,14 +118,18 @@ class CustomerInvestmentWalletModel {
       accountNumber: json['customerAccounts']['accountNumber'] ?? '',
       instruction: json['instruction'] ?? 0,
       interest: json['interest'] ?? 0,
-      fullName: json['customerAccounts']['customer']['firstName'] + ' ' + json['customerAccounts']['customer']['lastName'] ?? '',
+      fullName: json['customerAccounts']['customer']['firstName'] +
+              ' ' +
+              json['customerAccounts']['customer']['lastName'] ??
+          '',
       maturityAmount: json['maturityAmount'] ?? 0,
       maturityTime: json['maturityTime'] ?? '',
       rate: json['rate'] ?? 0,
       tenor: json['tenor'] ?? 0,
       timeCreated: json['timeCreated'] ?? '',
       wht: json['wht'] ?? 0,
-      displayName: json['customerAccounts']['products']['displayName'] ?? '',
+      product:
+          json['customerAccounts']['products']['products']['displayName'] ?? '',
     );
   }
 }
@@ -132,8 +151,8 @@ class CustomerAccountDisplayModel {
 
   CustomerAccountDisplayModel(
       {required this.accountNumber,
-        required this.displayName,
-        required this.phoneNumber});
+      required this.displayName,
+      required this.phoneNumber});
 
   factory CustomerAccountDisplayModel.fromJson(Map<String, dynamic> json) {
     return CustomerAccountDisplayModel(

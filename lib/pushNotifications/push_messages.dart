@@ -1,9 +1,9 @@
 // ignore_for_file: must_be_immutable
 
-import 'package:landmarkcoop_mobile_app/util/notification_badge.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import "package:flutter/material.dart";
 import 'package:google_fonts/google_fonts.dart';
+import 'package:landmarkcoop_mobile_app/utils/notification_badge.dart';
 import 'package:overlay_support/overlay_support.dart';
 
 import '../model/push_notification.dart';

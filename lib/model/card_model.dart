@@ -18,12 +18,12 @@ class CardValidationResponseModel {
 
   factory CardValidationResponseModel.fromJson(Map<String, dynamic> json) {
     return CardValidationResponseModel(
-      amount: json['data']['amount'] ?? '',
-      flwRef: json['data']['flw_ref'] ?? '',
-      chargedAmount: json['data']['charged_amount'] ?? '',
-      processorResponse: json['data']['processor_response'] ?? '',
-      status: json['data']['status'] ?? '',
-      message: json['message'] ?? '',
+      amount: json['data']['amount'] != null  ? json['data']['amount'] : '',
+      flwRef: json['data']['flw_ref'] != null ? json['data']['flw_ref'] : '',
+      chargedAmount: json['data']['charged_amount'] != null ? json['data']['charged_amount'] : '',
+      processorResponse: json['data']['processor_response'] != null ? json['data']['processor_response'] : '',
+      status: json['data']['status'] != null ? json['data']['status'] : '',
+      message: json['message'] != null ? json['message'] : '',
     );
   }
 }

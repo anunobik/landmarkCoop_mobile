@@ -3,31 +3,27 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttercontactpicker/fluttercontactpicker.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:landmarkcoop_mobile_app/api/api_service.dart';
+import 'package:landmarkcoop_mobile_app/entry_point.dart';
 import 'package:landmarkcoop_mobile_app/model/customer_model.dart';
 import 'package:landmarkcoop_mobile_app/model/login_model.dart';
 import 'package:landmarkcoop_mobile_app/model/other_model.dart';
+import 'package:landmarkcoop_mobile_app/model/push_notification.dart';
+import 'package:landmarkcoop_mobile_app/utils/ProgressHUD.dart';
+import 'package:landmarkcoop_mobile_app/utils/notification_badge.dart';
+import 'package:landmarkcoop_mobile_app/widgets/bottom_nav_bar.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../model/push_notification.dart';
-import '../util/ProgressHUD.dart';
-import '../util/home_drawer.dart';
-import '../util/notification_badge.dart';
-import 'dashboard.dart';
 
 class Transfer extends StatefulWidget {
   final String fullName;
   final String token;
-  final List<LastTransactionsModel> lastTransactions;
-  final List<CustomerWalletsBalanceModel> customerWallets;
 
   const Transfer({
     super.key,
     required this.fullName,
     required this.token,
-    required this.customerWallets,
-    required this.lastTransactions,
   });
 
   @override
@@ -54,7 +50,9 @@ class _TransferState extends State<Transfer> {
         productName: '',
         fullName: '',
         email: '',
-        phoneNo: '', interBankName: '', nubanAccountNumber: 'Select Account', trackNumber: '')
+        phoneNo: '', interBankName: '', nubanAccountNumber: 'Select Account',limitsEnabled: false,
+        limitAmount: 50000,
+      limitBalance: 0,)
   ];
   late int totalNotifications;
   late final FirebaseMessaging messaging;
@@ -90,7 +88,7 @@ class _TransferState extends State<Transfer> {
               subtitle: Text(notificationInfo!.body!,
                 style: GoogleFonts.montserrat(),
               ),
-              background: const Color(0XFF091841).withOpacity(0.7),
+              background: Color(0xff000080).withOpacity(0.7),
               duration: const Duration(seconds: 2),
             );
           }
@@ -115,21 +113,18 @@ class _TransferState extends State<Transfer> {
         });
 
         // API Sign in token
-        APIService apiService = APIService();
+        APIService apiService = APIService(subdomain_url: subdomain);
         apiService.login(loginRequestModel).then((value) {
           if (value.customerWalletsList.isNotEmpty) {
             Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context)=> HomeDrawer(
-                value: 0,
-                page: Dashboard(
-                  token: widget.token,
-                  fullName: widget.fullName, customerWallets: widget.customerWallets,
-                  lastTransactions: widget.lastTransactions,
+              MaterialPageRoute(builder: (context)=> EntryPoint(
+                customerWallets: value.customerWalletsList, 
+                fullName: value.customerWalletsList[0].fullName, 
+                screenName: 'Notification', 
+                subdomain: subdomain, 
+                token: value.token,
+                referralId: value.customerWalletsList[0].phoneNo,
                 ),
-                name: 'wallet',
-                token: widget.token,
-                fullName: widget.fullName, customerWallets: widget.customerWallets, lastTransactionsList: widget.lastTransactions,
-              ),
               ),
             );
             notificationList.add({
@@ -163,7 +158,7 @@ class _TransferState extends State<Transfer> {
     String subdomain =
         prefs.getString('subdomain') ?? 'https://core.landmarkcooperative.org';
 
-    APIService apiService = APIService();
+    APIService apiService = APIService(subdomain_url: subdomain);
     return apiService.pageReload(widget.token).then((value) {
       currentWallet = dataWallet[0];
       for (var singleData in value.customerWalletsList) {
@@ -177,6 +172,14 @@ class _TransferState extends State<Transfer> {
 
   @override
   Widget build(BuildContext context) {
+    return ProgressHUD(
+      inAsyncCall: isApiCallProcess,
+      opacity: 0.3,
+      child: _uiSetup(context),
+    );
+  }
+
+  Widget _uiSetup(BuildContext context) {
     return SafeArea(
       child: Scaffold(
           backgroundColor: Colors.white,
@@ -186,7 +189,7 @@ class _TransferState extends State<Transfer> {
               child: Column(
                 children: <Widget>[
                   Text(
-                    'Transfer to other Landmark users',
+                    'Transfer to other Landmark Coop users',
                     style: GoogleFonts.montserrat(
                       color: const Color(0xff000080),
                       fontSize: 18,
@@ -217,10 +220,10 @@ class _TransferState extends State<Transfer> {
                         _phoneContact = contact;
                       });
                       setState(() {
-                        _contact = _phoneContact!.phoneNumber!.number!.replaceAll(' ', '');
+                        _contact = _phoneContact!.phoneNumber!.number!;
                       });
                       APIService apiServicePhone =
-                          APIService();
+                          new APIService(subdomain_url: subdomain);
                       apiServicePhone
                           .getAccountFromPhone(
                               _contact.replaceAll(' ', ''), widget.token)
@@ -327,125 +330,115 @@ class _TransferState extends State<Transfer> {
     var width = MediaQuery.of(context).size.width;
     showDialog(
       context: context,
-      builder: (context) => ProgressHUD(
-        inAsyncCall: isApiCallProcess,
-        opacity: 0.3,
-        child: Form(
-          key: formKey,
-          child: AlertDialog(
-            title: Text(
+      builder: (context) => Form(
+        key: formKey,
+        child: AlertDialog(
+          title: Center(
+            child: Text(
               'Amount to Transfer',
               style: GoogleFonts.montserrat(
                 color: const Color(0xff000080),
               ),
+              textAlign: TextAlign.center,
             ),
-            content: SizedBox(
-              height: height * 0.25,
-              width: width,
-              child: Column(
-                children: [
-                  Form(
-                    key: formKeyTrf,
-                    child: TextFormField(
-                      style: const TextStyle(fontSize: 18.0),
-                      autofocus: true,
-                      onSaved: (input) =>
-                          fundTrfAmount = double.parse(input!.trim()),
-                      validator: (input) =>
-                          input!.isEmpty ? "Please enter amount" : null,
-                      keyboardType:
-                          const TextInputType.numberWithOptions(decimal: true),
-                      decoration: InputDecoration(
-                        hintText: 'Enter amount to transfer',
-                        hintStyle: GoogleFonts.montserrat(
-                          color: const Color(0xff9ca2ac),
-                        ),
-                        filled: true,
-                        fillColor: Colors.white,
-                        prefix: Container(
-                          height: 14,
-                          width: 14,
-                          decoration: const BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage("assets/pics/naira-black.png"),
-                              fit: BoxFit.contain,
-                            ),
+          ),
+          content: SizedBox(
+            height: height * 0.2,
+            width: width,
+            child: Column(
+              children: [
+                Form(
+                  key: formKeyTrf,
+                  child: TextFormField(
+                    style: TextStyle(fontSize: 18.0),
+                    autofocus: true,
+                    onSaved: (input) =>
+                        fundTrfAmount = double.parse(input!.trim()),
+                    validator: (input) =>
+                        input!.isEmpty ? "Please enter amount" : null,
+                    keyboardType:
+                        const TextInputType.numberWithOptions(decimal: true),
+                    decoration: InputDecoration(
+                      hintText: 'Enter amount to transfer',
+                      hintStyle: GoogleFonts.montserrat(
+                        color: const Color(0xff9ca2ac),
+                      ),
+                      filled: true,
+                      fillColor: Colors.white,
+                      prefix: Container(
+                        height: 14,
+                        width: 14,
+                        decoration: const BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage("assets/pics/naira-black.png"),
+                            fit: BoxFit.contain,
                           ),
                         ),
-                        enabledBorder: const UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey),
-                        ),
-                        focusedBorder: const UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.blue),
-                        ),
+                      ),
+                      enabledBorder: const UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      focusedBorder: const UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20),
-                  dropDownWallets(),
-                  // const SizedBox(height: 10),
-                  // selectedWallet != null ? Center(
-                  //   child: Text(
-                  //     selectedWallet!.productName,
-                  //     style: GoogleFonts.montserrat(
-                  //       fontWeight: FontWeight.bold,
-                  //       fontSize: 15,
-                  //     ),
-                  //   ),
-                  // )
-                  //     : Container(),
-                  const SizedBox(height: 10),
-                ],
-              ),
+                ),
+                const SizedBox(height: 20),
+                dropDownWallets(),
+              ],
             ),
-            actions: [
-              Center(
-                child: ElevatedButton(
-                  onPressed: () async {
-                    final prefs = await SharedPreferences.getInstance();
-                    String subdomain = prefs.getString('subdomain') ??
-                        'https://core.landmarkcooperative.org';
+          ),
+          actions: [
+            Center(
+              child: ElevatedButton(
+                onPressed: () async {
+                  final prefs = await SharedPreferences.getInstance();
+                  String subdomain = prefs.getString('subdomain') ??
+                      'https://core.landmarkcooperative.org';
 
-                    APIService apiService =
-                        APIService();
+                  APIService apiService =
+                      APIService(subdomain_url: subdomain);
 
-                    if (validateAndSaveTrf()) {
-                      AccountToAccountRequestModel
-                          accountToAccountRequestModel =
-                          AccountToAccountRequestModel(
-                              fromAccountNumber: selectedWallet!.accountNumber,
-                              toAccountNumber:
-                                  customerAccountDisplayModel!.accountNumber,
-                              amount: fundTrfAmount.toString());
+                  if (validateAndSaveTrf()) {
+                    AccountToAccountRequestModel
+                        accountToAccountRequestModel =
+                        AccountToAccountRequestModel(
+                            fromAccountNumber: selectedWallet!.accountNumber,
+                            toAccountNumber:
+                                customerAccountDisplayModel!.accountNumber,
+                            amount: fundTrfAmount);
+                    setState(() {
+                      isApiCallProcess = true;
+                    });
+                    waitAlert();
+                    apiService
+                        .internalTransfer(
+                            accountToAccountRequestModel, widget.token)
+                        .then((value) {
+                      // Close the wait alert dialog
+                      Navigator.of(context, rootNavigator: true).pop();
                       setState(() {
-                        isApiCallProcess = true;
+                        isApiCallProcess = false;
                       });
-                      apiService
-                          .internalTransfer(
-                              accountToAccountRequestModel, widget.token)
-                          .then((value) {
-                        setState(() {
-                          isApiCallProcess = false;
-                        });
-                        successTransactionAlert(value);
-                      });
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.lightBlue,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10))),
-                  child: Text(
-                    'Submit',
-                    style: GoogleFonts.montserrat(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
+                      successTransactionAlert(value);
+                    });
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.lightBlue,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10))),
+                child: Text(
+                  'Submit',
+                  style: GoogleFonts.montserrat(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-              )
-            ],
-          ),
+              ),
+            )
+          ],
         ),
       ),
     );
@@ -481,11 +474,11 @@ class _TransferState extends State<Transfer> {
                 currentWallet = newValue!;
                 state.didChange(newValue);
                 selectedWallet = newValue;
-                if (selectedWallet!.fullName.isNotEmpty) {
-                  disableAcctToAcctMoneyBtn = false;
-                } else {
-                  disableAcctToAcctMoneyBtn = true;
-                }
+                // if (selectedWallet!.fullName.isNotEmpty) {
+                //   disableAcctToAcctMoneyBtn = false;
+                // } else {
+                //   disableAcctToAcctMoneyBtn = true;
+                // }
               });
             },
             items: dataWallet
@@ -500,6 +493,54 @@ class _TransferState extends State<Transfer> {
     });
   }
 
+  waitAlert() {
+    return showDialog(
+      context: context,
+      barrierColor: Colors.black.withOpacity(0.5), // Semi-transparent background
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.transparent, // Make the dialog itself transparent
+          child: Center(
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.white, // Dialog content background color
+                borderRadius: BorderRadius.circular(15),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    blurRadius: 10,
+                    offset: const Offset(0, 5),
+                  ),
+                ],
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: const [
+                  Text(
+                    "Message",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    "Please wait...",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+
   // Success Transaction Alert
   successTransactionAlert(message) {
     return showDialog(
@@ -511,7 +552,7 @@ class _TransferState extends State<Transfer> {
                 height: 50,
                 alignment: Alignment.centerLeft,
                 padding: const EdgeInsets.only(left: 15),
-                color: const Color.fromRGBO(0, 0, 139, 1),
+                color: Color(0xff000080),
                 child: Center(
                   child: Text(
                     'Message',
@@ -550,7 +591,7 @@ class _TransferState extends State<Transfer> {
                           'https://core.landmarkcooperative.org';
 
                       APIService apiService =
-                          APIService();
+                          APIService(subdomain_url: subdomain);
                       setState(() {
                         isApiCallProcess = true;
                       });
@@ -559,21 +600,16 @@ class _TransferState extends State<Transfer> {
                           isApiCallProcess = false;
                         });
                         if (value.customerWalletsList.isNotEmpty) {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => HomeDrawer(
-                                value: 0,
-                                page: Dashboard(
-                                  token: widget.token,
-                                  fullName: widget.fullName, customerWallets: widget.customerWallets,
-                                  lastTransactions: widget.lastTransactions,
-                                ),
-                                name: 'wallet',
-                                token: widget.token,
-                                fullName: widget.fullName, customerWallets: widget.customerWallets, lastTransactionsList: widget.lastTransactions,
-                              ),
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => BottomNavBar(
+                              pageIndex: 0,
+                              fullName: value.customerWalletsList[0].fullName,
+                              token: value.token,
+                              subdomain: subdomain,
+                              customerWallets: value.customerWalletsList,
+                              phoneNumber: value.customerWalletsList[0].phoneNo,
                             ),
-                          );
+                          ));
                         } else {
                           showDialog(
                               context: context,
@@ -598,7 +634,7 @@ class _TransferState extends State<Transfer> {
                       child: Text(
                         "Ok",
                         style: GoogleFonts.montserrat(
-                          color: const Color.fromRGBO(0, 0, 139, 1),
+                          color: Color(0xff000080),
                           fontSize: 16,
                         ),
                       ),

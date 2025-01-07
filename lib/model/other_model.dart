@@ -13,19 +13,19 @@ class ProductResponseModel {
   final double serviceCharge;
   final double referralPercentageCharge;
 
-  ProductResponseModel(
-      {required this.id,
-        required this.productName,
-        required this.displayName,
-        required this.description,
-        required this.interestRate,
-        required this.tenorDays,
-        required this.prematureCharge,
-        required this.normalCharge,
-        required this.defaultCharge,
-        required this.serviceCharge,
-        required this.referralPercentageCharge,
-      });
+  ProductResponseModel({
+    required this.id,
+    required this.productName,
+    required this.displayName,
+    required this.description,
+    required this.interestRate,
+    required this.tenorDays,
+    required this.prematureCharge,
+    required this.normalCharge,
+    required this.defaultCharge,
+    required this.serviceCharge,
+    required this.referralPercentageCharge,
+  });
 
   factory ProductResponseModel.fromJson(Map<String, dynamic> json) {
     return ProductResponseModel(
@@ -49,11 +49,8 @@ class AccountTransactionRequestModel {
   double amount;
   var narration;
 
-  AccountTransactionRequestModel({
-    this.accountNumber,
-    required this.amount,
-    this.narration
-  });
+  AccountTransactionRequestModel(
+      {this.accountNumber, required this.amount, this.narration});
 
   String toJson() {
     return jsonEncode(<String, dynamic>{
@@ -64,12 +61,65 @@ class AccountTransactionRequestModel {
   }
 }
 
+class GatewayResponseModel {
+  final int id;
+  final String gatewayName;
+  final String publicKey;
+  final String privateKey;
+  final String secretKey;
+  final int isActive;
+
+  GatewayResponseModel({
+    required this.id,
+    required this.gatewayName,
+    required this.publicKey,
+    required this.privateKey,
+    required this.secretKey,
+    required this.isActive,
+  });
+
+  factory GatewayResponseModel.fromJson(Map<String, dynamic> json) {
+    return GatewayResponseModel(
+      id: json['id'] ?? 0,
+      gatewayName: json['gatewayName'] ?? '',
+      publicKey: json['publicKey'] ?? '',
+      privateKey: json['privateKey'] ?? '',
+      secretKey: json['secretKey'] ?? '',
+      isActive: json['isActive'] ?? 0,
+    );
+  }
+}
+
+class BranchResponseModel {
+  final int id;
+  final String branchName;
+  final String displayName;
+  final String address;
+
+  BranchResponseModel({
+    required this.id,
+    required this.branchName,
+    required this.displayName,
+    required this.address,
+  });
+
+  factory BranchResponseModel.fromJson(Map<String, dynamic> json) {
+    return BranchResponseModel(
+      id: json['id'] ?? 0,
+      branchName: json['branchName'] ?? '',
+      displayName: json['displayName'] ?? '',
+      address: json['address'] ?? '',
+    );
+  }
+}
+
 class BankListResponseModel {
   final int id;
   final String code;
   final String name;
 
-  BankListResponseModel({required this.id,
+  BankListResponseModel({
+    required this.id,
     required this.code,
     required this.name,
   });
@@ -91,14 +141,13 @@ class WithdrawalRequestModel {
   var bankAccountNo;
   var bankAccountName;
 
-  WithdrawalRequestModel({
-    this.accountNumber,
-    this.amount,
-    this.requestType,
-    this.bankName,
-    this.bankAccountNo,
-    this.bankAccountName
-  });
+  WithdrawalRequestModel(
+      {this.accountNumber,
+      this.amount,
+      this.requestType,
+      this.bankName,
+      this.bankAccountNo,
+      this.bankAccountName});
 
   String toJson() {
     return jsonEncode(<String, String>{
@@ -129,6 +178,78 @@ class BankAccountRequestModel {
   }
 }
 
+class OnlineRateResponseModel {
+  final int id;
+  final double oneMonth;
+  final double twoMonth;
+  final double threeMonth;
+  final double fourMonth;
+  final double fiveMonth;
+  final double sixMonth;
+  final double sevenMonth;
+  final double eightMonth;
+  final double nineMonth;
+  final double tenMonth;
+  final double elevenMonth;
+  final double twelveMonth;
+
+  OnlineRateResponseModel({
+    required this.id,
+    required this.oneMonth,
+    required this.twoMonth,
+    required this.threeMonth,
+    required this.fourMonth,
+    required this.fiveMonth,
+    required this.sixMonth,
+    required this.sevenMonth,
+    required this.eightMonth,
+    required this.nineMonth,
+    required this.tenMonth,
+    required this.elevenMonth,
+    required this.twelveMonth,
+  });
+
+  factory OnlineRateResponseModel.fromJson(Map<String, dynamic> json) {
+    return OnlineRateResponseModel(
+      id: json['id'] ?? 0,
+      oneMonth: json['oneMonth'] ?? 0,
+      twoMonth: json['twoMonth'] ?? 0,
+      threeMonth: json['threeMonth'] ?? 0,
+      fourMonth: json['fourMonth'] ?? 0,
+      fiveMonth: json['fiveMonth'] ?? 0,
+      sixMonth: json['sixMonth'] ?? 0,
+      sevenMonth: json['sevenMonth'] ?? 0,
+      eightMonth: json['eightMonth'] ?? 0,
+      nineMonth: json['nineMonth'] ?? 0,
+      tenMonth: json['tenMonth'] ?? 0,
+      elevenMonth: json['elevenMonth'] ?? 0,
+      twelveMonth: json['twelveMonth'] ?? 0,
+    );
+  }
+}
+
+class AccountToAccountRequestModel {
+  var fromAccountNumber;
+  var toAccountNumber;
+  double amount;
+  var narration;
+
+  AccountToAccountRequestModel({
+    required this.fromAccountNumber,
+    required this.toAccountNumber,
+    required this.amount,
+  });
+
+  String toJson() {
+    return jsonEncode(<String, dynamic>{
+      'fromAccountNumber': fromAccountNumber,
+      'toAccountNumber': toAccountNumber,
+      'amount': amount,
+      'narration': 'Account Transfer '
+    });
+  }
+}
+
 class PushDeviceTokenRequestModel {
   var deviceToken;
 
@@ -140,52 +261,6 @@ class PushDeviceTokenRequestModel {
     return jsonEncode(<String, String>{
       'deviceToken': deviceToken,
     });
-  }
-}
-
-class LastTransactionsModel {
-  final double mondayDepositAmount;
-  final double mondayWithdrawalAmount;
-  final double tuesdayDepositAmount;
-  final double tuesdayWithdrawalAmount;
-  final double wednesdayDepositAmount;
-  final double wednesdayWithdrawalAmount;
-  final double thursdayDepositAmount;
-  final double thursdayWithdrawalAmount;
-  final double fridayDepositAmount;
-  final double fridayWithdrawalAmount;
-  final double saturdayDepositAmount;
-  final double saturdayWithdrawalAmount;
-  final double sundayDepositAmount;
-  final double sundayWithdrawalAmount;
-
-  LastTransactionsModel(
-      {required this.mondayDepositAmount, required this.mondayWithdrawalAmount,
-        required this.tuesdayDepositAmount, required this.tuesdayWithdrawalAmount,
-        required this.wednesdayDepositAmount, required this.wednesdayWithdrawalAmount,
-        required this.thursdayDepositAmount, required this.thursdayWithdrawalAmount,
-        required this.fridayDepositAmount, required this.fridayWithdrawalAmount,
-        required this.saturdayDepositAmount, required this.saturdayWithdrawalAmount,
-        required this.sundayDepositAmount, required this.sundayWithdrawalAmount,
-        });
-
-  factory LastTransactionsModel.fromJson(Map<String, dynamic> json) {
-    return LastTransactionsModel(
-      mondayDepositAmount: json['depositAmount'] ?? 0,
-      mondayWithdrawalAmount: json['withdrawalAmount'] ?? 0,
-      tuesdayDepositAmount: json['depositAmount'] ?? 0,
-      tuesdayWithdrawalAmount: json['withdrawalAmount'] ?? 0,
-      wednesdayDepositAmount: json['depositAmount'] ?? 0,
-      wednesdayWithdrawalAmount: json['withdrawalAmount'] ?? 0,
-      thursdayDepositAmount: json['depositAmount'] ?? 0,
-      thursdayWithdrawalAmount: json['withdrawalAmount'] ?? 0,
-      fridayDepositAmount: json['depositAmount'] ?? 0,
-      fridayWithdrawalAmount: json['withdrawalAmount'] ?? 0,
-      saturdayDepositAmount: json['depositAmount'] ?? 0,
-      saturdayWithdrawalAmount: json['withdrawalAmount'] ?? 0,
-      sundayDepositAmount: json['depositAmount'] ?? 0,
-      sundayWithdrawalAmount: json['withdrawalAmount'] ?? 0,
-    );
   }
 }
 
@@ -243,7 +318,7 @@ class ExternalBankTransferDetailsRequestModel {
   });
 
   String toJson() {
-    return jsonEncode(<String, String>{
+   return jsonEncode(<String, String>{
       'destinationAccountName': destinationAccountName,
       'destinationAccountNumber': destinationAccountNumber,
       'destinationBankName': destinationBankName,
@@ -253,7 +328,7 @@ class ExternalBankTransferDetailsRequestModel {
       'account_bank': accountBank,
       'account_number': accountNumber,
       'amount': amount,
-      'narration': narration,
+      'narration': 'Landmark-$narration',
       'reference': reference,
     });
   }
@@ -322,116 +397,64 @@ class ExternalBankTransferHistoryResponseModel {
 
   factory ExternalBankTransferHistoryResponseModel.fromJson(Map<String, dynamic> json) {
     return ExternalBankTransferHistoryResponseModel(
-        id: json['id'] ?? 0,
-        destinationAccountName: json['destinationAccountName'] ?? '',
-        destinationAccountNumber: json['destinationAccountNumber'] ?? '',
-        destinationBankName: json['destinationBankName'] ?? '',
-        reference: json['reference'] ?? '',
-        status: json['status'] ?? '',
-        amount: json['amount'] ?? 0,
-        completeMessage: json['completeMessage'] ?? '',
-        timeCreated: json['timeCreated'] ?? ''
+      id: json['id'] ?? 0,
+      destinationAccountName: json['destinationAccountName'] ?? '',
+      destinationAccountNumber: json['destinationAccountNumber'] ?? '',
+      destinationBankName: json['destinationBankName'] ?? '',
+      reference: json['reference'] ?? '',
+      status: json['status'] ?? '',
+      amount: json['amount'] ?? 0,
+      completeMessage: json['completeMessage'] ?? '',
+      timeCreated: json['timeCreated'] ?? ''
     );
   }
 }
 
-class AccountToAccountRequestModel {
-  var fromAccountNumber;
-  var toAccountNumber;
-  var amount;
-  var narration;
+class CustomerBeneficiaryRequestModel {
+  var beneficiaryAccountName;
+  var beneficiaryAccountNumber;
+  var beneficiaryBankName;
+  var beneficiaryBankCode;
 
-  AccountToAccountRequestModel({
-    required this.fromAccountNumber,
-    required this.toAccountNumber,
-    required this.amount,
+  CustomerBeneficiaryRequestModel({
+    required this.beneficiaryAccountName,
+    required this.beneficiaryAccountNumber,
+    required this.beneficiaryBankName,
+    required this.beneficiaryBankCode,
   });
 
   String toJson() {
     return jsonEncode(<String, String>{
-      'fromAccountNumber': fromAccountNumber,
-      'toAccountNumber': toAccountNumber,
-      'amount': amount,
-      'narration': 'Account Transfer '
+      'beneficiaryAccountName': beneficiaryAccountName,
+      'beneficiaryAccountNumber': beneficiaryAccountNumber,
+      'beneficiaryBankName': beneficiaryBankName,
+      'beneficiaryBankCode': beneficiaryBankCode,
     });
   }
 }
 
-class OnlineRateResponseModel {
+class CustomerBeneficiaryResponseModel {
   final int id;
-  final double oneMonth;
-  final double twoMonth;
-  final double threeMonth;
-  final double fourMonth;
-  final double fiveMonth;
-  final double sixMonth;
-  final double sevenMonth;
-  final double eightMonth;
-  final double nineMonth;
-  final double tenMonth;
-  final double elevenMonth;
-  final double twelveMonth;
+  final String beneficiaryAccountName;
+  final String beneficiaryAccountNumber;
+  final String beneficiaryBankName;
+  final String beneficiaryBankCode;
 
-  OnlineRateResponseModel({
+  CustomerBeneficiaryResponseModel({
     required this.id,
-    required this.oneMonth,
-    required this.twoMonth,
-    required this.threeMonth,
-    required this.fourMonth,
-    required this.fiveMonth,
-    required this.sixMonth,
-    required this.sevenMonth,
-    required this.eightMonth,
-    required this.nineMonth,
-    required this.tenMonth,
-    required this.elevenMonth,
-    required this.twelveMonth,
+    required this.beneficiaryAccountName,
+    required this.beneficiaryAccountNumber,
+    required this.beneficiaryBankName,
+    required this.beneficiaryBankCode,
   });
 
-  factory OnlineRateResponseModel.fromJson(Map<String, dynamic> json) {
-    return OnlineRateResponseModel(
-      id: json['id'] ?? 0,
-      oneMonth: json['oneMonth'] ?? 0,
-      twoMonth: json['twoMonth'] ?? 0,
-      threeMonth: json['threeMonth'] ?? 0,
-      fourMonth: json['fourMonth'] ?? 0,
-      fiveMonth: json['fiveMonth'] ?? 0,
-      sixMonth: json['sixMonth'] ?? 0,
-      sevenMonth: json['sevenMonth'] ?? 0,
-      eightMonth: json['eightMonth'] ?? 0,
-      nineMonth: json['nineMonth'] ?? 0,
-      tenMonth: json['tenMonth'] ?? 0,
-      elevenMonth: json['elevenMonth'] ?? 0,
-      twelveMonth: json['twelveMonth'] ?? 0,
-    );
-  }
-}
-
-class GatewayResponseModel {
-  final int id;
-  final String gatewayName;
-  final String publicKey;
-  final String privateKey;
-  final String secretKey;
-  final int isActive;
-
-  GatewayResponseModel({
-    required this.id,
-    required this.gatewayName,
-    required this.publicKey,
-    required this.privateKey,
-    required this.secretKey,
-    required this.isActive,
-  });
-
-  factory GatewayResponseModel.fromJson(Map<String, dynamic> json) {
-    return GatewayResponseModel(
-      id: json['id'] ?? 0,
-      gatewayName: json['gatewayName'] ?? '',
-      publicKey: json['publicKey'] ?? '',
-      privateKey: json['privateKey'] ?? '',
-      secretKey: json['secretKey'] ?? '',
-      isActive: json['isActive'] ?? 0,
+  factory CustomerBeneficiaryResponseModel.fromJson(Map<String, dynamic> json) {
+    return CustomerBeneficiaryResponseModel(
+        id: json['id'] ?? 0,
+        beneficiaryAccountName: json['beneficiaryAccountName'] ?? '',
+        beneficiaryAccountNumber: json['beneficiaryAccountNumber'] ?? '',
+        beneficiaryBankName: json['beneficiaryBankName'] ?? '',
+        beneficiaryBankCode: json['beneficiaryBankCode'] ?? '',
     );
   }
 }

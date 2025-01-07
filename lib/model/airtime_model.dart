@@ -29,11 +29,11 @@ class AirtimeResponseModel {
 
   factory AirtimeResponseModel.fromJson(Map<String, dynamic> json) {
     return AirtimeResponseModel(
-      phoneNumber: json['data']['phone_number'] ?? '',
-      amount: json['data']['amount'] ?? '',
-      network: json['data']['network'] ?? '',
-      flwRef: json['data']['flw_ref'] ?? '',
-      reference: json['data']['reference'] ?? '',
+      phoneNumber: json['data']['phone_number'] != null ? json['data']['phone_number'] : '',
+      amount: json['data']['amount'] != null ? json['data']['amount'] : '',
+      network: json['data']['network'] != null ? json['data']['network'] : '',
+      flwRef: json['data']['flw_ref'] != null ? json['data']['flw_ref'] : '',
+      reference: json['data']['reference'] != null ? json['data']['reference'] : '',
     );
   }
 }
@@ -52,7 +52,7 @@ class AirtimeRequestModel {
   String toJson() {
     return jsonEncode(<String, dynamic>{
       "country": "NG",
-      "phoneNumber": '+234'+ phoneNumber.trim().substring(1, phoneNumber.length),
+      "customer_id": '+234'+ phoneNumber.trim().substring(1, phoneNumber.length),
       "amount": amount,
       "reference": reference,
     });
@@ -71,11 +71,11 @@ class DataBundleResponseModel {
 
   factory DataBundleResponseModel.fromJson(Map<String, dynamic> json) {
     return DataBundleResponseModel(
-      phoneNumber: json['data']['phone_number'] ?? '',
-      amount: json['data']['amount'] ?? '',
-      network: json['data']['network'] ?? '',
-      flwRef: json['data']['flw_ref'] ?? '',
-      reference: json['data']['reference'] ?? '',
+      phoneNumber: json['data']['phone_number'] != null ? json['data']['phone_number'] : '',
+      amount: json['data']['amount'] != null ? json['data']['amount'] : '',
+      network: json['data']['network'] != null ? json['data']['network'] : '',
+      flwRef: json['data']['flw_ref'] != null ? json['data']['flw_ref'] : '',
+      reference: json['data']['reference'] != null ? json['data']['reference'] : '',
     );
   }
 }
@@ -96,7 +96,7 @@ class DataBundleRequestModel {
   String toJson() {
     return jsonEncode(<String, dynamic>{
       "country": "NG",
-      "phoneNumber": '+234'+ phoneNumber.trim().substring(1, phoneNumber.length),
+      "customer_id": '+234'+ phoneNumber.trim().substring(1, phoneNumber.length),
       "amount": amount,
       "reference": reference,
     });

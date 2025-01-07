@@ -98,22 +98,22 @@ class CableTvPayRequestModel {
   }
 }
 
-// class BudPayResponseModel {
-//   late bool success;
-//   var message;
-//
-//   BudPayResponseModel({
-//     required this.success,
-//     required this.message,
-//   });
-//
-//   factory BudPayResponseModel.fromJson(Map<String, dynamic> json) {
-//     return BudPayResponseModel(
-//       success: json['success'] ?? false,
-//       message: json['message'] ?? '',
-//     );
-//   }
-// }
+class BudPayResponseModel {
+  late bool success;
+  var message;
+
+  BudPayResponseModel({
+    required this.success,
+    required this.message,
+  });
+
+  factory BudPayResponseModel.fromJson(Map<String, dynamic> json) {
+    return BudPayResponseModel(
+      success: json['success'] ?? false,
+      message: json['message'] ?? '',
+    );
+  }
+}
 
 class CableTvTransactionRequestModel {
   var provider;
@@ -220,23 +220,31 @@ class BillsInfoResponseModel {
 
   factory BillsInfoResponseModel.fromJson(Map<String, dynamic> json) {
     return BillsInfoResponseModel(
-      id: json['data']['id'] ?? '',
-      billerCode: json['data']['biller_code'] ?? '',
-      name: json['data']['name'] ?? '',
-      defaultCommission: json['data']['default_commission'] ?? '',
-      country: json['data']['country'] ?? '',
+      id: json['data']['id'] != null ? json['data']['id'] : '',
+      billerCode: json['data']['biller_code'] != null
+          ? json['data']['biller_code']
+          : '',
+      name: json['data']['name'] != null ? json['data']['name'] : '',
+      defaultCommission: json['data']['default_commission'] != null
+          ? json['data']['default_commission']
+          : '',
+      country: json['data']['country'] != null ? json['data']['country'] : '',
       isAirtime:
-          json['data']['is_airtime'] ?? '',
-      billerName: json['data']['biller_name'] ?? '',
+          json['data']['is_airtime'] != null ? json['data']['is_airtime'] : '',
+      billerName: json['data']['biller_name'] != null
+          ? json['data']['biller_name']
+          : '',
       itemCode:
-          json['data']['item_code'] ?? '',
+          json['data']['item_code'] != null ? json['data']['item_code'] : '',
       shortName:
-          json['data']['short_name'] ?? '',
-      fee: json['data']['fee'] ?? '',
-      commissionOnFee: json['data']['commission_on_fee'] ?? '',
+          json['data']['short_name'] != null ? json['data']['short_name'] : '',
+      fee: json['data']['fee'] != null ? json['data']['fee'] : '',
+      commissionOnFee: json['data']['commission_on_fee'] != null
+          ? json['data']['commission_on_fee']
+          : '',
       labelName:
-          json['data']['label_name'] ?? '',
-      amount: json['data']['amount'] ?? '',
+          json['data']['label_name'] != null ? json['data']['label_name'] : '',
+      amount: json['data']['amount'] != null ? json['data']['amount'] : '',
     );
   }
 }
@@ -301,7 +309,7 @@ class CableRequestModel {
   String toJson() {
     return jsonEncode(<String, dynamic>{
       "country": "NG",
-      "smartcardNumber": smartcardNumber,
+      "customer": smartcardNumber,
       "amount": amount,
       "recurrence": "ONCE",
       "type": billerName,
@@ -309,3 +317,94 @@ class CableRequestModel {
     });
   }
 }
+
+class CableTvTypeInfoResponseModel {
+  final int id;
+  final String name;
+  final String logo;
+  final String description;
+  final String short_name;
+  final String biller_code;
+  final String country_code;
+
+  CableTvTypeInfoResponseModel({
+    required this.id,
+    required this.name,
+    required this.logo,
+    required this.description,
+    required this.short_name,
+    required this.biller_code,
+    required this.country_code,
+  });
+
+  factory CableTvTypeInfoResponseModel.fromJson(Map<String, dynamic> json) {
+    return CableTvTypeInfoResponseModel(
+      id: json['id'] ?? '',
+      name: json['name'] ?? '',
+      logo: json['logo'] ?? '',
+      description: json['description'] ?? '',
+      short_name: json['short_name'] ?? '',
+      biller_code: json['biller_code'] ?? '',
+      country_code: json['country_code'] ?? '',
+    );
+  }
+}
+
+class BillsPaymentResponse {
+  final String status;
+  final String message;
+  final BillsPaymentData data;
+
+  BillsPaymentResponse({
+    required this.status,
+    required this.message,
+    required this.data,
+  });
+
+  factory BillsPaymentResponse.fromJson(Map<String, dynamic> json) {
+    return BillsPaymentResponse(
+      status: json['status'] ?? '',
+      message: json['message'] ?? '',
+      data: BillsPaymentData.fromJson(json['data']),
+    );
+  }
+}
+
+class BillsPaymentData {
+  final String phoneNumber;
+  final double amount;
+  final String network;
+  final String code;
+  final String txRef;
+  final String reference;
+  final String? batchReference;
+  final String? rechargeToken;
+  final double fee;
+
+  BillsPaymentData({
+    required this.phoneNumber,
+    required this.amount,
+    required this.network,
+    required this.code,
+    required this.txRef,
+    required this.reference,
+    this.batchReference,
+    this.rechargeToken,
+    required this.fee,
+  });
+
+  factory BillsPaymentData.fromJson(Map<String, dynamic> json) {
+    return BillsPaymentData(
+      phoneNumber: json['phone_number'] ?? '',
+      amount: json['amount'] != null ? json['amount'].toDouble() : 0.0,
+      network: json['network'] ?? '',
+      code: json['code'] ?? '',
+      txRef: json['tx_ref'] ?? '',
+      reference: json['reference'] ?? '',
+      batchReference: json['batch_reference'],
+      rechargeToken: json['recharge_token'],
+      fee: json['fee'] != null ? json['fee'].toDouble() : 0.0,
+    );
+  }
+}
+

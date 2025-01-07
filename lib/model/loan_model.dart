@@ -1,18 +1,21 @@
 import 'dart:convert';
 
 class LoanRequestModel {
-  var accountNumber;
-  var amount;
+  var tenor;
+  var amountRequested;
+  var rate;
 
   LoanRequestModel({
-    this.accountNumber,
-    this.amount,
+    this.tenor,
+    this.amountRequested,
+    this.rate,
   });
 
   String toJson() {
     return jsonEncode(<String, String>{
-      "accountNumber": accountNumber,
-      "amount": amount.trim(),
+      "tenor": tenor,
+      "rate": rate,
+      "amountRequested": amountRequested.trim(),
     });
   }
 }

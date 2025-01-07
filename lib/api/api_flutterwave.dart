@@ -1,22 +1,23 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:landmarkcoop_mobile_app/model/cable_tv_model.dart';
-import 'package:landmarkcoop_mobile_app/model/other_model.dart';
 
 import '../model/airtime_model.dart';
+import '../model/cable_tv_model.dart';
+import '../model/other_model.dart';
 
 class FlutterWaveService {
   static const String DOMAIN_URL = "https://core.landmarkcooperative.org";
 
-  Future<List<BillsInfoResponseModel>> getBillsList(String billCode, String token) async {
+  Future<List<BillsInfoResponseModel>> getBillsList(
+      String billCode, String token) async {
     print('Bill code - $billCode');
     String url = "$DOMAIN_URL/getBillsList/$billCode/$token";
 
     final response = await http.get(
       Uri.parse(url),
       headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',        
+        'Content-Type': 'application/json; charset=UTF-8',
       },
     );
     print(response.body);
@@ -35,23 +36,31 @@ class FlutterWaveService {
       List<BillsInfoResponseModel> billTypesList = [];
       for (var singleBill in restList) {
         BillsInfoResponseModel billsInfoResponseModel = BillsInfoResponseModel(
-          id: singleBill['id'] ?? '',
-          billerCode: singleBill['biller_code'] ?? '',
-          name: singleBill['name'] ?? '',
-          defaultCommission: singleBill['default_commission'] ?? '',
-          country: singleBill['country'] ?? '',
+          id: singleBill['id'] != null ? singleBill['id'] : '',
+          billerCode: singleBill['biller_code'] != null
+              ? singleBill['biller_code']
+              : '',
+          name: singleBill['name'] != null ? singleBill['name'] : '',
+          defaultCommission: singleBill['default_commission'] != null
+              ? singleBill['default_commission']
+              : '',
+          country: singleBill['country'] != null ? singleBill['country'] : '',
           isAirtime:
-              singleBill['is_airtime'] ?? '',
-          billerName: singleBill['biller_name'] ?? '',
+              singleBill['is_airtime'] != null ? singleBill['is_airtime'] : '',
+          billerName: singleBill['biller_name'] != null
+              ? singleBill['biller_name']
+              : '',
           itemCode:
-              singleBill['item_code'] ?? '',
+              singleBill['item_code'] != null ? singleBill['item_code'] : '',
           shortName:
-              singleBill['short_name'] ?? '',
-          fee: singleBill['fee'] ?? '',
-          commissionOnFee: singleBill['commission_on_fee'] ?? '',
+              singleBill['short_name'] != null ? singleBill['short_name'] : '',
+          fee: singleBill['fee'] != null ? singleBill['fee'] : '',
+          commissionOnFee: singleBill['commission_on_fee'] != null
+              ? singleBill['commission_on_fee']
+              : '',
           labelName:
-              singleBill['label_name'] ?? '',
-          amount: singleBill['amount'] ?? '',
+              singleBill['label_name'] != null ? singleBill['label_name'] : '',
+          amount: singleBill['amount'] != null ? singleBill['amount'] : '',
         );
 
         //Adding user to the list.
@@ -83,8 +92,8 @@ class FlutterWaveService {
     }
   }
 
-  Future<String> buyDataBundle(
-      DataBundleRequestModel dataBundleRequestModel, String billerCode, String itemCode, String token) async {
+  Future<String> buyAirtimeDataBundle(DataBundleRequestModel dataBundleRequestModel,
+      String billerCode, String itemCode, String token) async {
     String url = "$DOMAIN_URL/buyDataBundle/$billerCode/$itemCode/$token";
     print(dataBundleRequestModel.toJson());
 
@@ -104,7 +113,30 @@ class FlutterWaveService {
     }
   }
 
-  Future<String> buyTvCable(CableRequestModel cableRequestModel, String token) async {
+  Future<BillsPaymentResponse> buyDataBundle(DataBundleRequestModel dataBundleRequestModel,
+      String billerCode, String itemCode, String token) async {
+    String url = "$DOMAIN_URL/buyDataBundle/$billerCode/$itemCode/$token";
+    print(dataBundleRequestModel.toJson());
+
+    final response = await http.post(Uri.parse(url),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: dataBundleRequestModel.toJson());
+    print(response.body);
+
+    if (response.statusCode == 200) {
+      // Parse the response body to create a BillsPaymentResponse object
+      return BillsPaymentResponse.fromJson(json.decode(response.body));
+    } else if (response.statusCode == 400) {
+      throw Exception('Incomplete Transaction');
+    } else {
+      throw Exception('Failed to load data!');
+    }
+  }
+
+  Future<String> buyTvCable(
+      CableRequestModel cableRequestModel, String token) async {
     String url = "$DOMAIN_URL/buyTvCable/$token";
 
     final response = await http.post(Uri.parse(url),
@@ -124,7 +156,13 @@ class FlutterWaveService {
   }
 
   Future<ValidateBillsInfoResponseModel> validateFlutterwaveBill(
-      String itemCode, String billerCode, String customerNo, String token) async {
+      String itemCode,
+      String billerCode,
+      String customerNo,
+      String token) async {
+    print("itemCode $itemCode");
+    print("billerCode $billerCode");
+    print("customerNo $customerNo");
     String url =
         "$DOMAIN_URL/validateFlutterwaveBill/$itemCode/$customerNo/$billerCode/$token";
 
@@ -185,7 +223,8 @@ class FlutterWaveService {
     }
   }
 
-  Future<String> bankAccountVerify(BankAccountRequestModel requestModel, String token) async {
+  Future<String> bankAccountVerify(
+      BankAccountRequestModel requestModel, String token) async {
     String url = '$DOMAIN_URL/bankAccountVerify/$token';
     final response = await http.post(
       Uri.parse(url),
@@ -200,6 +239,96 @@ class FlutterWaveService {
       return data;
     } else {
       return 'Incorrect Details';
+    }
+  }
+
+  Future<List<CableTvTypeInfoResponseModel>> getCableTvTypeList(String token) async {
+    String url = "$DOMAIN_URL/getCableTvTypeList/$token";
+
+    final response = await http.get(
+      Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    print(response.body);
+
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      var restList = data["data"] as List;
+
+      List<CableTvTypeInfoResponseModel> cableTypeList = [];
+      for (var singleBill in restList) {
+        CableTvTypeInfoResponseModel cableTvTypeInfoResponseModel =
+            CableTvTypeInfoResponseModel(
+          id: singleBill['id'] != null ? singleBill['id'] : '',
+          name: singleBill['name'] != null ? singleBill['name'] : '',
+          logo: singleBill['logo'] != null ? singleBill['logo'] : '',
+          description: singleBill['description'] != null
+              ? singleBill['description']
+              : '',
+          short_name:
+              singleBill['short_name'] != null ? singleBill['short_name'] : '',
+          biller_code: singleBill['biller_code'] != null
+              ? singleBill['biller_code']
+              : '',
+          country_code: singleBill['country_code'] != null
+              ? singleBill['country_code']
+              : '',
+        );
+
+        //Adding user to the list.
+        cableTypeList.add(cableTvTypeInfoResponseModel);
+      }
+
+      return cableTypeList;
+    } else {
+      throw Exception('Failed to load data!');
+    }
+  }
+
+  Future<List<CableTvTypeInfoResponseModel>> getUtilityBillList(String token) async {
+    String url = "$DOMAIN_URL/getUtilityBillList/$token";
+
+    final response = await http.get(
+      Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    print(response.body);
+
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      var restList = data["data"] as List;
+
+      List<CableTvTypeInfoResponseModel> cableTypeList = [];
+      for (var singleBill in restList) {
+        CableTvTypeInfoResponseModel cableTvTypeInfoResponseModel =
+        CableTvTypeInfoResponseModel(
+          id: singleBill['id'] != null ? singleBill['id'] : '',
+          name: singleBill['name'] != null ? singleBill['name'] : '',
+          logo: singleBill['logo'] != null ? singleBill['logo'] : '',
+          description: singleBill['description'] != null
+              ? singleBill['description']
+              : '',
+          short_name:
+          singleBill['short_name'] != null ? singleBill['short_name'] : '',
+          biller_code: singleBill['biller_code'] != null
+              ? singleBill['biller_code']
+              : '',
+          country_code: singleBill['country_code'] != null
+              ? singleBill['country_code']
+              : '',
+        );
+
+        //Adding user to the list.
+        cableTypeList.add(cableTvTypeInfoResponseModel);
+      }
+
+      return cableTypeList;
+    } else {
+      throw Exception('Failed to load data!');
     }
   }
 }

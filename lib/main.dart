@@ -1,23 +1,25 @@
-import 'package:landmarkcoop_mobile_app/pages/first_registration.dart';
-import 'package:landmarkcoop_mobile_app/pages/login.dart';
-import 'package:landmarkcoop_mobile_app/util/firebase_options.dart';
-// import 'package:firebase_core/firebase_core.dart';
-// import 'package:firebase_messaging/firebase_messaging.dart';
+import 'dart:async';
+
+// import 'package:carousel_slider/carousel_slider.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:landmarkcoop_mobile_app/main_view.dart';
+import 'package:landmarkcoop_mobile_app/splash_screen.dart';
+import 'package:landmarkcoop_mobile_app/utils/firebase_options.dart';
 import 'package:lottie/lottie.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'component/clipper_paint_design/curve_painter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // If you're going to use other Firebase services in the background, such as Firestore,
+  // make sure you call `initializeApp` before using other Firebase services.
+  await Firebase.initializeApp();
 
-// Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-//   // If you're going to use other Firebase services in the background, such as Firestore,
-//   // make sure you call `initializeApp` before using other Firebase services.
-//   await Firebase.initializeApp();
-
-//   print("Handling a background message: ${message.messageId}");
-// }
+  print("Handling a background message: ${message.messageId}");
+}
 
 const AndroidNotificationChannel channel = AndroidNotificationChannel(
   //for notificaiton initialization
@@ -31,72 +33,63 @@ const AndroidNotificationChannel channel = AndroidNotificationChannel(
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 FlutterLocalNotificationsPlugin();
 
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
-void main() async{
-  // WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp(
-  //   options: DefaultFirebaseOptions.currentPlatform,
-  // );
+  //for background messaging
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+  //Local Notification implementation
+  await flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<
+      AndroidFlutterLocalNotificationsPlugin>()
+      ?.createNotificationChannel(channel);
+  //for firebase  plugin and messaging required
 
-  // //for background messaging
-  // FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
-  // //Local Notification implementation
-  // await flutterLocalNotificationsPlugin
-  //     .resolvePlatformSpecificImplementation<
-  //     AndroidFlutterLocalNotificationsPlugin>()
-  //     ?.createNotificationChannel(channel);
-  // //for firebase  plugin and messaging required
-
-  // await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-  //     alert: true, badge: true, sound: true);
-  // NotificationSettings settings = await FirebaseMessaging.instance.requestPermission(
-  //   alert: true,
-  //   badge: true,
-  //   provisional: false,
-  //   sound: true,
-  // );
-  // if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-  //     print('User granted permission');
-  //     String? token = await FirebaseMessaging.instance.getToken();
-  //     print("The token is ${token!}");
-  // } else {
-  //     print('User declined or has not accepted permission');
-  //   }
-  runApp(const MobileBank());
+  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+      alert: true, badge: true, sound: true);
+  runApp(const RoyalMarshal());
 }
 
-class MobileBank extends StatelessWidget {
-  const MobileBank({super.key});
+class RoyalMarshal extends StatelessWidget {
+  const RoyalMarshal({Key? key}) : super(key: key);
 
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return OverlaySupport.global(
+    return const OverlaySupport.global(
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: const HomePage(),
-        theme: ThemeData.light().copyWith(
-            textTheme:
-                GoogleFonts.montserratTextTheme(Theme.of(context).textTheme)),
+        // home: StartPage(),
+        home: SplashScreen(),
       ),
     );
   }
 }
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class StartPage extends StatefulWidget {
+  const StartPage({Key? key}) : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<StartPage> createState() => _StartPageState();
 }
 
-class _HomePageState extends State<HomePage> {
-  final int _currentIndex = 0;
+class _StartPageState extends State<StartPage> {
+  // final CarouselController _carouselController = CarouselController();
+  int _currentIndex = 0;
+  bool isInstitutionDialogShown = false;
+
+  // List<ClientResponseModel> clientList = <ClientResponseModel>[];
   List cardList = [
     const Item1(),
     const Item2(),
     const Item3(),
     const Item4(),
   ];
+  String institution = 'Landmark Coop';
+  String subdomain = 'https://core.landmarkcooperative.org';
 
   List<T> map<T>(List list, Function handler) {
     List<T> result = [];
@@ -106,174 +99,196 @@ class _HomePageState extends State<HomePage> {
     return result;
   }
 
+  setInstitution(String institution, String subdomain) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('institution', institution);
+    prefs.setString('subdomain', subdomain);
+  }
+
+  startTimer() async {
+    final prefs = await SharedPreferences.getInstance();
+    String institution = prefs.getString('institution') ?? '';
+    String subdomain = prefs.getString('subdomain') ?? '';
+    print('Institution is $institution');
+    print('Biometric token ${prefs.getString('biometricToken')!}');
+    Timer(const Duration(seconds: 10), () {
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => MainView()));
+    });
+  }
+
+  @override
+  void initState() {
+    setInstitution(institution, subdomain);
+    startTimer();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     return Scaffold(
-        body: Column(
-      children: [
-        Column(
-          children: [
-            // const TopBar(),
-            Container(
-              height: height * 0.15,
-            ),
-            Container(
-              height: 100,
-              width: 150,
-              decoration: const BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage('assets/Logo.png'),
-                      fit: BoxFit.contain)),
-            ),
-            Container(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Column(
+          children: <Widget>[
+            SizedBox(
               height: 40,
-              width: 150,
-              decoration: const BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage('assets/landmark.png'),
-                      fit: BoxFit.contain)),
             ),
             Container(
-              height: 20,
-              width: 150,
-              decoration: const BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage('assets/coop.png'),
-                      fit: BoxFit.contain)),
+              height: height * 0.1,
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/Logo.png'),
+                  fit: BoxFit.contain,
+                ),
+              ),
             ),
-            // Padding(
-            //   padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
-            //   child: Center(
-            //     child: Text('Landmark Coop.',
-            //         textAlign: TextAlign.center,
-            //         style: GoogleFonts.montserrat(
-            //             color: Colors.black,
-            //             fontSize: 18,
-            //             fontWeight: FontWeight.bold)),
-            //   ),
-            // )
+            Text(
+              'Landmark Coop',
+              style: GoogleFonts.montserrat(
+                color: Colors.blue,
+                fontWeight: FontWeight.bold,
+                fontSize: 25,
+              ),
+            ),
+            // SizedBox(height: height / 300),
+            // CarouselSlider(
+            //   items: cardList
+            //       .map(
+            //         (data) => Builder(builder: (BuildContext context) {
+            //           return SizedBox(
+            //             height: (height * 0.5).roundToDouble(),
+            //             child: Container(
+            //               // margin: const EdgeInsets.symmetric(horizontal: 5),
+            //               padding: const EdgeInsets.symmetric(horizontal: 10),
+            //               height: (height * 0.122).roundToDouble(),
+            //               child: data,
+            //             ),
+            //           );
+            //         }),
+            //       )
+            //       .toList(),
+            //   // carouselController: _carouselController,
+            //   options: CarouselOptions(
+            //       height: height * 0.5,
+            //       autoPlay: true,
+            //       enlargeCenterPage: true,
+            //       autoPlayInterval: const Duration(seconds: 5),
+            //       autoPlayAnimationDuration: const Duration(milliseconds: 800),
+            //       autoPlayCurve: Curves.fastOutSlowIn,
+            //       onPageChanged: (index, reason) {
+            //         setState(() {
+            //           _currentIndex = index;
+            //         });
+            //       }),
+            // ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: map<Widget>(
+                cardList,
+                ((index, url) {
+                  return Container(
+                    height: 12.0,
+                    width: 12.0,
+                    margin:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 2),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: _currentIndex == index
+                          ? Colors.blue
+                          : Colors.black12,
+                    ),
+                  );
+                }),
+              ),
+            ),
+            // ElevatedButton(
+            //     onPressed: () {},
+            //     style: ElevatedButton.styleFrom(
+            //         backgroundColor: Colors.white,
+            //         fixedSize: Size((width * 0.7), 40.0), // Set width and height
+            //         shape: RoundedRectangleBorder(
+            //           borderRadius: BorderRadius.circular(10),
+            //         )),
+            //     child: Text(
+            //       'Create an account',
+            //       style: GoogleFonts.montserrat(color: Colors.black, fontWeight: FontWeight.bold),
+            //     )),
+            // SizedBox(height: 5),
+            // ElevatedButton(
+            //     onPressed: () {},
+            //     style: ElevatedButton.styleFrom(
+            //         backgroundColor: Colors.blue[800],
+            //         fixedSize: Size((width * 0.7), 40.0), // Set width and height
+            //         shape: RoundedRectangleBorder(
+            //           borderRadius: BorderRadius.circular(10),
+            //         )),
+            //     child: Text(
+            //       'Login',
+            //       style: GoogleFonts.montserrat(color: Colors.white, fontWeight: FontWeight.bold),
+            //     )),
+            const SizedBox(height: 20),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => MainView()));
+              },
+              child: Text(
+                textAlign: TextAlign.center,
+                'Tap to\n\nLogin or Sign Up',
+                style: GoogleFonts.montserrat(
+                  color: Colors.blue,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
           ],
         ),
-        Container(
-                  padding: const EdgeInsets.only(left: 10),
-                  height: 350.8,
-                  width: width,
-                  child: ListView.builder(
-                      physics: const BouncingScrollPhysics(),
-                      scrollDirection: Axis.horizontal,
-                      shrinkWrap: true,
-                      itemCount: cardList.length,
-                      itemBuilder: (context, index) {
-                        return cardList[index];
-                      }),
-                ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: map<Widget>(cardList, ((index, url) {
-            return Container(
-              width: 12.0,
-              height: 12.0,
-              margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: _currentIndex == index
-                    ? Colors.blueAccent
-                    : Colors.black12,
-              ),
-            );
-          }))),
-        TextButton(
-          onPressed: () => Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => const Login())),
-          style: ButtonStyle(
-            foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
-            shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
-              side: BorderSide(color: Colors.blue.shade800),
-            )),
-            backgroundColor: WidgetStateProperty.all<Color>(Colors.white),
-          ),
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-                horizontal: width * 0.25, vertical: 12.0),
-            child: Text(
-              'Login',
-              style: GoogleFonts.montserrat(
-                  color: Colors.blue.shade800, fontSize: 16,
-                fontWeight: FontWeight.bold
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(height: 20,),
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => const FirstRegistration()));
-          },
-          style: TextButton.styleFrom(
-              padding: EdgeInsets.zero,
-              minimumSize: Size.zero,
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              backgroundColor: Colors.blue[500],
-              textStyle: GoogleFonts.dmSans(fontSize: 15)),
-          child: const Text('Open a New Account', style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),),
-        ),
-        const SizedBox(height: 50,),
-      ],
-    ));
-  }
-}
-
-class TopBar extends StatelessWidget {
-  const TopBar({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    var height = MediaQuery.of(context).size.height;
-    return CustomPaint(
-      painter: CurvePainter(),
-      child: Container(
-        height: height * 0.18,
       ),
     );
   }
 }
 
 class Item1 extends StatelessWidget {
-  const Item1({super.key});
+  const Item1({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
     return Container(
+      width: width,
+      height: height,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20.0),
+        borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           SizedBox(
-            height: 0.25 * height,
-            width: 0.25 * height,
-            child: Lottie.asset('assets/112338-relax.zip'),
+            height: 0.2 * height,
+            width: 0.2 * width,
+            // child: Image.asset(
+            //   'assets/pics/core_bank.jpg',
+            //   fit: BoxFit.cover,
+            // ),
+            child: Lottie.asset('assets/LottieAssets/loan.zip'),
+          ),
+          SizedBox(
+            height: 30,
           ),
           Center(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-              child: Text(
-                'Easy banking with the greatest of ease',
-                textAlign: TextAlign.center,
-                style: GoogleFonts.dmSans(
-                  textStyle: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16.0
-                  ),
-                ),
+            child: Text(
+              'Loans',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.montserrat(
+                color: Colors.blue,
+                fontWeight: FontWeight.bold,
+                fontSize: 20.0,
               ),
             ),
           ),
@@ -284,36 +299,37 @@ class Item1 extends StatelessWidget {
 }
 
 class Item2 extends StatelessWidget {
-  const Item2({super.key});
+  const Item2({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20.0),
+        borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           SizedBox(
-            height: 0.25 * height,
-            width: 0.25 * height,
-            child: Lottie.asset('assets/6139-animacion-ted.zip'),
+            height: 0.2 * height,
+            width: 0.2 * width,
+            // child: Image.asset(
+            //   'assets/pics/savings-loan.png',
+            //   fit: BoxFit.cover,
+            // ),
+            child: Lottie.asset('assets/LottieAssets/107877-onine-bank.zip'),
           ),
           Center(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-              child: Text(
-                'Make a deposit into your account at your convenience',
-                textAlign: TextAlign.center,
-                style: GoogleFonts.dmSans(
-                  textStyle: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16.0),
-                ),
-              ),
+            child: Text(
+              'Buy and Pay Small Small',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.montserrat(
+                  color: Colors.blue,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15.0),
             ),
           ),
         ],
@@ -323,31 +339,37 @@ class Item2 extends StatelessWidget {
 }
 
 class Item3 extends StatelessWidget {
-  const Item3({super.key});
+  const Item3({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20.0),
+        borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           SizedBox(
-            height: 0.25 * height,
-            width: 0.25 * height,
-            child: Lottie.asset('assets/71841-mobile-investing.zip'),
+            height: 0.2 * height,
+            width: 0.2 * width,
+            // child: Image.asset(
+            //   'assets/pics/office_staff.jpg',
+            //   fit: BoxFit.cover,
+            // ),
+            child: Lottie.asset('assets/LottieAssets/investment.zip'),
           ),
-          Text(
-            'Wealth Education',
-            textAlign: TextAlign.center,
-            style: GoogleFonts.dmSans(
-              textStyle: const TextStyle(
+          Center(
+            child: Text(
+              'Fixed Deposit',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.montserrat(
+                  color: Colors.blue,
                   fontWeight: FontWeight.bold,
-                  fontSize: 16.0),
+                  fontSize: 20.0),
             ),
           ),
         ],
@@ -357,7 +379,48 @@ class Item3 extends StatelessWidget {
 }
 
 class Item4 extends StatelessWidget {
-  const Item4({super.key});
+  const Item4({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          SizedBox(
+            height: 0.2 * height,
+            width: 0.2 * width,
+            // child: Image.asset(
+            //   'assets/pics/otp-new.png',
+            //   fit: BoxFit.cover,
+            // ),
+            child: Lottie.asset(
+                'assets/LottieAssets/11753-meda-chat-airtime-voucher-topup.zip'),
+          ),
+          Center(
+            child: Text(
+              'Savings Account',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.montserrat(
+                  color: Colors.blue,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20.0),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class Item5 extends StatelessWidget {
+  const Item5({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -365,23 +428,147 @@ class Item4 extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20.0),
+        borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           SizedBox(
-            height: 0.25 * height,
-            width: 0.25 * height,
-            child: Lottie.asset('assets/90204-planejador-financeiro.zip'),
+            height: 0.2 * height,
+            width: 0.2 * height,
+            // child: Image.asset(
+            //   'assets/pics/core_bank.jpg',
+            //   fit: BoxFit.cover,
+            // ),
+            child: Lottie.asset('assets/LottieAssets/accounting-report.zip'),
           ),
-          Text(
-            'Ease investments',
-            textAlign: TextAlign.center,
-            style: GoogleFonts.raleway(
-              textStyle: const TextStyle(
+          Center(
+            child: Text(
+              'Corporate Account',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.montserrat(
+                color: Colors.blue,
+                fontWeight: FontWeight.bold,
+                fontSize: 20.0,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class Item6 extends StatelessWidget {
+  const Item6({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    var height = MediaQuery.of(context).size.height;
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.blue,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          SizedBox(
+            height: 0.2 * height,
+            width: 0.2 * height,
+            // child: Image.asset(
+            //   'assets/pics/savings-loan.png',
+            //   fit: BoxFit.cover,
+            // ),
+            child: Lottie.asset('assets/LottieAssets/kid.zip'),
+          ),
+          Center(
+            child: Text(
+              'Landmark Coop Rich Kids',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.montserrat(
+                  color: Colors.white,
                   fontWeight: FontWeight.bold,
-                  fontSize: 16.0),
+                  fontSize: 20.0),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class Item7 extends StatelessWidget {
+  const Item7({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    var height = MediaQuery.of(context).size.height;
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.blue,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          SizedBox(
+            height: 0.2 * height,
+            width: 0.2 * height,
+            // child: Image.asset(
+            //   'assets/pics/office_staff.jpg',
+            //   fit: BoxFit.cover,
+            // ),
+            child: Lottie.asset('assets/LottieAssets/target.zip'),
+          ),
+          Center(
+            child: Text(
+              'Target Savings',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.montserrat(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20.0),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class Item8 extends StatelessWidget {
+  const Item8({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    var height = MediaQuery.of(context).size.height;
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.blue,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          SizedBox(
+            height: 0.2 * height,
+            width: 0.2 * height,
+            // child: Image.asset(
+            //   'assets/pics/otp-new.png',
+            //   fit: BoxFit.cover,
+            // ),
+            child: Lottie.asset(
+                'assets/LottieAssets/atm-card.zip'),
+          ),
+          Center(
+            child: Text(
+              'ATM Cards',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.montserrat(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20.0),
             ),
           ),
         ],

@@ -1,28 +1,28 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:landmarkcoop_mobile_app/api/api_service.dart';
-import 'package:landmarkcoop_mobile_app/model/customer_model.dart';
-import 'package:landmarkcoop_mobile_app/model/other_model.dart';
-import 'package:landmarkcoop_mobile_app/pages/search_status.dart';
-import 'package:landmarkcoop_mobile_app/pages/transfer_details.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:landmarkcoop_mobile_app/pages/search_status.dart';
+import 'package:landmarkcoop_mobile_app/pages/transfer_details.dart';
+import 'package:landmarkcoop_mobile_app/utils/status_list.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../api/api_service.dart';
+import '../model/customer_model.dart';
+import '../model/other_model.dart';
 import 'package:intl/intl.dart';
 
 class TransferStatus extends StatefulWidget {
   final String fullName;
   final String token;
   final List<CustomerWalletsBalanceModel> customerWallets;
-  final List<LastTransactionsModel> lastTransactions;
 
   const TransferStatus({
-    super.key,
+    Key? key,
     required this.customerWallets,
     required this.fullName,
     required this.token,
-    required this.lastTransactions,
-  });
+  }) : super(key: key);
 
   @override
   State<TransferStatus> createState() => _TransferStatusState();
@@ -40,8 +40,13 @@ class _TransferStatusState extends State<TransferStatus> {
     loadLastTenTransfers();
   }
 
-  loadLastTenTransfers() {
-    APIService apiService = APIService();
+  Future<void> loadLastTenTransfers() async {
+    final prefs = await SharedPreferences.getInstance();
+    String subdomain =
+        prefs.getString('subdomain') ?? 'https://core.landmarkcooperative.org';
+    String institution = prefs.getString('institution') ?? 'Minerva Hub';
+
+    APIService apiService = APIService(subdomain_url: subdomain);
     apiService.lastTenTransfers(widget.token).then((value) {
       setState(() {
         data = value;
@@ -63,7 +68,7 @@ class _TransferStatusState extends State<TransferStatus> {
         centerTitle: true,
         title: Text('Transfer Status',
           style: GoogleFonts.montserrat(
-            color: const Color(0XFF091841),
+            color: Color(0xff000080),
             fontSize: 16,
             fontWeight: FontWeight.bold,
           ),
@@ -78,12 +83,12 @@ class _TransferStatusState extends State<TransferStatus> {
                     isStatusDialogShown = true;
                   });
                   searchStatus(
-                    context, data,
+                    context,
                     onClosed: (context) {
                       setState(() {
                         isStatusDialogShown = false;
                       });
-                    },
+                    }, fullName: widget.fullName, customerWallets: widget.customerWallets,
                 );
               }
             );
@@ -101,7 +106,7 @@ class _TransferStatusState extends State<TransferStatus> {
             )
           ),
         ],
-        iconTheme: const IconThemeData(color: Color(0XFF091841)),
+        iconTheme: const IconThemeData(color: Color(0xff01440a)),
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -127,6 +132,8 @@ class _TransferStatusState extends State<TransferStatus> {
                              status: data[index].status,
                              date: data[index].timeCreated.substring(0, 10),
                              time: data[index].timeCreated.substring(10, data[index].timeCreated.length),
+                            customerWallets: widget.customerWallets,
+                            fullName: widget.fullName,
                             ),
                           )
                         );
@@ -152,32 +159,38 @@ class _TransferStatusState extends State<TransferStatus> {
                               children: <Widget>[
                                 Icon(
                                   Icons.outbond_outlined,
-                                  color: data[index].status == 'SUCCESSFUL' ? Colors.green
-                                  : data[index].status == 'FAILED' ?  Colors.red
-                                  : Colors.amber,
+                                  color: data[index].status == 'SUCCESSFUL'
+                                      ? Colors.green
+                                      : data[index].status == 'FAILED'
+                                      ? Colors.red
+                                      : Colors.blue,
                                 ),
                                 const SizedBox(width: 10),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Text(
-                                      data[index].destinationAccountName.length > 22
-                                          ? '${data[index].destinationAccountName.substring(0, 22)}...'
-                                          : data[index].destinationAccountName,
-                                      style: GoogleFonts.montserrat(
-                                        fontWeight: FontWeight.w700,
+
+                                // Wrapping Column with Expanded to prevent overflow
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(
+                                        data[index].destinationAccountName,
+                                        style: GoogleFonts.montserrat(fontWeight: FontWeight.w700),
+                                        overflow: TextOverflow.ellipsis,  // Ensuring long text is handled
                                       ),
-                                    ),
-                                    const SizedBox(height: 15),
-                                    AutoSizeText(data[index].completeMessage,
-                                    maxLines: 3,
-                                    overflow: TextOverflow.ellipsis,
-                                      style: GoogleFonts.montserrat(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w600,
+                                      const SizedBox(height: 15),
+
+                                      // Ensuring AutoSizeText fits in available space
+                                      AutoSizeText(
+                                        data[index].completeMessage,
+                                        maxLines: 3,
+                                        overflow: TextOverflow.ellipsis,  // Handle overflow with ellipsis
+                                        style: GoogleFonts.montserrat(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),

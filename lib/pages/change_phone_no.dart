@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:landmarkcoop_mobile_app/component/custom_text_form_field.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api/api_service.dart';
+import '../component/custom_text_form_field.dart';
+import '../utils/ProgressHUD.dart';
 
 
 Future<Object?> changePhoneNo(BuildContext context,
@@ -86,7 +87,7 @@ Future<Object?> changePhoneNo(BuildContext context,
                             final prefs = await SharedPreferences.getInstance();
                             String subdomain = prefs.getString('subdomain') ?? 'https://core.landmarkcooperative.org';
 
-                            APIService apiService = APIService();
+                            APIService apiService = APIService(subdomain_url: subdomain);
                             if (phoneController.text.isEmpty) {
                               Fluttertoast.showToast(msg: 'Phone number cannot be empty');
                             } else {
@@ -107,7 +108,7 @@ Future<Object?> changePhoneNo(BuildContext context,
                                             height: 50,
                                             alignment: Alignment.centerLeft,
                                             padding: const EdgeInsets.only(left: 15),
-                                            color: const Color.fromRGBO(0, 0, 139, 1),
+                                            color: const Color(0xff000080),
                                             child: Center(
                                               child: Text(
                                                 'Message',
@@ -142,7 +143,7 @@ Future<Object?> changePhoneNo(BuildContext context,
                                                   child: Text(
                                                     "Close",
                                                     style: GoogleFonts.montserrat(
-                                                      color: const Color.fromRGBO(0, 0, 139, 1),
+                                                      color: const Color(0xff000080),
                                                       fontSize: 16,
                                                     ),
                                                   ),
@@ -272,7 +273,7 @@ Future<Object?> changePhoneNo(BuildContext context,
 //                               height: 50,
 //                               alignment: Alignment.centerLeft,
 //                               padding: const EdgeInsets.only(left: 15),
-//                               color: const Color.fromRGBO(0, 0, 139, 1),
+//                               color: const Color(0xff000080),
 //                               child: Center(
 //                                 child: Text(
 //                                   'Message',
@@ -307,7 +308,7 @@ Future<Object?> changePhoneNo(BuildContext context,
 //                                     child: Text(
 //                                       "Close",
 //                                       style: GoogleFonts.montserrat(
-//                                         color: const Color.fromRGBO(0, 0, 139, 1),
+//                                         color: const Color(0xff000080),
 //                                         fontSize: 16,
 //                                       ),
 //                                     ),

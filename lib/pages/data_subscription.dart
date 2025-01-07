@@ -6,31 +6,28 @@ import 'package:fluttercontactpicker/fluttercontactpicker.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:landmarkcoop_mobile_app/api/api_flutterwave.dart';
 import 'package:landmarkcoop_mobile_app/api/api_service.dart';
-import 'package:landmarkcoop_mobile_app/model/airtime_model.dart';
-import 'package:landmarkcoop_mobile_app/model/cable_tv_model.dart';
-import 'package:landmarkcoop_mobile_app/model/customer_model.dart';
-import 'package:landmarkcoop_mobile_app/model/other_model.dart';
 import 'package:landmarkcoop_mobile_app/model/push_notification.dart';
-import 'package:landmarkcoop_mobile_app/util/ProgressHUD.dart';
+import 'package:landmarkcoop_mobile_app/utils/ProgressHUD.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../component/processing_airtime_request.dart';
+import '../model/airtime_model.dart';
+import '../model/cable_tv_model.dart';
+import '../model/customer_model.dart';
 
 class DataSubscription extends StatefulWidget {
   final String fullName;
   final String token;
   final List<CustomerWalletsBalanceModel> customerWallets;
-  final List<LastTransactionsModel> lastTransactions;
 
   const DataSubscription({
-    super.key,
+    Key? key,
     required this.customerWallets,
     required this.fullName,
     required this.token,
-    required this.lastTransactions,
-  });
+  }) : super(key: key);
 
   @override
   State<DataSubscription> createState() => _DataSubscriptionState();
@@ -244,7 +241,7 @@ class _DataSubscriptionState extends State<DataSubscription> {
                           width: 3,
                         ),
                         image: const DecorationImage(
-                          image: AssetImage('assets/mtn.jpg'),
+                          image: AssetImage('assets/pics/mtn.jpg'),
                           fit: BoxFit.contain,
                         ),
                       ),
@@ -268,7 +265,7 @@ class _DataSubscriptionState extends State<DataSubscription> {
                                 : Colors.transparent,
                             width: 3),
                         image: const DecorationImage(
-                          image: AssetImage('assets/glo.png'),
+                          image: AssetImage('assets/pics/glo.png'),
                           fit: BoxFit.contain,
                         ),
                       ),
@@ -293,7 +290,7 @@ class _DataSubscriptionState extends State<DataSubscription> {
                           width: 3,
                         ),
                         image: const DecorationImage(
-                          image: AssetImage('assets/airtel.jpg'),
+                          image: AssetImage('assets/pics/airtel.jpg'),
                           fit: BoxFit.contain,
                         ),
                       ),
@@ -318,7 +315,7 @@ class _DataSubscriptionState extends State<DataSubscription> {
                           width: 3,
                         ),
                         image: const DecorationImage(
-                          image: AssetImage('assets/9mobile.jpg'),
+                          image: AssetImage('assets/pics/9mobile.jpg'),
                           fit: BoxFit.contain,
                         ),
                       ),
@@ -371,6 +368,9 @@ class _DataSubscriptionState extends State<DataSubscription> {
                 child: TextButton(
                   onPressed: () async {
                     final prefs = await SharedPreferences.getInstance();
+                    String subdomain = prefs.getString('subdomain') ??
+                        'https://core.landmarkcooperative.org';
+
                     final granted = await FlutterContactPicker.hasPermission();
 
                     //Todo confirm if privacy policy has been read
@@ -400,7 +400,7 @@ class _DataSubscriptionState extends State<DataSubscription> {
                       // Look at the code below
 
                       // APIService apiServicePhone =
-                      //     new APIService();
+                      //     new APIService(subdomain_url: subdomain);
                       // apiServicePhone
                       //     .getAccountFromPhone(
                       //         phoneController.text.replaceAll(' ', ''), widget.token)
@@ -439,11 +439,13 @@ class _DataSubscriptionState extends State<DataSubscription> {
                     ? null
                     : () async {
                         final prefs = await SharedPreferences.getInstance();
+                        String subdomain = prefs.getString('subdomain') ??
+                            'https://core.landmarkcooperative.org';
                         setState(() {
                           isApiCallProcess = true;
                         });
                         txRef =
-                            "ozi_user.${phoneController.text.trim()}_$datePart";
+                            "${phoneController.text.trim()}_$datePart";
                         InstantAirtimeAndDataRequestModel requestModel =
                             InstantAirtimeAndDataRequestModel(
                                 phoneNumber: phoneController.text.trim(),
@@ -452,7 +454,7 @@ class _DataSubscriptionState extends State<DataSubscription> {
                                 requestType: 'Data');
 
                         APIService apiService =
-                            APIService();
+                            APIService(subdomain_url: subdomain);
                         if (widget.customerWallets[0].balance <
                             currentDataBundle!.amount) {
                           setState(() {
@@ -474,7 +476,7 @@ class _DataSubscriptionState extends State<DataSubscription> {
                                   widget.token)
                               .then((valueTransactionRes) {
                             if (valueTransactionRes.result) {
-                              rechargeDataPhone(valueTransactionRes, selectedDateBundle);
+                              rechargeDataPhone(valueTransactionRes, subdomain, selectedDateBundle);
                             } else {
                               setState(() {
                                 isApiCallProcess = false;
@@ -493,7 +495,7 @@ class _DataSubscriptionState extends State<DataSubscription> {
                         }
                       },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.lightBlue,
+                  backgroundColor: Color.fromRGBO(49, 88, 203, 1.0),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
@@ -503,7 +505,7 @@ class _DataSubscriptionState extends State<DataSubscription> {
                       const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                   child: Text("Validate",
                       style: GoogleFonts.openSans(
-                        color: Colors.white,
+                        color: Colors.black,
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       )),
@@ -565,7 +567,7 @@ class _DataSubscriptionState extends State<DataSubscription> {
                 height: 50,
                 alignment: Alignment.centerLeft,
                 padding: const EdgeInsets.only(left: 15),
-                color: const Color.fromRGBO(0, 0, 139, 1),
+                color: const Color(0xff000080),
                 child: Center(
                   child: Text(
                     'Message',
@@ -616,7 +618,7 @@ class _DataSubscriptionState extends State<DataSubscription> {
                       child: Text(
                         "Agree",
                         style: GoogleFonts.montserrat(
-                          color: const Color.fromRGBO(0, 0, 139, 1),
+                          color: const Color(0xff000080),
                           fontSize: 16,
                         ),
                       ),
@@ -709,7 +711,7 @@ class _DataSubscriptionState extends State<DataSubscription> {
                 viewAmount = displayAmount.format(newValue!.amount);
                 state.didChange(newValue);
                 _enableSubmitBtn = true;
-                selectedDateBundle = newValue;
+                selectedDateBundle = newValue!;
               });
             },
             items: dataTo
@@ -806,7 +808,8 @@ class _DataSubscriptionState extends State<DataSubscription> {
   }
 
   void rechargeDataPhone(
-      InstantAirtimeAndDataFeedbackResponseModel valueTransactionRes, BillsInfoResponseModel billsInfoModel) {
+      InstantAirtimeAndDataFeedbackResponseModel valueTransactionRes,
+      String subdomain, BillsInfoResponseModel billsInfoModel) {
     String displayDate = DateFormat('yyyy-MMM-dd').format(DateTime.now());
     FlutterWaveService apiFlutterWave = FlutterWaveService();
     DataBundleRequestModel dataBundleRequestModel = DataBundleRequestModel(
@@ -815,26 +818,21 @@ class _DataSubscriptionState extends State<DataSubscription> {
       billerName: currentDataBundle!.billerName,
       reference: valueTransactionRes.transactionRef,
     );
-    apiFlutterWave.buyDataBundle(dataBundleRequestModel, billsInfoModel.billerCode, billsInfoModel.itemCode, widget.token).then((value) {
+    apiFlutterWave.buyAirtimeDataBundle(dataBundleRequestModel, billsInfoModel.billerCode, billsInfoModel.itemCode, widget.token).then((value) {
       if (value == 'Successful') {
         setState(() {
           isApiCallProcess = false;
         });
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => ProcessingAirtimeRequest(
-            customerWallets: widget.customerWallets,
-            fullName: widget.fullName,
-            token: widget.token,
-            lastTransactions: widget.lastTransactions,
-          ),
-        ));
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => ProcessingAirtimeRequest(customerWallets: widget.customerWallets, fullName: widget.fullName, token: widget.token, subdomain: subdomain,),)
+        );
       } else {
         setState(() {
           isApiCallProcess = false;
         });
 
         //Todo reverse the debit amount
-        APIService apiService2 = APIService();
+        APIService apiService2 = APIService(subdomain_url: subdomain);
         apiService2.reverseInstantAirtimeFeedback(
             valueTransactionRes.id, widget.token);
 

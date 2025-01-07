@@ -1,20 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:landmarkcoop_mobile_app/api/api_service.dart';
-import 'package:landmarkcoop_mobile_app/model/customer_model.dart';
-import 'package:landmarkcoop_mobile_app/model/other_model.dart';
-import 'package:landmarkcoop_mobile_app/pages/setting.dart';
-import 'package:landmarkcoop_mobile_app/util/home_drawer.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../api/api_service.dart';
 
 
 Future<Object?> changePassword(BuildContext context,
     {required ValueChanged onClosed,
       required final String fullName,
-      required final String token,
-      required final List<CustomerWalletsBalanceModel> customerWallets,
-      required final List<LastTransactionsModel> lastTransactions,
-    }){
+      required final String token,}){
   bool isApiCallProcess = false;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   TextEditingController passwordController = TextEditingController();
@@ -83,7 +78,7 @@ Future<Object?> changePassword(BuildContext context,
                   children: [
                     Column(
                       children: [
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 50),
                         Text('Change Password',
                             style: GoogleFonts.montserrat(
                               color: const Color(0xff000080),
@@ -91,7 +86,7 @@ Future<Object?> changePassword(BuildContext context,
                               fontWeight: FontWeight.bold,
                             )
                         ),
-                        const SizedBox(height: 15),
+                        const SizedBox(height: 20),
                         AnimatedContainer(
                           duration: const Duration(seconds: 1),
                           decoration: focusNode.hasFocus
@@ -144,7 +139,7 @@ Future<Object?> changePassword(BuildContext context,
                             onTap: enableButton,
                           ),
                         ),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 15),
                         AnimatedContainer(
                           duration: const Duration(seconds: 1),
                           decoration: focusNode1.hasFocus
@@ -206,7 +201,10 @@ Future<Object?> changePassword(BuildContext context,
                         )
                             : ElevatedButton(
                           onPressed: () async {
-                            APIService apiService = APIService();
+                            final prefs = await SharedPreferences.getInstance();
+                            String subdomain = prefs.getString('subdomain') ?? 'https://core.landmarkcooperative.org';
+
+                            APIService apiService = APIService(subdomain_url: subdomain);
                             if (passwordController.text.isEmpty) {
                               Fluttertoast.showToast(msg: 'Password cannot be empty');
                             } else if (cPasswordController.text.isEmpty) {
@@ -231,7 +229,7 @@ Future<Object?> changePassword(BuildContext context,
                                             height: 50,
                                             alignment: Alignment.centerLeft,
                                             padding: const EdgeInsets.only(left: 15),
-                                            color: const Color.fromRGBO(0, 0, 139, 1),
+                                            color: const Color(0xff000080),
                                             child: Center(
                                               child: Text(
                                                 'Message',
@@ -253,20 +251,6 @@ Future<Object?> changePassword(BuildContext context,
                                               child: ElevatedButton(
                                                 onPressed: () {
                                                   Navigator.pop(context);
-                                                  Navigator.of(context).push(MaterialPageRoute(
-                                                      builder: (context) => HomeDrawer(
-                                                          value: 1,
-                                                          page: Setting(
-                                                            token: token,
-                                                            fullName: fullName,
-                                                            customerWallets: customerWallets,
-                                                            lastTransactions: lastTransactions, phoneNumber: customerWallets[0].phoneNo,
-                                                          ),
-                                                          name: 'setting',
-                                                          token: token,
-                                                          fullName: fullName,
-                                                          customerWallets: customerWallets,
-                                                          lastTransactionsList: lastTransactions)));
                                                 },
                                                 style: ElevatedButton.styleFrom(
                                                   backgroundColor: Colors.grey.shade200,
@@ -280,7 +264,7 @@ Future<Object?> changePassword(BuildContext context,
                                                   child: Text(
                                                     "Close",
                                                     style: GoogleFonts.montserrat(
-                                                      color: const Color.fromRGBO(0, 0, 139, 1),
+                                                      color: const Color(0xff000080),
                                                       fontSize: 16,
                                                     ),
                                                   ),
@@ -521,7 +505,7 @@ Future<Object?> changePassword(BuildContext context,
 //               final prefs = await SharedPreferences.getInstance();
 //               String subdomain = prefs.getString('subdomain') ?? 'https://core.landmarkcooperative.org';
 
-//               APIService apiService = APIService();
+//               APIService apiService = APIService(subdomain_url: subdomain);
 //               if (passwordController.text.isEmpty) {
 //                 Fluttertoast.showToast(msg: 'Password cannot be empty');
 //               } else if (cPasswordController.text.isEmpty) {
@@ -533,7 +517,7 @@ Future<Object?> changePassword(BuildContext context,
 //                 setState(() {
 //                   isApiCallProcess = true;
 //                 });
-//                 apiService.modifyPassword(password, token).then((value) {
+//                 apiService.modifyPassword(password, widget.token).then((value) {
 //                   setState(() {
 //                     isApiCallProcess = false;
 //                   });
@@ -546,7 +530,7 @@ Future<Object?> changePassword(BuildContext context,
 //                               height: 50,
 //                               alignment: Alignment.centerLeft,
 //                               padding: const EdgeInsets.only(left: 15),
-//                               color: const Color.fromRGBO(0, 0, 139, 1),
+//                               color: const Color(0xff000080),
 //                               child: Center(
 //                                 child: Text(
 //                                   'Message',
@@ -581,7 +565,7 @@ Future<Object?> changePassword(BuildContext context,
 //                                     child: Text(
 //                                       "Close",
 //                                       style: GoogleFonts.montserrat(
-//                                         color: const Color.fromRGBO(0, 0, 139, 1),
+//                                         color: const Color(0xff000080),
 //                                         fontSize: 16,
 //                                       ),
 //                                     ),
