@@ -461,6 +461,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               String subdomain =
                                   prefs.getString('subdomain') ??
                                       'core.landmarkcooperative.org';
+                              await prefs.setBool('atLoginPage', true);
 
                               APIService apiService =
                               APIService(subdomain_url: subdomain);

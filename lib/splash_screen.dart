@@ -2,7 +2,9 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:landmarkcoop_mobile_app/main_view.dart';
 import 'package:landmarkcoop_mobile_app/onboarding_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_animations/animation_builder/mirror_animation_builder.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -25,12 +27,18 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     super.initState();
   }
 
-  void startTimer() {
+  void startTimer() async{
+    final prefs = await SharedPreferences.getInstance();
+    bool isLoginPage = prefs.getBool('atLoginPage') ?? false;
+
     Timer(const Duration(seconds: 5), () {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const OnboardingScreen())
+        MaterialPageRoute(
+          builder: (context) => isLoginPage ? const MainView() : const OnboardingScreen(),
+        ),
       );
-     });
+    });
+
   }
 
   @override

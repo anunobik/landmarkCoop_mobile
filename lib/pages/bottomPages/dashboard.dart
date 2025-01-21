@@ -2371,7 +2371,7 @@ class _DashboardState extends State<Dashboard> {
                                               ),
                                               content: Text(
                                                 "Amount must be more than NGN50 "
-                                                "else call 09033824052 or email - contactcenter@myminervahub.com "
+                                                "else call 08147312529 or email - contactcenter@landmarkcooperative.org "
                                                 "for other funding less than NGN50",
                                                 textAlign: TextAlign.center,
                                               ),
