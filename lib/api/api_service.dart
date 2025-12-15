@@ -973,4 +973,24 @@ class APIService {
     }
   }
 
+  Future<CustomerFeedbackResponseModel> transferFundsToLaPlageWallet(double amount, String accountNumber, String token) async {
+    String url = "$subdomain_url/transferFundsToLaPlageWallet/$accountNumber/$amount/$token";
+
+    final response = await http.post(Uri.parse(url),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8'
+        },
+        body: '');
+
+    if (response.statusCode == 200) {
+      return CustomerFeedbackResponseModel(
+          status: true, message: response.body);
+    } else if (response.statusCode == 400) {
+      return CustomerFeedbackResponseModel(
+          status: false, message: response.body);
+    } else {
+      throw Exception('Failed to load data!');
+    }
+  }
+
 }

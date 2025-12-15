@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:landmarkcoop_mobile_app/main_view.dart';
-import 'package:landmarkcoop_mobile_app/onboarding_screen.dart';
+import 'package:landmarkcoop_latest/main_view.dart';
+import 'package:landmarkcoop_latest/onboarding_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_animations/animation_builder/mirror_animation_builder.dart';
 

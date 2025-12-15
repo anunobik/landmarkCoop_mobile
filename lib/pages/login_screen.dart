@@ -4,15 +4,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:landmarkcoop_mobile_app/api/api_service.dart';
-import 'package:landmarkcoop_mobile_app/entry_point.dart';
-import 'package:landmarkcoop_mobile_app/main.dart';
-import 'package:landmarkcoop_mobile_app/model/login_model.dart';
-import 'package:landmarkcoop_mobile_app/model/other_model.dart';
-import 'package:landmarkcoop_mobile_app/model/push_notification.dart';
-import 'package:landmarkcoop_mobile_app/pages/registration/forgot_password.dart';
-import 'package:landmarkcoop_mobile_app/utils/notification_badge.dart';
-import 'package:landmarkcoop_mobile_app/widgets/bottom_nav_bar.dart';
+import 'package:landmarkcoop_latest/api/api_service.dart';
+import 'package:landmarkcoop_latest/entry_point.dart';
+import 'package:landmarkcoop_latest/main.dart';
+import 'package:landmarkcoop_latest/model/login_model.dart';
+import 'package:landmarkcoop_latest/model/other_model.dart';
+import 'package:landmarkcoop_latest/model/push_notification.dart';
+import 'package:landmarkcoop_latest/pages/registration/forgot_password.dart';
+import 'package:landmarkcoop_latest/utils/notification_badge.dart';
+import 'package:landmarkcoop_latest/widgets/bottom_nav_bar.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:lottie/lottie.dart';
 import 'package:overlay_support/overlay_support.dart';
@@ -71,10 +71,10 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void requestAndRegisterNotifcation() async {
-    await Firebase.initializeApp();
-
-    messaging = FirebaseMessaging.instance;
-    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+    // await Firebase.initializeApp();
+    //
+    // messaging = FirebaseMessaging.instance;
+    // FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
     NotificationSettings settings = await messaging.requestPermission(
       alert: true,

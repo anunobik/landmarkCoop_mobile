@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:landmarkcoop_mobile_app/api/api_service.dart';
-import 'package:landmarkcoop_mobile_app/model/customer_model.dart';
-import 'package:landmarkcoop_mobile_app/model/other_model.dart';
+import 'package:landmarkcoop_latest/api/api_service.dart';
+import 'package:landmarkcoop_latest/model/customer_model.dart';
+import 'package:landmarkcoop_latest/model/other_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utils/ProgressHUD.dart';

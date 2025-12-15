@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:landmarkcoop_mobile_app/model/loan_model.dart';
-import 'package:landmarkcoop_mobile_app/model/other_model.dart';
+import 'package:landmarkcoop_latest/model/loan_model.dart';
+import 'package:landmarkcoop_latest/model/other_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api/api_service.dart';

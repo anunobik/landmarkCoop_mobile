@@ -4,9 +4,9 @@ import 'package:google_fonts/google_fonts.dart';
 // ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'package:landmarkcoop_mobile_app/entry_point.dart';
-import 'package:landmarkcoop_mobile_app/model/push_notification.dart';
-import 'package:landmarkcoop_mobile_app/utils/notification_badge.dart';
+import 'package:landmarkcoop_latest/entry_point.dart';
+import 'package:landmarkcoop_latest/model/push_notification.dart';
+import 'package:landmarkcoop_latest/utils/notification_badge.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../api/api_service.dart';

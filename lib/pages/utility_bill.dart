@@ -3,10 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'package:landmarkcoop_mobile_app/entry_point.dart';
-import 'package:landmarkcoop_mobile_app/model/cable_tv_model.dart';
-import 'package:landmarkcoop_mobile_app/pages/pay_cableTv.dart';
-import 'package:landmarkcoop_mobile_app/pages/pay_utilityBill.dart';
+import 'package:landmarkcoop_latest/entry_point.dart';
+import 'package:landmarkcoop_latest/model/cable_tv_model.dart';
+import 'package:landmarkcoop_latest/pages/pay_cableTv.dart';
+import 'package:landmarkcoop_latest/pages/pay_utilityBill.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api/api_flutterwave.dart';

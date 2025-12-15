@@ -3,26 +3,26 @@ import 'dart:math';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:landmarkcoop_mobile_app/api/api_service.dart';
-import 'package:landmarkcoop_mobile_app/component/side_menu.dart';
-import 'package:landmarkcoop_mobile_app/model/customer_model.dart';
-import 'package:landmarkcoop_mobile_app/model/other_model.dart';
-import 'package:landmarkcoop_mobile_app/model/push_notification.dart';
-import 'package:landmarkcoop_mobile_app/pages/airtime_tabs.dart';
-import 'package:landmarkcoop_mobile_app/pages/bottomPages/customer_care.dart';
-import 'package:landmarkcoop_mobile_app/pages/bottomPages/dashboard.dart';
-import 'package:landmarkcoop_mobile_app/pages/bottomPages/setting.dart';
-import 'package:landmarkcoop_mobile_app/pages/bottomPages/transfer_tabs.dart';
-import 'package:landmarkcoop_mobile_app/pages/cable_tv.dart';
-import 'package:landmarkcoop_mobile_app/pages/investment.dart';
-import 'package:landmarkcoop_mobile_app/pages/logout_page.dart';
-import 'package:landmarkcoop_mobile_app/pages/statement_screen.dart';
-import 'package:landmarkcoop_mobile_app/pushNotifications/push_messages.dart';
-import 'package:landmarkcoop_mobile_app/utils/notification_badge.dart';
-import 'package:landmarkcoop_mobile_app/utils/rive_utils.dart';
-import 'package:landmarkcoop_mobile_app/widgets/menu_btn.dart';
+import 'package:landmarkcoop_latest/api/api_service.dart';
+import 'package:landmarkcoop_latest/component/side_menu.dart';
+import 'package:landmarkcoop_latest/model/customer_model.dart';
+import 'package:landmarkcoop_latest/model/other_model.dart';
+import 'package:landmarkcoop_latest/model/push_notification.dart';
+import 'package:landmarkcoop_latest/pages/airtime_tabs.dart';
+import 'package:landmarkcoop_latest/pages/bottomPages/customer_care.dart';
+import 'package:landmarkcoop_latest/pages/bottomPages/dashboard.dart';
+import 'package:landmarkcoop_latest/pages/bottomPages/setting.dart';
+import 'package:landmarkcoop_latest/pages/bottomPages/transfer_tabs.dart';
+import 'package:landmarkcoop_latest/pages/cable_tv.dart';
+import 'package:landmarkcoop_latest/pages/investment.dart';
+import 'package:landmarkcoop_latest/pages/logout_page.dart';
+import 'package:landmarkcoop_latest/pages/statement_screen.dart';
+import 'package:landmarkcoop_latest/pushNotifications/push_messages.dart';
+import 'package:landmarkcoop_latest/utils/notification_badge.dart';
+import 'package:landmarkcoop_latest/utils/rive_utils.dart';
+import 'package:landmarkcoop_latest/widgets/menu_btn.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'package:rive/rive.dart';
+import 'package:rive/rive.dart' as rive;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class EntryPoint extends StatefulWidget {
@@ -57,7 +57,7 @@ class _EntryPointState extends State<EntryPoint>
   PushNotification? notificationInfo;
   List notificationList = [];
 
-  late SMIBool isSideBarClosed;
+  late rive.SMIBool isSideBarClosed;
 
   bool isSideMenuClosed = true;
   OnlineRateResponseModel newValue = OnlineRateResponseModel(
@@ -284,10 +284,10 @@ class _EntryPointState extends State<EntryPoint>
             top: 16,
             child: MenuBtn(
               riveOnInit: (artboard) {
-                StateMachineController controller = RiveUtils.getRiveController(
+                rive.StateMachineController controller = RiveUtils.getRiveController(
                     artboard,
                     stateMachineName: "State Machine");
-                isSideBarClosed = controller.findSMI("isOpen") as SMIBool;
+                isSideBarClosed = controller.findSMI("isOpen") as rive.SMIBool;
                 isSideBarClosed.value = true;
               },
               press: () {

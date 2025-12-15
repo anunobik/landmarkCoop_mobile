@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:landmarkcoop_mobile_app/main_view.dart';
-import 'package:landmarkcoop_mobile_app/pages/sing_up_screen.dart';
-import 'package:landmarkcoop_mobile_app/size_config.dart';
+import 'package:landmarkcoop_latest/main_view.dart';
+import 'package:landmarkcoop_latest/pages/sing_up_screen.dart';
+import 'package:landmarkcoop_latest/size_config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'onboarding_contents.dart';

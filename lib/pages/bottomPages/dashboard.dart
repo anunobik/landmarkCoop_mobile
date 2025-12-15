@@ -8,29 +8,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 // import 'package:flutter_paystack/flutter_paystack.dart';
-import 'package:fluttercontactpicker/fluttercontactpicker.dart';
-import 'package:flutterwave_standard/flutterwave.dart';
+import 'package:flutter_native_contact_picker/flutter_native_contact_picker.dart';
+import 'package:flutter_native_contact_picker/model/contact.dart';
+// import 'package:flutterwave_standard/flutterwave.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:landmarkcoop_mobile_app/api/api_service.dart';
-import 'package:landmarkcoop_mobile_app/entry_point.dart';
-import 'package:landmarkcoop_mobile_app/model/customer_model.dart';
-import 'package:landmarkcoop_mobile_app/model/login_model.dart';
-import 'package:landmarkcoop_mobile_app/model/other_model.dart';
-import 'package:landmarkcoop_mobile_app/model/push_notification.dart';
-import 'package:landmarkcoop_mobile_app/pages/airtime_tabs.dart';
-import 'package:landmarkcoop_mobile_app/pages/bottomPages/customer_care.dart';
-import 'package:landmarkcoop_mobile_app/pages/cable_tv.dart';
-import 'package:landmarkcoop_mobile_app/pages/investment.dart';
-import 'package:landmarkcoop_mobile_app/pages/investment_cert.dart';
-import 'package:landmarkcoop_mobile_app/pages/logout_page.dart';
-import 'package:landmarkcoop_mobile_app/pages/statement_screen.dart';
-import 'package:landmarkcoop_mobile_app/pages/transfer_details.dart';
-import 'package:landmarkcoop_mobile_app/pages/transfer_external.dart';
-import 'package:landmarkcoop_mobile_app/pages/utility_bill.dart';
-import 'package:landmarkcoop_mobile_app/utils/ProgressHUD.dart';
-import 'package:landmarkcoop_mobile_app/utils/notification_badge.dart';
-import 'package:landmarkcoop_mobile_app/widgets/bottom_nav_bar.dart';
+import 'package:landmarkcoop_latest/api/api_service.dart';
+import 'package:landmarkcoop_latest/entry_point.dart';
+import 'package:landmarkcoop_latest/model/customer_model.dart';
+import 'package:landmarkcoop_latest/model/login_model.dart';
+import 'package:landmarkcoop_latest/model/other_model.dart';
+import 'package:landmarkcoop_latest/model/push_notification.dart';
+import 'package:landmarkcoop_latest/pages/airtime_tabs.dart';
+import 'package:landmarkcoop_latest/pages/bottomPages/customer_care.dart';
+import 'package:landmarkcoop_latest/pages/cable_tv.dart';
+import 'package:landmarkcoop_latest/pages/investment.dart';
+import 'package:landmarkcoop_latest/pages/investment_cert.dart';
+import 'package:landmarkcoop_latest/pages/logout_page.dart';
+import 'package:landmarkcoop_latest/pages/statement_screen.dart';
+import 'package:landmarkcoop_latest/pages/transfer_details.dart';
+import 'package:landmarkcoop_latest/pages/transfer_external.dart';
+import 'package:landmarkcoop_latest/pages/utility_bill.dart';
+import 'package:landmarkcoop_latest/utils/ProgressHUD.dart';
+import 'package:landmarkcoop_latest/utils/notification_badge.dart';
+import 'package:landmarkcoop_latest/widgets/bottom_nav_bar.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -1115,6 +1116,26 @@ class _DashboardState extends State<Dashboard> {
                                               ],
                                             ),
                                           ),
+                                          SizedBox(
+                                            height: 20,
+                                          ),
+                                          Center(
+                                            child: ElevatedButton.icon(
+                                              onPressed: () {
+                                                _transferToLaplageWallet();
+                                              },
+                                              icon: const Icon(Icons.account_balance_wallet, color: Colors.white),
+                                              label: Text(
+                                                'Fund LaPlage Wallet',
+                                                style: GoogleFonts.montserrat(color: Colors.white, fontWeight: FontWeight.w600),
+                                              ),
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: Colors.blue,
+                                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                                              ),
+                                            ),
+                                          ),
                                         ],
                                       ),
                                     ),
@@ -1706,91 +1727,91 @@ class _DashboardState extends State<Dashboard> {
   }
 
   // Payment Initializer
-  _handlePaymentInitialization(String accountNumber) async {
-    String FLUTTERWAVE_PUB_KEY = gateWayResponse.publicKey;
-    var email = widget.customerWallets[0].email;
-    var displayName = widget.customerWallets[0].fullName;
-    var phoneNo = widget.customerWallets[0].phoneNo;
-
-    String narration = "Mobile App credit";
-    String datePart = DateFormat('yymmddhhmmss').format(DateTime.now());
-    String txRef = "$accountNumber.$datePart";
-
-    // final style = FlutterwaveStyle(
-    //     appBarText: "Wallet Funding",
-    //     appBarTitleTextStyle: const TextStyle(color: Colors.white),
-    //     buttonColor: Color(0xff000080),
-    //     appBarIcon: const Icon(Icons.message, color: Color(0xff01440a)),
-    //     buttonTextStyle: const TextStyle(
-    //         color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
-    //     appBarColor: Color(0xff000080),
-    //     dialogCancelTextStyle:
-    //     const TextStyle(color: Colors.redAccent, fontSize: 18),
-    //     dialogContinueTextStyle:
-    //     const TextStyle(color: Colors.blue, fontSize: 18),
-    //     dialogBackgroundColor: Colors.white,
-    //     buttonText: "Pay NGN$fundAmount");
-
-    final Customer customer =
-        Customer(name: displayName, phoneNumber: phoneNo, email: email);
-    print("Flutterwave Hre");
-    final Flutterwave flutterwave = Flutterwave(
-        context: context,
-        // style: style,
-        publicKey: FLUTTERWAVE_PUB_KEY,
-        currency: "NGN",
-        redirectUrl:
-            "https://core.landmarkcooperative.org/verifyBanktransfer/IHd88sdBGAasdfRYEGRh76asf05052023",
-        txRef: txRef,
-        amount: fundAmount.toString(),
-        customer: customer,
-        paymentOptions: "ussd, bank_transfer, card",
-        // paymentOptions: "ussd, bank_transfer",
-        customization: Customization(title: "Mobile funding"),
-        isTestMode: false);
-
-    final ChargeResponse response = await flutterwave.charge();
-    Navigator.pop(context);
-    print(response.toJson());
-    if (response != null) {
-      if (!response.success!) {
-        // Call the verify transaction endpoint with the transactionID returned in `response.transactionId` to verify transaction before offering value to customer
-        AccountTransactionRequestModel accountTransactionRequestModel =
-            AccountTransactionRequestModel(amount: fundAmount);
-        accountTransactionRequestModel.narration = narration;
-        accountTransactionRequestModel.accountNumber = accountNumber;
-        final prefs = await SharedPreferences.getInstance();
-        String subdomain =
-            prefs.getString('subdomain') ?? 'https://core.landmarkcooperative.org';
-
-        APIService apiService = APIService(subdomain_url: subdomain);
-        apiService
-            .verifyDeposit(
-                accountTransactionRequestModel,
-                int.parse(response.transactionId!),
-                response.txRef!,
-                widget.token)
-            .then((value) {
-          successTransactionAlert(value);
-        });
-      } else {
-        failTransactionAlert("Transaction not successful");
-      }
-    } else {
-      // User cancelled
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return const AlertDialog(
-              title: Text("Message"),
-              content: Text("You cancelled the transaction!"),
-            );
-          });
-      setState(() {
-        isApiCallProcess = false;
-      });
-    }
-  }
+  // _handlePaymentInitialization(String accountNumber) async {
+  //   String FLUTTERWAVE_PUB_KEY = gateWayResponse.publicKey;
+  //   var email = widget.customerWallets[0].email;
+  //   var displayName = widget.customerWallets[0].fullName;
+  //   var phoneNo = widget.customerWallets[0].phoneNo;
+  //
+  //   String narration = "Mobile App credit";
+  //   String datePart = DateFormat('yymmddhhmmss').format(DateTime.now());
+  //   String txRef = "$accountNumber.$datePart";
+  //
+  //   // final style = FlutterwaveStyle(
+  //   //     appBarText: "Wallet Funding",
+  //   //     appBarTitleTextStyle: const TextStyle(color: Colors.white),
+  //   //     buttonColor: Color(0xff000080),
+  //   //     appBarIcon: const Icon(Icons.message, color: Color(0xff01440a)),
+  //   //     buttonTextStyle: const TextStyle(
+  //   //         color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+  //   //     appBarColor: Color(0xff000080),
+  //   //     dialogCancelTextStyle:
+  //   //     const TextStyle(color: Colors.redAccent, fontSize: 18),
+  //   //     dialogContinueTextStyle:
+  //   //     const TextStyle(color: Colors.blue, fontSize: 18),
+  //   //     dialogBackgroundColor: Colors.white,
+  //   //     buttonText: "Pay NGN$fundAmount");
+  //
+  //   final Customer customer =
+  //       Customer(name: displayName, phoneNumber: phoneNo, email: email);
+  //   print("Flutterwave Hre");
+  //   final Flutterwave flutterwave = Flutterwave(
+  //       context: context,
+  //       // style: style,
+  //       publicKey: FLUTTERWAVE_PUB_KEY,
+  //       currency: "NGN",
+  //       redirectUrl:
+  //           "https://core.landmarkcooperative.org/verifyBanktransfer/IHd88sdBGAasdfRYEGRh76asf05052023",
+  //       txRef: txRef,
+  //       amount: fundAmount.toString(),
+  //       customer: customer,
+  //       paymentOptions: "ussd, bank_transfer, card",
+  //       // paymentOptions: "ussd, bank_transfer",
+  //       customization: Customization(title: "Mobile funding"),
+  //       isTestMode: false);
+  //
+  //   final ChargeResponse response = await flutterwave.charge();
+  //   Navigator.pop(context);
+  //   print(response.toJson());
+  //   if (response != null) {
+  //     if (!response.success!) {
+  //       // Call the verify transaction endpoint with the transactionID returned in `response.transactionId` to verify transaction before offering value to customer
+  //       AccountTransactionRequestModel accountTransactionRequestModel =
+  //           AccountTransactionRequestModel(amount: fundAmount);
+  //       accountTransactionRequestModel.narration = narration;
+  //       accountTransactionRequestModel.accountNumber = accountNumber;
+  //       final prefs = await SharedPreferences.getInstance();
+  //       String subdomain =
+  //           prefs.getString('subdomain') ?? 'https://core.landmarkcooperative.org';
+  //
+  //       APIService apiService = APIService(subdomain_url: subdomain);
+  //       apiService
+  //           .verifyDeposit(
+  //               accountTransactionRequestModel,
+  //               int.parse(response.transactionId!),
+  //               response.txRef!,
+  //               widget.token)
+  //           .then((value) {
+  //         successTransactionAlert(value);
+  //       });
+  //     } else {
+  //       failTransactionAlert("Transaction not successful");
+  //     }
+  //   } else {
+  //     // User cancelled
+  //     showDialog(
+  //         context: context,
+  //         builder: (BuildContext context) {
+  //           return const AlertDialog(
+  //             title: Text("Message"),
+  //             content: Text("You cancelled the transaction!"),
+  //           );
+  //         });
+  //     setState(() {
+  //       isApiCallProcess = false;
+  //     });
+  //   }
+  // }
 
   // Paystack Payments
   // _handlePaystackPayment(String accountNumber) async {
@@ -2013,6 +2034,221 @@ class _DashboardState extends State<Dashboard> {
         ),
       ),
     );
+  }
+
+  // Open Additional Accounts
+  void _transferToLaplageWallet() {
+    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
+    CustomerWalletsBalanceModel selectedWallet = widget.customerWallets[0];
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) {
+        bool dialogLoading = false;
+
+        return StatefulBuilder(
+          builder: (context, setStateDialog) {
+            return ProgressHUD(
+              inAsyncCall: dialogLoading,
+              opacity: 0.3,
+              child: Form(
+                key: formKey,
+                child: AlertDialog(
+                  title: Text(
+                    'Funding Your LaPlage Wallet',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.montserrat(
+                      color: const Color(0xff000080),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                  content: SingleChildScrollView(
+                    child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        const SizedBox(height: 15),
+                        StatefulBuilder(
+                          builder: (context, setStateSB) {
+                            return DropdownButtonFormField<CustomerWalletsBalanceModel>(
+                              decoration: InputDecoration(
+                                labelText: 'Select Account',
+                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                                contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                              ),
+                              items: widget.customerWallets.map((w) {
+                                final acct = isBvnLinked ? w.nubanAccountNumber : w.accountNumber;
+                                return DropdownMenuItem<CustomerWalletsBalanceModel>(
+                                    value: w,
+                                    child: Text('$acct')
+                                );
+                              }).toList(),
+                              onChanged: (val) {
+                                setStateSB(() {
+                                  selectedWallet = val!;
+                                });
+                              },
+                              validator: (val) => val == null || val.accountNumber.isEmpty
+                                  ? 'Please select an account' : null,
+                            );
+                          },
+                        ),
+                        const SizedBox(height: 20),
+                        Text(
+                          'Enter Amount',
+                          style: GoogleFonts.montserrat(
+                              fontWeight: FontWeight.bold, fontSize: 15),
+                        ),
+                        const SizedBox(height: 10),
+                        TextFormField(
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            labelText: 'Amount',
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                            contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          ),
+                          validator: (val) => val == null || val.isEmpty ? 'Please enter an amount' : null,
+                          onSaved: (val) => fundAmount = double.parse(val!),
+                        ),
+                        // const SizedBox(height: 10),
+                      ],
+                    ),
+                  ),
+                  actions: [
+                    Center(
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          // 🔴 Cancel Button
+                          ElevatedButton(
+                            onPressed: dialogLoading
+                                ? null
+                                : () {
+                              Navigator.pop(dialogContext);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.red,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            child: const Text(
+                              "Cancel",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+
+                          const SizedBox(width: 15),
+
+                          // 🔵 Submit Button
+                          ElevatedButton(
+                            onPressed: dialogLoading
+                                ? null
+                                : () async {
+                              if (!formKey.currentState!.validate()) return;
+                              formKey.currentState!.save();
+
+                              if (selectedWallet.balance < fundAmount) {
+                                showDialog(
+                                  context: context,
+                                  builder: (_) => const AlertDialog(
+                                    title: Text("Message",
+                                        textAlign: TextAlign.center),
+                                    content: Text("Insufficient Funds",
+                                        textAlign: TextAlign.center),
+                                  ),
+                                );
+                                return;
+                              }
+
+                              setStateDialog(() {
+                                dialogLoading = true;
+                              });
+
+                              try {
+                                final prefs =
+                                await SharedPreferences.getInstance();
+                                final subdomain =
+                                    prefs.getString('subdomain') ??
+                                        'https://core.landmarkcooperative.org';
+
+                                APIService apiService =
+                                APIService(subdomain_url: subdomain);
+
+                                final result =
+                                await apiService.transferFundsToLaPlageWallet(
+                                  fundAmount,
+                                  selectedWallet.accountNumber,
+                                  widget.token,
+                                );
+
+                                setStateDialog(() {
+                                  dialogLoading = false;
+                                });
+
+                                Navigator.pop(dialogContext);
+
+                                showDialog(
+                                  context: context,
+                                  builder: (_) => AlertDialog(
+                                    title: Text(
+                                      result.status ? "Success" : "Message",
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    content: Text(
+                                      result.message,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                );
+                              } catch (e) {
+                                setStateDialog(() {
+                                  dialogLoading = false;
+                                });
+
+                                showDialog(
+                                  context: context,
+                                  builder: (_) => const AlertDialog(
+                                    title: Text("Error",
+                                        textAlign: TextAlign.center),
+                                    content: Text(
+                                        "Something went wrong. Please try again."),
+                                  ),
+                                );
+                              }
+                            },
+                            child: dialogLoading
+                                ? Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: const [
+                                SizedBox(
+                                  width: 18,
+                                  height: 18,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                SizedBox(width: 10),
+                                Text("Sending...",
+                                    style: TextStyle(color: Colors.white)),
+                              ],
+                            )
+                                : const Text("Submit"),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+
   }
 
   // Success Transaction Alert
@@ -2248,7 +2484,7 @@ class _DashboardState extends State<Dashboard> {
                                     setState(() {
                                       isApiCallProcess = false;
                                     });
-                                    _handlePaymentInitialization(accountNumber);
+                                    // _handlePaymentInitialization(accountNumber);
                                     // if (gateWayResponse.gatewayName ==
                                     //     'Paystack') {
                                     //   _handlePaystackPayment(accountNumber);
@@ -2478,8 +2714,8 @@ class _DashboardState extends State<Dashboard> {
                           String subdomain = prefs.getString('subdomain') ??
                               'https://core.landmarkcooperative.org';
 
-                          final granted =
-                              await FlutterContactPicker.hasPermission();
+                          // final granted =
+                          //     await FlutterContactPicker.hasPermission();
 
                           //Todo confirm if privacy policy has been read
                           readPolicy = prefs.getBool('readPolicy') ?? false;
@@ -2488,23 +2724,23 @@ class _DashboardState extends State<Dashboard> {
                             readAndAcceptPolicy();
                             acceptOrRejectPolicy();
                           } else {
-                            if (!granted) {
-                              await FlutterContactPicker.requestPermission();
-                            }
-                            final PhoneContact contact =
-                                await FlutterContactPicker.pickPhoneContact();
-                            if (contact.phoneNumber!.number!.substring(0, 4) ==
-                                '+234') {
-                              var newPhone = contact.phoneNumber!.number!
-                                  .replaceAll('+234', '0');
-                              setState(() {
-                                _contact = newPhone.replaceAll(" ", "");
-                              });
-                            } else {
-                              setState(() {
-                                _contact = contact.phoneNumber!.number!;
-                              });
-                            }
+                            // if (!granted) {
+                            //   await FlutterContactPicker.requestPermission();
+                            // }
+                            // final PhoneContact contact =
+                            //     await FlutterContactPicker.pickPhoneContact();
+                            // if (contact.phoneNumber!.number!.substring(0, 4) ==
+                            //     '+234') {
+                            //   var newPhone = contact.phoneNumber!.number!
+                            //       .replaceAll('+234', '0');
+                            //   setState(() {
+                            //     _contact = newPhone.replaceAll(" ", "");
+                            //   });
+                            // } else {
+                            //   setState(() {
+                            //     _contact = contact.phoneNumber!.number!;
+                            //   });
+                            // }
                             APIService apiServicePhone =
                                 new APIService(subdomain_url: subdomain);
                             apiServicePhone

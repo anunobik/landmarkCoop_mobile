@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:landmarkcoop_mobile_app/pages/sing_up_screen_2.dart';
+import 'package:landmarkcoop_latest/pages/sing_up_screen_2.dart';
 
 import '../main_view.dart';
 

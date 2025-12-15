@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:landmarkcoop_mobile_app/model/customer_model.dart';
-import 'package:landmarkcoop_mobile_app/pages/bottomPages/customer_care.dart';
-import 'package:landmarkcoop_mobile_app/pages/bottomPages/dashboard.dart';
-import 'package:landmarkcoop_mobile_app/pages/bottomPages/transfer_tabs.dart';
+import 'package:landmarkcoop_latest/model/customer_model.dart';
+import 'package:landmarkcoop_latest/pages/bottomPages/customer_care.dart';
+import 'package:landmarkcoop_latest/pages/bottomPages/dashboard.dart';
+import 'package:landmarkcoop_latest/pages/bottomPages/transfer_tabs.dart';
 
 
 import '../pages/bottomPages/setting.dart';

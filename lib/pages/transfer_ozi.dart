@@ -1,18 +1,19 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttercontactpicker/fluttercontactpicker.dart';
+import 'package:flutter_native_contact_picker/flutter_native_contact_picker.dart';
+import 'package:flutter_native_contact_picker/model/contact.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:landmarkcoop_mobile_app/api/api_service.dart';
-import 'package:landmarkcoop_mobile_app/entry_point.dart';
-import 'package:landmarkcoop_mobile_app/model/customer_model.dart';
-import 'package:landmarkcoop_mobile_app/model/login_model.dart';
-import 'package:landmarkcoop_mobile_app/model/other_model.dart';
-import 'package:landmarkcoop_mobile_app/model/push_notification.dart';
-import 'package:landmarkcoop_mobile_app/utils/ProgressHUD.dart';
-import 'package:landmarkcoop_mobile_app/utils/notification_badge.dart';
-import 'package:landmarkcoop_mobile_app/widgets/bottom_nav_bar.dart';
+import 'package:landmarkcoop_latest/api/api_service.dart';
+import 'package:landmarkcoop_latest/entry_point.dart';
+import 'package:landmarkcoop_latest/model/customer_model.dart';
+import 'package:landmarkcoop_latest/model/login_model.dart';
+import 'package:landmarkcoop_latest/model/other_model.dart';
+import 'package:landmarkcoop_latest/model/push_notification.dart';
+import 'package:landmarkcoop_latest/utils/ProgressHUD.dart';
+import 'package:landmarkcoop_latest/utils/notification_badge.dart';
+import 'package:landmarkcoop_latest/widgets/bottom_nav_bar.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -31,7 +32,8 @@ class Transfer extends StatefulWidget {
 }
 
 class _TransferState extends State<Transfer> {
-  PhoneContact? _phoneContact;
+  final FlutterNativeContactPicker _contactPicker = FlutterNativeContactPicker();
+  List<Contact>? _contacts;
   String _contact = 'Tap to get phone number';
   bool isApiCallProcess = false;
   GlobalKey<FormState> formKeyTrf = GlobalKey<FormState>();
@@ -209,18 +211,10 @@ class _TransferState extends State<Transfer> {
                       String subdomain = prefs.getString('subdomain') ??
                           'https://core.landmarkcooperative.org';
 
-                      final granted =
-                          await FlutterContactPicker.hasPermission();
-                      granted
-                          ? print('Granted')
-                          : await FlutterContactPicker.requestPermission();
-                      final PhoneContact contact =
-                          await FlutterContactPicker.pickPhoneContact();
+                      Contact? contact = await _contactPicker.selectPhoneNumber();
                       setState(() {
-                        _phoneContact = contact;
-                      });
-                      setState(() {
-                        _contact = _phoneContact!.phoneNumber!.number!;
+                        _contacts = contact == null ? null : [contact];
+                        _contact = contact?.selectedPhoneNumber ?? "";
                       });
                       APIService apiServicePhone =
                           new APIService(subdomain_url: subdomain);

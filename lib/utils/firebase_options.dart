@@ -21,6 +21,18 @@ class DefaultFirebaseOptions {
        return android;
      case TargetPlatform.iOS:
        return ios;
+     case TargetPlatform.fuchsia:
+     // TODO: Handle this case.
+       throw UnimplementedError();
+     case TargetPlatform.linux:
+     // TODO: Handle this case.
+       throw UnimplementedError();
+     case TargetPlatform.macOS:
+     // TODO: Handle this case.
+       throw UnimplementedError();
+     case TargetPlatform.windows:
+     // TODO: Handle this case.
+       throw UnimplementedError();
    }
 
    throw UnsupportedError(

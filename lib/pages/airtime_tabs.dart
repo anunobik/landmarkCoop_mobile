@@ -1,15 +1,15 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:landmarkcoop_mobile_app/api/api_service.dart';
-import 'package:landmarkcoop_mobile_app/entry_point.dart';
-import 'package:landmarkcoop_mobile_app/model/customer_model.dart';
-import 'package:landmarkcoop_mobile_app/model/login_model.dart';
-import 'package:landmarkcoop_mobile_app/model/push_notification.dart';
-import 'package:landmarkcoop_mobile_app/pages/airtime_purchase.dart';
-import 'package:landmarkcoop_mobile_app/pages/data_subscription.dart';
-import 'package:landmarkcoop_mobile_app/utils/notification_badge.dart';
-import 'package:landmarkcoop_mobile_app/widgets/bottom_nav_bar.dart';
+import 'package:landmarkcoop_latest/api/api_service.dart';
+import 'package:landmarkcoop_latest/entry_point.dart';
+import 'package:landmarkcoop_latest/model/customer_model.dart';
+import 'package:landmarkcoop_latest/model/login_model.dart';
+import 'package:landmarkcoop_latest/model/push_notification.dart';
+import 'package:landmarkcoop_latest/pages/airtime_purchase.dart';
+import 'package:landmarkcoop_latest/pages/data_subscription.dart';
+import 'package:landmarkcoop_latest/utils/notification_badge.dart';
+import 'package:landmarkcoop_latest/widgets/bottom_nav_bar.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

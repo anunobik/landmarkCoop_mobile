@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:landmarkcoop_mobile_app/pages/transfer_details.dart';
-import 'package:landmarkcoop_mobile_app/pages/transfer_details.dart';
-import 'package:landmarkcoop_mobile_app/utils/status_list.dart';
+import 'package:landmarkcoop_latest/pages/transfer_details.dart';
+import 'package:landmarkcoop_latest/pages/transfer_details.dart';
+import 'package:landmarkcoop_latest/utils/status_list.dart';
 
 import '../model/customer_model.dart';
 

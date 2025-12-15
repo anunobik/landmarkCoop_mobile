@@ -2,12 +2,13 @@ import 'dart:async';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttercontactpicker/fluttercontactpicker.dart';
+import 'package:flutter_native_contact_picker/flutter_native_contact_picker.dart';
+import 'package:flutter_native_contact_picker/model/contact.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:landmarkcoop_mobile_app/api/api_flutterwave.dart';
-import 'package:landmarkcoop_mobile_app/api/api_service.dart';
-import 'package:landmarkcoop_mobile_app/model/push_notification.dart';
-import 'package:landmarkcoop_mobile_app/utils/ProgressHUD.dart';
+import 'package:landmarkcoop_latest/api/api_flutterwave.dart';
+import 'package:landmarkcoop_latest/api/api_service.dart';
+import 'package:landmarkcoop_latest/model/push_notification.dart';
+import 'package:landmarkcoop_latest/utils/ProgressHUD.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -371,49 +372,23 @@ class _DataSubscriptionState extends State<DataSubscription> {
                     String subdomain = prefs.getString('subdomain') ??
                         'https://core.landmarkcooperative.org';
 
-                    final granted = await FlutterContactPicker.hasPermission();
-
-                    //Todo confirm if privacy policy has been read
-                    readPolicy = prefs.getBool('readPolicy') ?? false;
-
-                    if (!readPolicy) {
-                      readAndAcceptPolicy();
-                      acceptOrRejectPolicy();
+                    final FlutterNativeContactPicker _contactPicker = FlutterNativeContactPicker();
+                    List<Contact>? _contacts;
+                    Contact? contact = await _contactPicker.selectPhoneNumber();
+                    setState(() {
+                      _contacts = contact == null ? null : [contact];
+                    });
+                    if (contact?.selectedPhoneNumber!.substring(0, 4) ==
+                        '+234') {
+                      var newPhone = contact?.selectedPhoneNumber!
+                          .replaceAll('+234', '0');
+                      setState(() {
+                        phoneController.text = newPhone!.replaceAll(" ", "");
+                      });
                     } else {
-                      if (!granted) {
-                        await FlutterContactPicker.requestPermission();
-                      }
-                      final PhoneContact contact =
-                          await FlutterContactPicker.pickPhoneContact();
-                      if (contact.phoneNumber!.number!.substring(0, 4) ==
-                          '+234') {
-                        var newPhone = contact.phoneNumber!.number!
-                            .replaceAll('+234', '0');
-                        setState(() {
-                          phoneController.text = newPhone.replaceAll(" ", "");
-                        });
-                      } else {
-                        setState(() {
-                          phoneController.text = contact.phoneNumber!.number!;
-                        });
-                      }
-                      // Look at the code below
-
-                      // APIService apiServicePhone =
-                      //     new APIService(subdomain_url: subdomain);
-                      // apiServicePhone
-                      //     .getAccountFromPhone(
-                      //         phoneController.text.replaceAll(' ', ''), widget.token)
-                      //     .then((value) {
-                      //   setState(() {
-                      //     customerAccountDisplayModel = value;
-                      //     if (value.displayName.isNotEmpty) {
-                      //       disableSendMoneyBtn = false;
-                      //     } else {
-                      //       disableSendMoneyBtn = true;
-                      //     }
-                      //   });
-                      // });
+                      setState(() {
+                        phoneController.text = contact!.selectedPhoneNumber!;
+                      });
                     }
                   },
                   child: Text(

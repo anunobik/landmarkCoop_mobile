@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttercontactpicker/fluttercontactpicker.dart';
+import 'package:flutter_native_contact_picker/flutter_native_contact_picker.dart';
+import 'package:flutter_native_contact_picker/model/contact.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -36,7 +37,8 @@ class _AirtimePurchaseState extends State<AirtimePurchase> {
       TextEditingController(text: 'Instant Airtime');
   TextEditingController phoneController = TextEditingController();
   TextEditingController amountController = TextEditingController();
-  PhoneContact? _phoneContact;
+  final FlutterNativeContactPicker _contactPicker = FlutterNativeContactPicker();
+  List<Contact>? _contacts;
   String phone = "";
   int amount = 0;
   bool _value = false;
@@ -123,20 +125,14 @@ class _AirtimePurchaseState extends State<AirtimePurchase> {
                 const SizedBox(height: 10),
                 ElevatedButton.icon(
                   onPressed: () async {
-                    final granted = await FlutterContactPicker.hasPermission();
-                    granted
-                        ? print('Granted')
-                        : await FlutterContactPicker.requestPermission();
-                    final PhoneContact contact =
-                        await FlutterContactPicker.pickPhoneContact();
+                    Contact? contact = await _contactPicker.selectPhoneNumber();
                     print(contact);
                     setState(() {
-                      _phoneContact = contact;
+                      _contacts = contact == null ? null : [contact];
                     });
                     setState(() {
-                      phoneController.text =
-                          _phoneContact!.phoneNumber!.number!;
-                      phone = _phoneContact!.phoneNumber!.number!;
+                      phoneController.text = contact!.selectedPhoneNumber!;
+                      phone = contact!.selectedPhoneNumber!;
                     });
                   },
                   style: ElevatedButton.styleFrom(

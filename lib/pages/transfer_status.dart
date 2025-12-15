@@ -2,9 +2,9 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:landmarkcoop_mobile_app/pages/search_status.dart';
-import 'package:landmarkcoop_mobile_app/pages/transfer_details.dart';
-import 'package:landmarkcoop_mobile_app/utils/status_list.dart';
+import 'package:landmarkcoop_latest/pages/search_status.dart';
+import 'package:landmarkcoop_latest/pages/transfer_details.dart';
+import 'package:landmarkcoop_latest/utils/status_list.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api/api_service.dart';

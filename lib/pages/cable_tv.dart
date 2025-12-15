@@ -2,8 +2,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:landmarkcoop_mobile_app/model/cable_tv_model.dart';
-import 'package:landmarkcoop_mobile_app/pages/pay_cableTv.dart';
+import 'package:landmarkcoop_latest/model/cable_tv_model.dart';
+import 'package:landmarkcoop_latest/pages/pay_cableTv.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

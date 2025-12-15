@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:landmarkcoop_mobile_app/main_view.dart';
+import 'package:landmarkcoop_latest/main_view.dart';
 import 'registration/forgot_password.dart';
 
 class CheckMail extends StatefulWidget {

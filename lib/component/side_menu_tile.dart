@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:landmarkcoop_mobile_app/model/rive_asset.dart';
+import 'package:landmarkcoop_latest/model/rive_asset.dart';
 import 'package:rive/rive.dart';
 
 class SideMenuTile extends StatelessWidget {

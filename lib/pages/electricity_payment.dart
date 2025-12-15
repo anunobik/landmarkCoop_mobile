@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutterwave_standard/flutterwave.dart';
+// import 'package:flutterwave_standard/flutterwave.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -412,98 +412,98 @@ class ElectricityPaymentState extends State<ElectricityPayment> {
         isApiCallProcess = false;
       });
     } else {
-      _handlePaymentInitialization();
+      // _handlePaymentInitialization();
     }
   }
 
-  _handlePaymentInitialization() async {
-    const String _FLUTTERWAVE_PUB_KEY =
-        "FLWPUBK-ffa67ca9defd5a5a55604596614bb668-X";
-    var email = emailController.text;
-    var displayName = "Minerva Payer";
-    var phoneNo = phoneNoController.text;
-    email.isEmpty ? email = "info@myminervahub.com" : email;
-    phoneNo.isEmpty ? phoneNo = "07039162908" : phoneNo;
-    String narration = "Minervahub electricity payment";
-    String datePart = DateFormat('yymmddhhmmss').format(DateTime.now());
-    String txRef = "minervahubuser." + datePart;
-    double amountToDebit = amount + 50;
-
-    // final style = FlutterwaveStyle(
-    //     appBarText: "Payment",
-    //     appBarTitleTextStyle: GoogleFonts.montserrat(color: Colors.white),
-    //     buttonColor: Color(0xff000080),
-    //     appBarIcon: const Icon(Icons.message, color: Color(0xff01440a)),
-    //     buttonTextStyle: GoogleFonts.montserrat(
-    //         color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
-    //     appBarColor: Color(0xff000080),
-    //     dialogCancelTextStyle:
-    //         GoogleFonts.montserrat(color: Colors.redAccent, fontSize: 18),
-    //     dialogContinueTextStyle:
-    //         GoogleFonts.montserrat(color: Colors.blue, fontSize: 18),
-    //     dialogBackgroundColor: Colors.white,
-    //     buttonText: "Pay NGN$amountToDebit");
-
-    final Customer customer =
-        Customer(name: displayName, phoneNumber: phoneNo, email: email);
-
-    final Flutterwave flutterwave = Flutterwave(
-        context: context,
-        // style: style,
-        publicKey: _FLUTTERWAVE_PUB_KEY,
-        currency: "NGN",
-        redirectUrl: "my_redirect_url",
-        txRef: txRef,
-        amount: amountToDebit.toString(),
-        customer: customer,
-        paymentOptions: "ussd, card",
-        customization: Customization(title: "Plux Payment"),
-        isTestMode: false);
-
-    final ChargeResponse response = await flutterwave.charge();
-    if (response != null) {
-      if (response.success!) {
-        String orderId = "minervahubuser.$datePart";
-        // transactionRequestModel.meterNo = meterNoController.text;
-        // transactionRequestModel.disco = discoController.text;
-        // transactionRequestModel.vendAmount = amountController.text;
-        // transactionRequestModel.phoneNo = phoneNo;
-        // transactionRequestModel.orderId = orderId;
-        // transactionRequestModel.email = emailController.text;
-        // Call the verify transaction endpoint with the transactionID returned in `response.transactionId` to verify transaction before offering value to customer
-        // APIService apiService = APIService();
-        // apiService
-        //     .anonymousBillsPay(
-        //         transactionRequestModel, int.parse(response.transactionId!))
-        //     .then((value) {
-        //   vendBillPayment(value, orderId);
-        // });
-      } else {
-        // Transaction not successful
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return const AlertDialog(
-                title: Text("Notice"),
-                content: Text("Transaction not successful"),
-              );
-            });
-      }
-    } else {
-      // User cancelled
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return const AlertDialog(
-              title: Text("Message"),
-              content: Text("You cancelled the transaction!"),
-            );
-          });
-      setState(() {
-        isApiCallProcess = false;
-      });
-    }
-  }
+  // _handlePaymentInitialization() async {
+  //   const String _FLUTTERWAVE_PUB_KEY =
+  //       "FLWPUBK-ffa67ca9defd5a5a55604596614bb668-X";
+  //   var email = emailController.text;
+  //   var displayName = "Minerva Payer";
+  //   var phoneNo = phoneNoController.text;
+  //   email.isEmpty ? email = "info@myminervahub.com" : email;
+  //   phoneNo.isEmpty ? phoneNo = "07039162908" : phoneNo;
+  //   String narration = "Minervahub electricity payment";
+  //   String datePart = DateFormat('yymmddhhmmss').format(DateTime.now());
+  //   String txRef = "minervahubuser." + datePart;
+  //   double amountToDebit = amount + 50;
+  //
+  //   // final style = FlutterwaveStyle(
+  //   //     appBarText: "Payment",
+  //   //     appBarTitleTextStyle: GoogleFonts.montserrat(color: Colors.white),
+  //   //     buttonColor: Color(0xff000080),
+  //   //     appBarIcon: const Icon(Icons.message, color: Color(0xff01440a)),
+  //   //     buttonTextStyle: GoogleFonts.montserrat(
+  //   //         color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+  //   //     appBarColor: Color(0xff000080),
+  //   //     dialogCancelTextStyle:
+  //   //         GoogleFonts.montserrat(color: Colors.redAccent, fontSize: 18),
+  //   //     dialogContinueTextStyle:
+  //   //         GoogleFonts.montserrat(color: Colors.blue, fontSize: 18),
+  //   //     dialogBackgroundColor: Colors.white,
+  //   //     buttonText: "Pay NGN$amountToDebit");
+  //
+  //   final Customer customer =
+  //       Customer(name: displayName, phoneNumber: phoneNo, email: email);
+  //
+  //   final Flutterwave flutterwave = Flutterwave(
+  //       context: context,
+  //       // style: style,
+  //       publicKey: _FLUTTERWAVE_PUB_KEY,
+  //       currency: "NGN",
+  //       redirectUrl: "my_redirect_url",
+  //       txRef: txRef,
+  //       amount: amountToDebit.toString(),
+  //       customer: customer,
+  //       paymentOptions: "ussd, card",
+  //       customization: Customization(title: "Plux Payment"),
+  //       isTestMode: false);
+  //
+  //   final ChargeResponse response = await flutterwave.charge();
+  //   if (response != null) {
+  //     if (response.success!) {
+  //       String orderId = "minervahubuser.$datePart";
+  //       // transactionRequestModel.meterNo = meterNoController.text;
+  //       // transactionRequestModel.disco = discoController.text;
+  //       // transactionRequestModel.vendAmount = amountController.text;
+  //       // transactionRequestModel.phoneNo = phoneNo;
+  //       // transactionRequestModel.orderId = orderId;
+  //       // transactionRequestModel.email = emailController.text;
+  //       // Call the verify transaction endpoint with the transactionID returned in `response.transactionId` to verify transaction before offering value to customer
+  //       // APIService apiService = APIService();
+  //       // apiService
+  //       //     .anonymousBillsPay(
+  //       //         transactionRequestModel, int.parse(response.transactionId!))
+  //       //     .then((value) {
+  //       //   vendBillPayment(value, orderId);
+  //       // });
+  //     } else {
+  //       // Transaction not successful
+  //       showDialog(
+  //           context: context,
+  //           builder: (BuildContext context) {
+  //             return const AlertDialog(
+  //               title: Text("Notice"),
+  //               content: Text("Transaction not successful"),
+  //             );
+  //           });
+  //     }
+  //   } else {
+  //     // User cancelled
+  //     showDialog(
+  //         context: context,
+  //         builder: (BuildContext context) {
+  //           return const AlertDialog(
+  //             title: Text("Message"),
+  //             content: Text("You cancelled the transaction!"),
+  //           );
+  //         });
+  //     setState(() {
+  //       isApiCallProcess = false;
+  //     });
+  //   }
+  // }
 
   void submitMerchant() {
     // String datePart = DateFormat('yymmddhhmmss').format(DateTime.now());

@@ -2,11 +2,12 @@
 //
 // import 'package:firebase_messaging/firebase_messaging.dart';
 // import 'package:flutter/material.dart';
-// import 'package:fluttercontactpicker/fluttercontactpicker.dart';
+// import 'package:flutter_native_contact_picker/flutter_native_contact_picker.dart';
+import 'package:flutter_native_contact_picker/model/contact.dart';
 // import 'package:google_fonts/google_fonts.dart';
 // import 'package:overlay_support/overlay_support.dart';
 // import 'package:intl/intl.dart';
-// import 'package:landmarkcoop_mobile_app/model/push_notification.dart';
+// import 'package:landmarkcoop_latest/model/push_notification.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:url_launcher/url_launcher.dart';
 //
