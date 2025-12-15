@@ -1125,8 +1125,9 @@ class _DashboardState extends State<Dashboard> {
                                               },
                                               icon: const Icon(Icons.account_balance_wallet, color: Colors.white),
                                               label: Text(
-                                                'Fund LaPlage Wallet',
+                                                'Fund La Plage \n Metaverse Wallet',
                                                 style: GoogleFonts.montserrat(color: Colors.white, fontWeight: FontWeight.w600),
+                                              textAlign: TextAlign.center,
                                               ),
                                               style: ElevatedButton.styleFrom(
                                                 backgroundColor: Colors.blue,
@@ -2055,7 +2056,7 @@ class _DashboardState extends State<Dashboard> {
                 key: formKey,
                 child: AlertDialog(
                   title: Text(
-                    'Funding Your LaPlage Wallet',
+                    'Funding Your La Plage \n Metaverse Wallet',
                     textAlign: TextAlign.center,
                     style: GoogleFonts.montserrat(
                       color: const Color(0xff000080),
@@ -2077,7 +2078,7 @@ class _DashboardState extends State<Dashboard> {
                                 contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                               ),
                               items: widget.customerWallets.map((w) {
-                                final acct = isBvnLinked ? w.nubanAccountNumber : w.accountNumber;
+                                final acct = w.nubanAccountNumber.isNotEmpty ? w.nubanAccountNumber : w.accountNumber;
                                 return DropdownMenuItem<CustomerWalletsBalanceModel>(
                                     value: w,
                                     child: Text('$acct')
@@ -2116,8 +2117,9 @@ class _DashboardState extends State<Dashboard> {
                   ),
                   actions: [
                     Center(
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
+                      child: Wrap(
+                        spacing: 12, // space between buttons
+                        alignment: WrapAlignment.center,
                         children: [
                           // 🔴 Cancel Button
                           ElevatedButton(
