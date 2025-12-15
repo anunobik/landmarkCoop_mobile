@@ -87,7 +87,6 @@ class _SingUpScreen2State extends State<SingUpScreen2> {
         prefs.getString('subdomain') ?? 'https://core.landmarkcooperative.org';
     String institution = prefs.getString('institution') ?? 'Minerva Hub';
     if (institution == 'Landmark Coop' ||
-        subdomain == null ||
         institution.isEmpty) {
       isMinervaHub = true;
       disableRegisterBtn = false;
@@ -627,7 +626,7 @@ class _SingUpScreen2State extends State<SingUpScreen2> {
                 currentProduct = newValue!;
                 state.didChange(newValue);
                 selectedProduct = newValue;
-                if (isMinervaHub!) {
+                if (isMinervaHub) {
                   disableRegisterBtn = false;
                 }
               });

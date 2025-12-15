@@ -24,15 +24,12 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
-
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>tel</string>
 	</array>
-
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-
 	<key>NSCameraUsageDescription</key>
 	<string>We need camera access to allow photo capture for profile pictures.</string>
 	<key>NSContactsUsageDescription</key>
@@ -43,18 +40,18 @@
 	<string>Location access is needed for nearby location-based features.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>We need access to your photo library to upload pictures.</string>
-
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
-
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
 		<string>remote-notification</string>
 	</array>
-
-	<key>UILaunchStoryboardName</key>
-	<string>Main.storyboard</string>
+	<key>UILaunchScreen</key>
+	<dict>
+		<key>UILaunchScreenBackgroundColor</key>
+		<string>LaunchBackground</string>
+	</dict>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UISupportedInterfaceOrientations</key>

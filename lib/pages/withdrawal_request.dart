@@ -169,7 +169,6 @@ class _WithdrawalRequestState extends State<WithdrawalRequest> {
         prefs.getString('subdomain') ?? 'https://core.landmarkcooperative.org';
     String institution = prefs.getString('institution') ?? 'Minerva Hub';
     if (institution == 'Landmark Coop' ||
-        subdomain == null ||
         institution.isEmpty) {
       isMinervaHub = true;
     }

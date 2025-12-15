@@ -82,7 +82,7 @@ class APIService {
     String browserInfo = 'mobile_app';
     try {
       ipAddress = await Ipify.ipv4();
-    } on Exception catch (e) {
+    } on Exception {
       // TODO
       ipAddress = "IP failed to load";
     }
@@ -113,7 +113,7 @@ class APIService {
     String browserInfo = 'mobile_app';
     try {
       ipAddress = await Ipify.ipv4();
-    } on Exception catch (e) {
+    } on Exception {
       // TODO
       ipAddress = "IP failed to load";
     }
@@ -364,7 +364,7 @@ class APIService {
     String browserInfo = 'mobile_app';
     try {
       ipAddress = await Ipify.ipv4();
-    } on Exception catch (e) {
+    } on Exception {
       // TODO
       ipAddress = "IP failed to load";
     }
@@ -547,7 +547,7 @@ class APIService {
     String browserInfo = 'mobile_app';
     try {
       ipAddress = await Ipify.ipv4();
-    } on Exception catch (e) {
+    } on Exception {
       // TODO
       ipAddress = "IP failed to load";
     }
